@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+#Environment variables
+.env
+.env.local
+.env.*.local
+
+#build output
+dist/
+build/
+
+#log 
+*.log
+npm-debug.log*
+
+#OS files
+.DS_Store
+Thumbs.db
+
+#vscode
+.vscode/
+
+#temporary files
+*.tmp
+*.temp
