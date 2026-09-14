@@ -4,17 +4,24 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-console.log("MONGODB_URI:", process.env.MONGODB_URI);
-
 const connectDB = require("./config/database");
+const courseRoutes = require("./routes/courseRoutes");
+
+console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Connect to MongoDB Database
+connectDB();
+
+// Middleware for parsing JSON and URL-encoded form data
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-connectDB();
+// API Routes
+app.use("/api/courses", courseRoutes);
 
 app.get("/", (req, res) => {
     res.json({
