@@ -9,6 +9,7 @@ const courseRoutes = require("./routes/courseRoutes");
 const qualificationRoutes = require("./routes/qualificationRoutes");
 const streamRoutes = require("./routes/streamRoutes");
 const pathwayRoutes = require("./routes/pathwayRoutes");
+const cityRoutes = require("./routes/cityRoutes");
 
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
@@ -28,6 +29,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/qualifications", qualificationRoutes);
 app.use("/api/streams", streamRoutes);
 app.use("/api/pathways", pathwayRoutes);
+app.use("/api/cities", cityRoutes);
 
 app.get("/", (req, res) => {
     res.json({
