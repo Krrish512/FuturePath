@@ -7,6 +7,7 @@ dotenv.config();
 const connectDB = require("./config/database");
 const courseRoutes = require("./routes/courseRoutes");
 const qualificationRoutes = require("./routes/qualificationRoutes");
+const streamRoutes = require("./routes/streamRoutes");
 
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use("/api/courses", courseRoutes);
 app.use("/api/qualifications", qualificationRoutes);
+app.use("/api/streams", streamRoutes);
 
 app.get("/", (req, res) => {
     res.json({
