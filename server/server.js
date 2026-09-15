@@ -13,6 +13,7 @@ const cityRoutes = require("./routes/cityRoutes");
 const institutionRoutes = require("./routes/institutionRoutes");
 const careerRoutes = require("./routes/careerRoutes");
 const guidanceRoutes = require("./routes/guidanceRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
@@ -36,6 +37,7 @@ app.use("/api/cities", cityRoutes);
 app.use("/api/institutions", institutionRoutes);
 app.use("/api/careers", careerRoutes);
 app.use("/api/guidance", guidanceRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
     res.json({

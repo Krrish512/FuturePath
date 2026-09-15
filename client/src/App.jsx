@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from './services/api';
 import { useBookmarks } from './hooks/useBookmarks';
+import { useAuth } from './hooks/useAuth';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import GuidanceWizard from './components/GuidanceWizard';
@@ -13,6 +14,9 @@ import BookmarksView from './components/BookmarksView';
 import FAQView from './components/FAQView';
 import CompareFloatingBar from './components/CompareFloatingBar';
 import CompareModal from './components/CompareModal';
+import AuthView from './components/AuthView';
+import ProfileView from './components/ProfileView';
+import AdminDashboard from './components/AdminDashboard';
 import Footer from './components/Footer';
 
 function App() {
@@ -20,6 +24,9 @@ function App() {
   const [summary, setSummary] = useState(null);
   const [selectedQual, setSelectedQual] = useState('12th');
   const [selectedStream, setSelectedStream] = useState('Science');
+
+  // Authentication
+  const { user, isLoggedIn, isAdmin, login, register, logout, loading: authLoading } = useAuth();
 
   // Bookmarking custom hook
   const { bookmarks, toggleBookmark, isBookmarked, clearBookmarks, bookmarkCount } = useBookmarks();
@@ -142,6 +149,12 @@ function App() {
     return cityMatch && typeMatch;
   });
 
+  // Handle logout: clear auth and go to explore
+  const handleLogout = () => {
+    logout();
+    setActiveTab('explore');
+  };
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Header Navigation */}
@@ -149,6 +162,9 @@ function App() {
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         bookmarkCount={bookmarkCount}
+        isLoggedIn={isLoggedIn}
+        isAdmin={isAdmin}
+        userName={user?.name}
       />
 
       {/* Main Content Area */}
@@ -195,16 +211,7 @@ function App() {
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
                   placeholder="🔍 Search roadmaps (e.g. Engineering, Medical, CA)..."
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid var(--border-light)',
-                    color: 'var(--text-main)',
-                    fontSize: '0.9rem',
-                    outline: 'none'
-                  }}
+                  style={searchInputStyle}
                 />
               </div>
             </div>
@@ -245,16 +252,7 @@ function App() {
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
                   placeholder="🔍 Search courses (e.g. BCA, B.Tech, B.Com, Diploma)..."
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid var(--border-light)',
-                    color: 'var(--text-main)',
-                    fontSize: '0.9rem',
-                    outline: 'none'
-                  }}
+                  style={searchInputStyle}
                 />
               </div>
             </div>
@@ -297,16 +295,7 @@ function App() {
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
                   placeholder="🔍 Search careers by role or skills (e.g. Developer, Python, Doctor)..."
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid var(--border-light)',
-                    color: 'var(--text-main)',
-                    fontSize: '0.9rem',
-                    outline: 'none'
-                  }}
+                  style={searchInputStyle}
                 />
               </div>
             </div>
@@ -392,16 +381,7 @@ function App() {
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
                   placeholder="🔍 Search colleges by name or affiliation (e.g. GTU, MSU, AIT)..."
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid var(--border-light)',
-                    color: 'var(--text-main)',
-                    fontSize: '0.9rem',
-                    outline: 'none'
-                  }}
+                  style={searchInputStyle}
                 />
               </div>
             </div>
@@ -439,6 +419,29 @@ function App() {
             onTakeQuiz={() => setActiveTab('quiz')}
           />
         )}
+
+        {/* Authentication View */}
+        {activeTab === 'auth' && !isLoggedIn && (
+          <AuthView 
+            onLogin={login}
+            onRegister={register}
+            loading={authLoading}
+          />
+        )}
+
+        {/* Profile View */}
+        {activeTab === 'profile' && isLoggedIn && (
+          <ProfileView 
+            user={user}
+            onLogout={handleLogout}
+            onGoExplore={() => setActiveTab('explore')}
+          />
+        )}
+
+        {/* Admin Dashboard */}
+        {activeTab === 'admin' && isLoggedIn && isAdmin && (
+          <AdminDashboard />
+        )}
       </main>
 
       {/* Floating Compare Bar */}
@@ -462,5 +465,17 @@ function App() {
     </div>
   );
 }
+
+// Shared search input style
+const searchInputStyle = {
+  width: '100%',
+  padding: '0.75rem 1.25rem',
+  borderRadius: 'var(--radius-full)',
+  background: 'rgba(255, 255, 255, 0.05)',
+  border: '1px solid var(--border-light)',
+  color: 'var(--text-main)',
+  fontSize: '0.9rem',
+  outline: 'none',
+};
 
 export default App;

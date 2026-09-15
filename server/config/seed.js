@@ -10,6 +10,7 @@ const Course = require("../models/Course");
 const Pathway = require("../models/Pathway");
 const Institution = require("../models/Institution");
 const Career = require("../models/Career");
+const User = require("../models/User");
 
 const seedDatabase = async () => {
     try {
@@ -27,7 +28,8 @@ const seedDatabase = async () => {
             Course.deleteMany({}),
             Pathway.deleteMany({}),
             Institution.deleteMany({}),
-            Career.deleteMany({})
+            Career.deleteMany({}),
+            User.deleteMany({})
         ]);
         console.log("Existing data cleared.");
 
@@ -358,6 +360,16 @@ const seedDatabase = async () => {
         console.log("  DATABASE SEEDING COMPLETED SUCCESSFULLY!");
         console.log("  Real-world guidance data for 10th & 12th is ready.");
         console.log("=======================================================\n");
+
+        // Seed default admin user
+        console.log("Creating default admin user...");
+        await User.create({
+            name: "Admin",
+            email: "admin@futurepath.com",
+            password: "admin123",
+            role: "admin"
+        });
+        console.log("Admin user created: admin@futurepath.com / admin123");
 
         await mongoose.connection.close();
         process.exit(0);

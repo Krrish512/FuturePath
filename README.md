@@ -38,6 +38,7 @@ The portal bridges the gap between completed schooling and future career goals b
 | **Typography** | Google Fonts | *Outfit* (Headings) & *Plus Jakarta Sans* (Body) |
 | **Backend** | Node.js + Express 5 | RESTful API Architecture, JSON middleware, CORS |
 | **Database** | MongoDB + Mongoose 9 | Document database, Referential modeling with `ObjectId` & `populate()` |
+| **Authentication** | JWT + Bcrypt | JSON Web Token auth, Bcrypt password hashing, Role-based access (RBAC) |
 | **Environment** | Dotenv | Configuration management via `.env` |
 
 ---
@@ -87,7 +88,19 @@ The portal bridges the gap between completed schooling and future career goals b
 - **Career Module** (`/api/careers`): Industry professions with skill chips, salary ranges, and qualifying course relations.
 - **Guidance Aggregator Engine** (`/api/guidance` & `/api/guidance/summary`): BFF (Backend-For-Frontend) endpoint assembling full roadmaps in a single query.
 
-### B. Frontend Student Experience
+### B. Authentication & Authorization
+- **User Registration**: Student account creation with name, email, password, and qualification.
+- **Login/Logout**: JWT-based stateless authentication with secure token storage.
+- **Role-Based Access Control (RBAC)**: `student` and `admin` roles with middleware guards.
+- **Password Security**: Bcrypt hashing with salted rounds.
+- **Profile Management**: View and update user profile details.
+
+### C. Admin Dashboard
+- **Platform Overview**: Real-time stats for total users, students, admins, and all content counts.
+- **User Management**: View all registered users, role badges, and delete student accounts.
+- **Recent Activity**: Track latest registrations with timestamps.
+
+### D. Frontend Student Experience
 - **Interactive Guidance Explorer**: 2-step decision wizard (10th/12th + Stream picker).
 - **Career Aptitude Decision Quiz**: 5-question personality/interest quiz with scoring engine and 1-click guidance transition.
 - **Side-by-Side Degree Comparison Matrix**: Compares up to 3 courses simultaneously across duration, eligibility, subjects, and careers.
@@ -106,7 +119,9 @@ FuturePath/
 │   ├── public/                 # Static public assets
 │   ├── src/
 │   │   ├── components/         # Reusable UI Components
+│   │   │   ├── AdminDashboard.jsx     # Admin panel with stats and user management
 │   │   │   ├── AptitudeQuiz.jsx        # 5-question career assessment quiz
+│   │   │   ├── AuthView.jsx            # Login/Register dual-mode form
 │   │   │   ├── BookmarksView.jsx       # Student shortlist management view
 │   │   │   ├── CareerCard.jsx          # Career opportunity card
 │   │   │   ├── CompareFloatingBar.jsx  # Active comparison floating bar
@@ -117,9 +132,11 @@ FuturePath/
 │   │   │   ├── GuidanceWizard.jsx      # 2-step decision guidance wizard
 │   │   │   ├── Hero.jsx                # Hero banner with live counters
 │   │   │   ├── InstitutionCard.jsx     # College & university card
-│   │   │   ├── Navbar.jsx              # Sticky header with navigation & badges
-│   │   │   └── PathwayCard.jsx         # Milestone timeline roadmap card
+│   │   │   ├── Navbar.jsx              # Sticky header with auth-aware navigation
+│   │   │   ├── PathwayCard.jsx         # Milestone timeline roadmap card
+│   │   │   └── ProfileView.jsx         # User profile display & logout
 │   │   ├── hooks/
+│   │   │   ├── useAuth.js             # JWT authentication state management hook
 │   │   │   └── useBookmarks.js         # localStorage bookmark persistence hook
 │   │   ├── services/
 │   │   │   └── api.js                  # Centralized HTTP API client
@@ -143,6 +160,8 @@ FuturePath/
 │   │   ├── pathwayController.js
 │   │   ├── qualificationController.js
 │   │   └── streamController.js
+│   ├── middleware/              # Express Middleware
+│   │   └── auth.js                    # JWT verify, protect, adminOnly guards
 │   ├── models/                 # Mongoose Schemas & Models
 │   │   ├── Career.js
 │   │   ├── City.js
@@ -150,8 +169,10 @@ FuturePath/
 │   │   ├── Institution.js
 │   │   ├── Pathway.js
 │   │   ├── Qualification.js
-│   │   └── Stream.js
+│   │   ├── Stream.js
+│   │   └── User.js
 │   ├── routes/                 # Express REST Endpoints
+│   │   ├── authRoutes.js
 │   │   ├── careerRoutes.js
 │   │   ├── cityRoutes.js
 │   │   ├── courseRoutes.js
@@ -160,7 +181,7 @@ FuturePath/
 │   │   ├── pathwayRoutes.js
 │   │   ├── qualificationRoutes.js
 │   │   └── streamRoutes.js
-│   ├── .env                    # Environment variables (PORT, MONGODB_URI)
+│   ├── .env                    # Environment variables (PORT, MONGODB_URI, JWT_SECRET)
 │   ├── package.json            # Server dependencies & scripts
 │   └── server.js               # Main Express server entrypoint
 │
@@ -182,6 +203,7 @@ The backend requires a `.env` file inside the `server/` directory:
 ```env
 PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/futurepath
+JWT_SECRET=futurepath_jwt_secret_2024
 ```
 
 ---
@@ -224,6 +246,8 @@ Seeding Pathways...
 Seeding Careers...
 Seeding Institutions...
 DATABASE SEEDING COMPLETED SUCCESSFULLY!
+Creating default admin user...
+Admin user created: admin@futurepath.com / admin123
 ```
 
 ### Step 3: Start the Backend Server
@@ -267,6 +291,15 @@ npm run dev
 | `/institutions/:id` | `GET`, `PUT`, `DELETE` | Single institution CRUD (populates city and courses offered) |
 | `/cities` | `GET`, `POST` | Get all cities or create city |
 | `/cities/:id` | `GET`, `PUT`, `DELETE` | Single city CRUD |
+| `/auth/register` | `POST` | Register new student account |
+| `/auth/login` | `POST` | Authenticate user and get JWT token |
+| `/auth/me` | `GET` | Get current user profile (🔒 Protected) |
+| `/auth/profile` | `PUT` | Update user profile (🔒 Protected) |
+| `/auth/admin/stats` | `GET` | Platform statistics dashboard (🔒 Admin) |
+| `/auth/admin/users` | `GET` | List all registered users (🔒 Admin) |
+| `/auth/admin/users/:id` | `DELETE` | Delete a user account (🔒 Admin) |
+
+**🔒 Legend**: Protected = requires `Authorization: Bearer <token>` header. Admin = requires admin role.
 
 ---
 
@@ -284,6 +317,15 @@ npm run dev
 4. **Interactive Career Quiz**: Confused students take the 5-question aptitude assessment to find their percentage alignment match and jump directly to recommended roadmaps.
 5. **Course Comparison**: Student selects 2-3 degrees (e.g. *BCA vs B.Tech CSE*) to compare eligibility and subjects side-by-side.
 6. **Shortlisting**: Student clicks `⭐ Save` on desired roadmaps and colleges to maintain a personalized plan in the `⭐ Shortlist` tab.
+7. **Account Registration**: Student creates an account to access profile features. Login uses JWT tokens for stateless authentication.
+8. **Admin Dashboard**: Administrators log in with `admin@futurepath.com / admin123` to view platform stats and manage users.
+
+### Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | `admin@futurepath.com` | `admin123` |
+| **Student** | Register any new account | Min. 6 characters |
 
 ---
 
@@ -300,6 +342,15 @@ npm run dev
 
 ### Q4: How is student shortlisting persisted without user login?
 > **Answer**: Through a custom React hook (`useBookmarks.js`) that encapsulates browser `localStorage` synchronization with `useState` and `useEffect`. Bookmarks persist across sessions and tab reloads automatically.
+
+### Q5: How does JWT authentication work in FuturePath?
+> **Answer**: Upon registration/login, the server generates a signed JWT using `jsonwebtoken` with a 7-day expiry. The token is stored in browser `localStorage` and sent via `Authorization: Bearer <token>` header on protected requests. Server middleware (`auth.js`) verifies the token, extracts the user ID, and attaches the user object to `req.user`.
+
+### Q6: How is Role-Based Access Control (RBAC) implemented?
+> **Answer**: The User model includes a `role` field (`student` or `admin`). The `adminOnly` middleware checks `req.user.role === 'admin'` after the `protect` middleware verifies the JWT. Admin-only routes (stats, user management) are guarded by chaining both middlewares: `protect, adminOnly`.
+
+### Q7: How are passwords secured?
+> **Answer**: Passwords are hashed using `bcryptjs` with 10 salt rounds in a Mongoose `pre('save')` hook. The `password` field has `select: false`, so it's never returned in API responses unless explicitly requested with `.select('+password')` during login verification.
 
 ---
 
@@ -319,9 +370,10 @@ npm run dev
 
 ## 13. Future Enhancements
 
-- Student Authentication (JWT + bcryptjs) for cross-device cloud bookmark syncing.
-- Admin CMS Dashboard for managing courses and institutions with role-based access control.
 - PDF Roadmap Export enabling students to download personalized career roadmaps.
+- Cloud-synced bookmarks linked to user accounts for cross-device persistence.
+- Email notification system for admission deadline reminders.
+- Entrance exam preparation resource recommendations.
 
 ---
 

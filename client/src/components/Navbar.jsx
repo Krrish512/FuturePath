@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0 }) {
+export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0, isLoggedIn = false, isAdmin = false, userName = '' }) {
   return (
     <header style={{
       position: 'sticky',
@@ -116,6 +116,77 @@ export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0 }) {
               }}>
                 {bookmarkCount}
               </span>
+            )}
+          </button>
+
+          {/* Admin Tab - only for admin users */}
+          {isLoggedIn && isAdmin && (
+            <button
+              onClick={() => setActiveTab('admin')}
+              style={{
+                padding: '0.45rem 0.75rem',
+                fontSize: '0.825rem',
+                fontWeight: activeTab === 'admin' ? '700' : '600',
+                color: activeTab === 'admin' ? '#ffffff' : '#f59e0b',
+                background: activeTab === 'admin' ? 'rgba(245, 158, 11, 0.2)' : 'transparent',
+                border: activeTab === 'admin' ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid transparent',
+                borderRadius: 'var(--radius-sm)',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem'
+              }}
+            >
+              <span>🛡️</span>
+              <span>Admin</span>
+            </button>
+          )}
+
+          {/* Auth / Profile button */}
+          <button
+            onClick={() => setActiveTab(isLoggedIn ? 'profile' : 'auth')}
+            style={{
+              padding: '0.45rem 0.85rem',
+              fontSize: '0.825rem',
+              fontWeight: (activeTab === 'auth' || activeTab === 'profile') ? '700' : '600',
+              color: isLoggedIn ? '#34d399' : '#818cf8',
+              background: (activeTab === 'auth' || activeTab === 'profile')
+                ? (isLoggedIn ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.15)')
+                : (isLoggedIn ? 'rgba(16, 185, 129, 0.1)' : 'rgba(99, 102, 241, 0.08)'),
+              border: (activeTab === 'auth' || activeTab === 'profile')
+                ? (isLoggedIn ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(99, 102, 241, 0.3)')
+                : '1px solid transparent',
+              borderRadius: 'var(--radius-sm)',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              marginLeft: '0.2rem',
+            }}
+          >
+            {isLoggedIn ? (
+              <>
+                <span style={{
+                  width: '22px',
+                  height: '22px',
+                  borderRadius: '50%',
+                  background: 'rgba(16, 185, 129, 0.25)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.65rem',
+                  fontWeight: '800',
+                  color: '#34d399',
+                }}>
+                  {userName?.charAt(0).toUpperCase() || '?'}
+                </span>
+                <span>{userName?.split(' ')[0] || 'Profile'}</span>
+              </>
+            ) : (
+              <>
+                <span>🔐</span>
+                <span>Login</span>
+              </>
             )}
           </button>
         </nav>
