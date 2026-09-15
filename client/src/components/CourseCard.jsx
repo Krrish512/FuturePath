@@ -1,9 +1,15 @@
 import React from 'react';
 
-export default function CourseCard({ course, onToggleBookmark, isSaved }) {
+export default function CourseCard({ 
+  course, 
+  onToggleBookmark, 
+  isSaved,
+  onToggleCompare,
+  isCompared 
+}) {
   return (
     <div className="glass-card fade-in" style={{ padding: '1.75rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Header Badges & Bookmark */}
+      {/* Header Badges & Actions */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '0.5rem', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <span className="badge badge-emerald">
@@ -14,27 +20,53 @@ export default function CourseCard({ course, onToggleBookmark, isSaved }) {
           </span>
         </div>
 
-        {onToggleBookmark && (
-          <button
-            onClick={() => onToggleBookmark(course, 'course')}
-            title={isSaved ? 'Remove from shortlist' : 'Save course'}
-            style={{
-              background: isSaved ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-              color: isSaved ? '#fbbf24' : 'var(--text-muted)',
-              border: isSaved ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid var(--border-light)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '0.35rem 0.65rem',
-              fontSize: '0.85rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.3rem',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <span>{isSaved ? '⭐' : '☆'}</span>
-            <span style={{ fontSize: '0.75rem' }}>{isSaved ? 'Saved' : 'Save'}</span>
-          </button>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          {/* Compare Button */}
+          {onToggleCompare && (
+            <button
+              onClick={() => onToggleCompare(course)}
+              title={isCompared ? 'Remove from compare' : 'Compare this course'}
+              style={{
+                background: isCompared ? 'rgba(99, 102, 241, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+                color: isCompared ? '#818cf8' : 'var(--text-muted)',
+                border: isCompared ? '1px solid rgba(99, 102, 241, 0.5)' : '1px solid var(--border-light)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '0.35rem 0.65rem',
+                fontSize: '0.8rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <span>⚖️</span>
+              <span style={{ fontSize: '0.75rem' }}>{isCompared ? 'Comparing' : 'Compare'}</span>
+            </button>
+          )}
+
+          {/* Bookmark Button */}
+          {onToggleBookmark && (
+            <button
+              onClick={() => onToggleBookmark(course, 'course')}
+              title={isSaved ? 'Remove from shortlist' : 'Save course'}
+              style={{
+                background: isSaved ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                color: isSaved ? '#fbbf24' : 'var(--text-muted)',
+                border: isSaved ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid var(--border-light)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '0.35rem 0.65rem',
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <span>{isSaved ? '⭐' : '☆'}</span>
+              <span style={{ fontSize: '0.75rem' }}>{isSaved ? 'Saved' : 'Save'}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Course Title */}

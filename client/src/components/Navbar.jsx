@@ -51,13 +51,15 @@ export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0 }) {
         </div>
 
         {/* Navigation Tabs */}
-        <nav style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <nav style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', flexWrap: 'wrap' }}>
           {[
             { id: 'explore', label: 'Explore', icon: '🧭' },
+            { id: 'quiz', label: 'Quiz', icon: '🎯' },
             { id: 'pathways', label: 'Roadmaps', icon: '🗺️' },
             { id: 'courses', label: 'Courses', icon: '📚' },
             { id: 'careers', label: 'Careers', icon: '💼' },
-            { id: 'colleges', label: 'Colleges', icon: '🏛️' }
+            { id: 'colleges', label: 'Colleges', icon: '🏛️' },
+            { id: 'faq', label: 'FAQ', icon: '❓' }
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -65,8 +67,8 @@ export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0 }) {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
-                  padding: '0.5rem 0.85rem',
-                  fontSize: '0.875rem',
+                  padding: '0.45rem 0.75rem',
+                  fontSize: '0.825rem',
                   fontWeight: isActive ? '600' : '500',
                   color: isActive ? '#ffffff' : 'var(--text-muted)',
                   background: isActive ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
@@ -75,7 +77,7 @@ export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0 }) {
                   transition: 'all 0.2s ease',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.35rem'
+                  gap: '0.3rem'
                 }}
               >
                 <span>{tab.icon}</span>
@@ -88,8 +90,8 @@ export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0 }) {
           <button
             onClick={() => setActiveTab('bookmarks')}
             style={{
-              padding: '0.5rem 0.95rem',
-              fontSize: '0.875rem',
+              padding: '0.45rem 0.85rem',
+              fontSize: '0.825rem',
               fontWeight: activeTab === 'bookmarks' ? '700' : '600',
               color: activeTab === 'bookmarks' ? '#ffffff' : '#fbbf24',
               background: activeTab === 'bookmarks' ? 'rgba(245, 158, 11, 0.25)' : 'rgba(245, 158, 11, 0.1)',
@@ -98,8 +100,8 @@ export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0 }) {
               transition: 'all 0.2s ease',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
-              marginLeft: '0.5rem'
+              gap: '0.35rem',
+              marginLeft: '0.2rem'
             }}
           >
             <span>⭐ Shortlist</span>
