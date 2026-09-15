@@ -1,18 +1,42 @@
 import React from 'react';
 
-export default function CareerCard({ career }) {
+export default function CareerCard({ career, onToggleBookmark, isSaved }) {
   return (
     <div className="glass-card fade-in" style={{ padding: '1.75rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Header with Salary Badge */}
+      {/* Header with Salary Badge & Bookmark */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '0.5rem', flexWrap: 'wrap' }}>
         <h3 style={{ fontSize: '1.25rem', color: '#ffffff' }}>
           {career.title}
         </h3>
-        {career.salaryRange && (
-          <span className="badge badge-amber" style={{ whiteSpace: 'nowrap' }}>
-            💰 {career.salaryRange}
-          </span>
-        )}
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {career.salaryRange && (
+            <span className="badge badge-amber" style={{ whiteSpace: 'nowrap' }}>
+              💰 {career.salaryRange}
+            </span>
+          )}
+          {onToggleBookmark && (
+            <button
+              onClick={() => onToggleBookmark(career, 'career')}
+              title={isSaved ? 'Remove from shortlist' : 'Save career'}
+              style={{
+                background: isSaved ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                color: isSaved ? '#fbbf24' : 'var(--text-muted)',
+                border: isSaved ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid var(--border-light)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '0.35rem 0.65rem',
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <span>{isSaved ? '⭐' : '☆'}</span>
+              <span style={{ fontSize: '0.75rem' }}>{isSaved ? 'Saved' : 'Save'}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Description */}

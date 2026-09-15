@@ -5,12 +5,18 @@ import CourseCard from './CourseCard';
 import CareerCard from './CareerCard';
 import InstitutionCard from './InstitutionCard';
 
-export default function GuidanceWizard({ initialQual = '12th', initialStream = 'Science' }) {
+export default function GuidanceWizard({ 
+  initialQual = '12th', 
+  initialStream = 'Science',
+  onToggleBookmark,
+  isBookmarked
+}) {
   const [qualification, setQualification] = useState(initialQual);
   const [stream, setStream] = useState(initialStream);
   const [guidanceData, setGuidanceData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('pathways'); // 'pathways' | 'courses' | 'careers' | 'institutions'
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchGuidance(qualification, stream);
@@ -39,11 +45,30 @@ export default function GuidanceWizard({ initialQual = '12th', initialStream = '
     }
   };
 
+  // Filter items by search keyword
+  const filterBySearch = (items = [], fields = []) => {
+    if (!searchTerm.trim()) return items;
+    const term = searchTerm.toLowerCase();
+    return items.filter((item) => {
+      return fields.some((field) => {
+        const val = item[field];
+        if (typeof val === 'string') return val.toLowerCase().includes(term);
+        if (Array.isArray(val)) return val.some((v) => typeof v === 'string' && v.toLowerCase().includes(term));
+        return false;
+      });
+    });
+  };
+
+  const filteredPathways = filterBySearch(guidanceData?.pathways, ['title', 'description', 'steps']);
+  const filteredCourses = filterBySearch(guidanceData?.courses, ['name', 'description', 'subjects', 'eligibility']);
+  const filteredCareers = filterBySearch(guidanceData?.careers, ['title', 'description', 'requiredSkills', 'jobRoles']);
+  const filteredInstitutions = filterBySearch(guidanceData?.institutions, ['name', 'address', 'affiliation']);
+
   return (
     <section id="guidance-wizard" style={{ padding: '2rem 0 5rem' }}>
       <div className="container">
         {/* Wizard Filter Controls */}
-        <div className="glass-card" style={{ padding: '2rem', marginBottom: '2.5rem' }}>
+        <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
             <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>
               Interactive Guidance <span className="gradient-text">Decision Explorer</span>
@@ -85,7 +110,7 @@ export default function GuidanceWizard({ initialQual = '12th', initialStream = '
 
           {/* Selector 2: Stream (if 12th) */}
           {qualification === '12th' && (
-            <div className="fade-in">
+            <div className="fade-in" style={{ marginBottom: '1.5rem' }}>
               <div style={{ fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-sub)', marginBottom: '0.75rem', textAlign: 'center' }}>
                 Step 2: Choose Your Stream
               </div>
@@ -124,6 +149,43 @@ export default function GuidanceWizard({ initialQual = '12th', initialStream = '
               </div>
             </div>
           )}
+
+          {/* Live Search Filter Input */}
+          <div style={{ maxWidth: '540px', margin: '1rem auto 0', position: 'relative' }}>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="🔍 Live keyword search (e.g. Developer, Medical, GTU, DBMS)..."
+              style={{
+                width: '100%',
+                padding: '0.75rem 1.25rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid var(--border-light)',
+                color: 'var(--text-main)',
+                fontSize: '0.9rem',
+                outline: 'none',
+                transition: 'border-color 0.2s ease'
+              }}
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  color: 'var(--text-muted)',
+                  fontSize: '0.9rem'
+                }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Section Navigation Tabs */}
@@ -136,10 +198,10 @@ export default function GuidanceWizard({ initialQual = '12th', initialStream = '
             flexWrap: 'wrap'
           }}>
             {[
-              { id: 'pathways', label: 'Step-by-Step Roadmaps', count: guidanceData.pathways?.length, icon: '🗺️' },
-              { id: 'courses', label: 'Degree Programs', count: guidanceData.courses?.length, icon: '📚' },
-              { id: 'careers', label: 'Career Trajectories', count: guidanceData.careers?.length, icon: '💼' },
-              { id: 'institutions', label: 'Top Colleges', count: guidanceData.institutions?.length, icon: '🏛️' }
+              { id: 'pathways', label: 'Step-by-Step Roadmaps', count: filteredPathways?.length, icon: '🗺️' },
+              { id: 'courses', label: 'Degree Programs', count: filteredCourses?.length, icon: '📚' },
+              { id: 'careers', label: 'Career Trajectories', count: filteredCareers?.length, icon: '💼' },
+              { id: 'institutions', label: 'Top Colleges', count: filteredInstitutions?.length, icon: '🏛️' }
             ].map((section) => {
               const isActive = activeSection === section.id;
               return (
@@ -204,13 +266,18 @@ export default function GuidanceWizard({ initialQual = '12th', initialStream = '
                 gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
                 gap: '1.5rem'
               }}>
-                {guidanceData.pathways && guidanceData.pathways.length > 0 ? (
-                  guidanceData.pathways.map((pathway) => (
-                    <PathwayCard key={pathway._id} pathway={pathway} />
+                {filteredPathways && filteredPathways.length > 0 ? (
+                  filteredPathways.map((pathway) => (
+                    <PathwayCard 
+                      key={pathway._id} 
+                      pathway={pathway} 
+                      onToggleBookmark={onToggleBookmark}
+                      isSaved={isBookmarked && isBookmarked(pathway._id, 'pathway')}
+                    />
                   ))
                 ) : (
                   <div className="glass-card" style={{ padding: '3rem', textAlign: 'center', gridColumn: '1 / -1' }}>
-                    <p style={{ color: 'var(--text-muted)' }}>No roadmaps found for this selection.</p>
+                    <p style={{ color: 'var(--text-muted)' }}>No roadmaps found matching your criteria.</p>
                   </div>
                 )}
               </div>
@@ -223,13 +290,18 @@ export default function GuidanceWizard({ initialQual = '12th', initialStream = '
                 gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
                 gap: '1.5rem'
               }}>
-                {guidanceData.courses && guidanceData.courses.length > 0 ? (
-                  guidanceData.courses.map((course) => (
-                    <CourseCard key={course._id} course={course} />
+                {filteredCourses && filteredCourses.length > 0 ? (
+                  filteredCourses.map((course) => (
+                    <CourseCard 
+                      key={course._id} 
+                      course={course} 
+                      onToggleBookmark={onToggleBookmark}
+                      isSaved={isBookmarked && isBookmarked(course._id, 'course')}
+                    />
                   ))
                 ) : (
                   <div className="glass-card" style={{ padding: '3rem', textAlign: 'center', gridColumn: '1 / -1' }}>
-                    <p style={{ color: 'var(--text-muted)' }}>No courses found for this selection.</p>
+                    <p style={{ color: 'var(--text-muted)' }}>No courses found matching your criteria.</p>
                   </div>
                 )}
               </div>
@@ -242,13 +314,18 @@ export default function GuidanceWizard({ initialQual = '12th', initialStream = '
                 gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
                 gap: '1.5rem'
               }}>
-                {guidanceData.careers && guidanceData.careers.length > 0 ? (
-                  guidanceData.careers.map((career) => (
-                    <CareerCard key={career._id} career={career} />
+                {filteredCareers && filteredCareers.length > 0 ? (
+                  filteredCareers.map((career) => (
+                    <CareerCard 
+                      key={career._id} 
+                      career={career} 
+                      onToggleBookmark={onToggleBookmark}
+                      isSaved={isBookmarked && isBookmarked(career._id, 'career')}
+                    />
                   ))
                 ) : (
                   <div className="glass-card" style={{ padding: '3rem', textAlign: 'center', gridColumn: '1 / -1' }}>
-                    <p style={{ color: 'var(--text-muted)' }}>No career trajectories found for this selection.</p>
+                    <p style={{ color: 'var(--text-muted)' }}>No career trajectories found matching your criteria.</p>
                   </div>
                 )}
               </div>
@@ -261,13 +338,18 @@ export default function GuidanceWizard({ initialQual = '12th', initialStream = '
                 gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
                 gap: '1.5rem'
               }}>
-                {guidanceData.institutions && guidanceData.institutions.length > 0 ? (
-                  guidanceData.institutions.map((inst) => (
-                    <InstitutionCard key={inst._id} institution={inst} />
+                {filteredInstitutions && filteredInstitutions.length > 0 ? (
+                  filteredInstitutions.map((inst) => (
+                    <InstitutionCard 
+                      key={inst._id} 
+                      institution={inst} 
+                      onToggleBookmark={onToggleBookmark}
+                      isSaved={isBookmarked && isBookmarked(inst._id, 'institution')}
+                    />
                   ))
                 ) : (
                   <div className="glass-card" style={{ padding: '3rem', textAlign: 'center', gridColumn: '1 / -1' }}>
-                    <p style={{ color: 'var(--text-muted)' }}>No institutions found offering these courses.</p>
+                    <p style={{ color: 'var(--text-muted)' }}>No institutions found matching your criteria.</p>
                   </div>
                 )}
               </div>

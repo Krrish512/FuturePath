@@ -1,17 +1,41 @@
 import React from 'react';
 
-export default function PathwayCard({ pathway }) {
+export default function PathwayCard({ pathway, onToggleBookmark, isSaved }) {
   return (
-    <div className="glass-card fade-in" style={{ padding: '1.75rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Badges Header */}
+    <div className="glass-card fade-in" style={{ padding: '1.75rem', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Badges Header & Bookmark Button */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <span className="badge badge-primary">
-          🗺️ {pathway.qualification?.name || 'Roadmap'}
-        </span>
-        {pathway.stream?.name && (
-          <span className="badge badge-cyan">
-            {pathway.stream.name}
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <span className="badge badge-primary">
+            🗺️ {pathway.qualification?.name || 'Roadmap'}
           </span>
+          {pathway.stream?.name && (
+            <span className="badge badge-cyan">
+              {pathway.stream.name}
+            </span>
+          )}
+        </div>
+
+        {onToggleBookmark && (
+          <button
+            onClick={() => onToggleBookmark(pathway, 'pathway')}
+            title={isSaved ? 'Remove from shortlist' : 'Save roadmap'}
+            style={{
+              background: isSaved ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+              color: isSaved ? '#fbbf24' : 'var(--text-muted)',
+              border: isSaved ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid var(--border-light)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '0.35rem 0.65rem',
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <span>{isSaved ? '⭐' : '☆'}</span>
+            <span style={{ fontSize: '0.75rem' }}>{isSaved ? 'Saved' : 'Save'}</span>
+          </button>
         )}
       </div>
 

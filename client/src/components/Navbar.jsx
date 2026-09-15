@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Navbar({ activeTab, setActiveTab }) {
+export default function Navbar({ activeTab, setActiveTab, bookmarkCount = 0 }) {
   return (
     <header style={{
       position: 'sticky',
@@ -51,9 +51,9 @@ export default function Navbar({ activeTab, setActiveTab }) {
         </div>
 
         {/* Navigation Tabs */}
-        <nav style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <nav style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
           {[
-            { id: 'explore', label: 'Explore Guidance', icon: '🧭' },
+            { id: 'explore', label: 'Explore', icon: '🧭' },
             { id: 'pathways', label: 'Roadmaps', icon: '🗺️' },
             { id: 'courses', label: 'Courses', icon: '📚' },
             { id: 'careers', label: 'Careers', icon: '💼' },
@@ -65,7 +65,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
-                  padding: '0.5rem 1rem',
+                  padding: '0.5rem 0.85rem',
                   fontSize: '0.875rem',
                   fontWeight: isActive ? '600' : '500',
                   color: isActive ? '#ffffff' : 'var(--text-muted)',
@@ -75,7 +75,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                   transition: 'all 0.2s ease',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.4rem'
+                  gap: '0.35rem'
                 }}
               >
                 <span>{tab.icon}</span>
@@ -83,6 +83,39 @@ export default function Navbar({ activeTab, setActiveTab }) {
               </button>
             );
           })}
+
+          {/* Shortlist / Bookmark Tab */}
+          <button
+            onClick={() => setActiveTab('bookmarks')}
+            style={{
+              padding: '0.5rem 0.95rem',
+              fontSize: '0.875rem',
+              fontWeight: activeTab === 'bookmarks' ? '700' : '600',
+              color: activeTab === 'bookmarks' ? '#ffffff' : '#fbbf24',
+              background: activeTab === 'bookmarks' ? 'rgba(245, 158, 11, 0.25)' : 'rgba(245, 158, 11, 0.1)',
+              border: activeTab === 'bookmarks' ? '1px solid #fbbf24' : '1px solid rgba(245, 158, 11, 0.3)',
+              borderRadius: 'var(--radius-sm)',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              marginLeft: '0.5rem'
+            }}
+          >
+            <span>⭐ Shortlist</span>
+            {bookmarkCount > 0 && (
+              <span style={{
+                background: '#f59e0b',
+                color: '#000000',
+                fontSize: '0.7rem',
+                fontWeight: '800',
+                padding: '0.1rem 0.45rem',
+                borderRadius: 'var(--radius-full)'
+              }}>
+                {bookmarkCount}
+              </span>
+            )}
+          </button>
         </nav>
       </div>
     </header>
