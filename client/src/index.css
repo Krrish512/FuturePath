@@ -438,3 +438,125 @@ button {
 .spin-icon {
   animation: spin 0.8s linear infinite;
 }
+
+/* ==========================================================================
+   FAQ Page Styles — FuturePath Light Theme
+   ========================================================================== */
+.faq-item {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-item:hover {
+  border-color: #CBD5E1;
+}
+
+.faq-item.active {
+  border-color: #4F46E5;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.08);
+}
+
+.faq-question-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.35rem;
+  background: #FFFFFF;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.faq-question-btn:hover {
+  background: #F8FAFC;
+}
+
+.faq-question-btn:focus-visible {
+  outline: 2px solid #4F46E5;
+  outline-offset: -2px;
+}
+
+.faq-item.active .faq-question-btn {
+  background: #F8FAFC;
+}
+
+.faq-question-text {
+  font-size: 1.025rem;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.4;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.faq-answer-body {
+  padding: 1.15rem 1.35rem;
+  border-top: 1px solid #E5E7EB;
+  background: #FFFFFF;
+  color: #4B5563;
+  font-size: 0.925rem;
+  line-height: 1.65;
+}
+
+.faq-search-wrapper {
+  position: relative;
+  max-width: 540px;
+  margin: 0 auto 1.5rem;
+}
+
+.faq-search-input {
+  width: 100%;
+  padding: 0.75rem 1.25rem 0.75rem 2.65rem;
+  border-radius: var(--radius-full);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  color: #111827;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-search-input::placeholder {
+  color: #9CA3AF;
+}
+
+.faq-search-input:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.faq-category-btn {
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  border-radius: var(--radius-full);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.faq-category-btn.active {
+  background: #4F46E5;
+  color: #FFFFFF;
+  border: 1px solid #4F46E5;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+}
+
+.faq-category-btn.inactive {
+  background: #FFFFFF;
+  color: #6B7280;
+  border: 1px solid #E5E7EB;
+  font-weight: 500;
+}
+
+.faq-category-btn.inactive:hover {
+  color: #4F46E5;
+  border-color: #4F46E5;
+  background: #EEF2FF;
+}
