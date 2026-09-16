@@ -17,6 +17,9 @@ import CompareModal from './components/CompareModal';
 import AuthView from './components/AuthView';
 import ProfileView from './components/ProfileView';
 import AdminDashboard from './components/AdminDashboard';
+import EducationUpdates from './components/EducationUpdates';
+import AboutView from './components/AboutView';
+import MobileBottomNav from './components/MobileBottomNav';
 import Footer from './components/Footer';
 
 function App() {
@@ -412,6 +415,19 @@ function App() {
           />
         )}
 
+        {/* Live & Verified Education Updates / Official Portals */}
+        {activeTab === 'updates' && (
+          <EducationUpdates />
+        )}
+
+        {/* About FuturePath Portal View */}
+        {activeTab === 'about' && (
+          <AboutView 
+            onExplore={() => setActiveTab('explore')}
+            onTakeQuiz={() => setActiveTab('quiz')}
+          />
+        )}
+
         {/* Guidance FAQ & Help Center View */}
         {activeTab === 'faq' && (
           <FAQView 
@@ -460,8 +476,15 @@ function App() {
         onRemoveCourse={handleRemoveCompare}
       />
 
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        bookmarkCount={bookmarkCount}
+      />
+
       {/* Footer */}
-      <Footer />
+      <Footer onNavigate={setActiveTab} />
     </div>
   );
 }

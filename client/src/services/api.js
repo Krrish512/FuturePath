@@ -86,4 +86,8 @@ export const api = {
     getAdminStats: () => fetchAPI("/auth/admin/stats", true),
     getAdminUsers: () => fetchAPI("/auth/admin/users", true),
     deleteUser: (id) => mutateAPI(`/auth/admin/users/${id}`, "DELETE", null, true),
+
+    // Live / External Education Updates
+    getEducationUpdates: () => fetchAPI("/updates"),
+    refreshEducationUpdates: () => mutateAPI("/updates/refresh", "POST"),
 };

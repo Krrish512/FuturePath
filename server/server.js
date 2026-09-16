@@ -14,6 +14,7 @@ const institutionRoutes = require("./routes/institutionRoutes");
 const careerRoutes = require("./routes/careerRoutes");
 const guidanceRoutes = require("./routes/guidanceRoutes");
 const authRoutes = require("./routes/authRoutes");
+const externalDataRoutes = require("./routes/externalDataRoutes");
 
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
@@ -38,6 +39,7 @@ app.use("/api/institutions", institutionRoutes);
 app.use("/api/careers", careerRoutes);
 app.use("/api/guidance", guidanceRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/updates", externalDataRoutes);
 
 app.get("/", (req, res) => {
     res.json({

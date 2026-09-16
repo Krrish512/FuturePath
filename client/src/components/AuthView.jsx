@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LogIn, UserPlus, Eye, EyeOff, Mail, Lock, User, GraduationCap, AlertTriangle, Info } from 'lucide-react';
 
 export default function AuthView({ onLogin, onRegister, loading }) {
   const [mode, setMode] = useState('login'); // 'login' or 'register'
@@ -53,36 +54,37 @@ export default function AuthView({ onLogin, onRegister, loading }) {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '2rem 1.5rem',
+      background: 'var(--fp-bg)',
     }}>
       <div style={{
         width: '100%',
         maxWidth: '440px',
-        animation: 'fadeIn 0.5s ease forwards',
+        animation: 'fadeIn 0.4s ease forwards',
       }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '16px',
+            width: '60px',
+            height: '60px',
+            borderRadius: '14px',
             background: 'var(--grad-primary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.75rem',
             margin: '0 auto 1rem',
-            boxShadow: '0 8px 24px rgba(99, 102, 241, 0.35)',
+            boxShadow: '0 6px 20px rgba(79, 70, 229, 0.25)',
+            color: '#ffffff',
           }}>
-            {mode === 'login' ? '👋' : '🚀'}
+            {mode === 'login' ? <LogIn size={26} /> : <UserPlus size={26} />}
           </div>
-          <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>
+          <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem', color: 'var(--fp-text)' }}>
             {mode === 'login' ? (
               <>Welcome <span className="gradient-text">Back</span></>
             ) : (
               <>Create Your <span className="gradient-text">Account</span></>
             )}
           </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+          <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.9rem' }}>
             {mode === 'login'
               ? 'Sign in to access your saved preferences and bookmarks'
               : 'Join FuturePath to get personalized career guidance'}
@@ -90,47 +92,45 @@ export default function AuthView({ onLogin, onRegister, loading }) {
         </div>
 
         {/* Form Card */}
-        <div className="glass-card" style={{ padding: '2rem' }}>
+        <div className="fp-card" style={{ padding: '2rem' }}>
           <form onSubmit={handleSubmit}>
             {/* Name (register only) */}
             {mode === 'register' && (
               <div style={{ marginBottom: '1.25rem' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  color: 'var(--text-muted)',
-                  marginBottom: '0.4rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                }}>Full Name</label>
+                <label style={labelStyle}>
+                  <User size={13} style={{ marginRight: '4px' }} /> Full Name
+                </label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Enter your full name"
-                  style={inputStyle}
+                  className="fp-input"
                 />
               </div>
             )}
 
             {/* Email */}
             <div style={{ marginBottom: '1.25rem' }}>
-              <label style={labelStyle}>Email Address</label>
+              <label style={labelStyle}>
+                <Mail size={13} style={{ marginRight: '4px' }} /> Email Address
+              </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                style={inputStyle}
+                className="fp-input"
               />
             </div>
 
             {/* Password */}
             <div style={{ marginBottom: '1.25rem' }}>
-              <label style={labelStyle}>Password</label>
+              <label style={labelStyle}>
+                <Lock size={13} style={{ marginRight: '4px' }} /> Password
+              </label>
               <div style={{ position: 'relative' }}>
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -138,24 +138,27 @@ export default function AuthView({ onLogin, onRegister, loading }) {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder={mode === 'register' ? 'Min. 6 characters' : 'Enter your password'}
-                  style={inputStyle}
+                  className="fp-input"
+                  style={{ paddingRight: '42px' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
                     position: 'absolute',
-                    right: '12px',
+                    right: '10px',
                     top: '50%',
                     transform: 'translateY(-50%)',
                     background: 'none',
                     border: 'none',
-                    color: 'var(--text-muted)',
-                    fontSize: '0.85rem',
+                    color: 'var(--fp-text-muted)',
                     cursor: 'pointer',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
-                  {showPassword ? '🙈' : '👁️'}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
@@ -163,12 +166,15 @@ export default function AuthView({ onLogin, onRegister, loading }) {
             {/* Qualification (register only) */}
             {mode === 'register' && (
               <div style={{ marginBottom: '1.25rem' }}>
-                <label style={labelStyle}>Current Qualification</label>
+                <label style={labelStyle}>
+                  <GraduationCap size={13} style={{ marginRight: '4px' }} /> Current Qualification
+                </label>
                 <select
                   name="qualification"
                   value={formData.qualification}
                   onChange={handleChange}
-                  style={{ ...inputStyle, cursor: 'pointer' }}
+                  className="fp-input"
+                  style={{ cursor: 'pointer' }}
                 >
                   <option value="10th">10th Standard</option>
                   <option value="12th">12th Standard</option>
@@ -183,16 +189,16 @@ export default function AuthView({ onLogin, onRegister, loading }) {
               <div style={{
                 padding: '0.75rem 1rem',
                 borderRadius: 'var(--radius-sm)',
-                background: 'rgba(244, 63, 94, 0.12)',
-                border: '1px solid rgba(244, 63, 94, 0.3)',
-                color: '#fb7185',
+                background: 'var(--fp-danger-soft)',
+                border: '1px solid #FECACA',
+                color: '#B91C1C',
                 fontSize: '0.85rem',
                 marginBottom: '1.25rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
               }}>
-                <span>⚠️</span> {error}
+                <AlertTriangle size={15} /> {error}
               </div>
             )}
 
@@ -208,7 +214,13 @@ export default function AuthView({ onLogin, onRegister, loading }) {
                 opacity: loading ? 0.7 : 1,
               }}
             >
-              {loading ? '⏳ Please wait...' : mode === 'login' ? '🔐 Sign In' : '✨ Create Account'}
+              {loading ? (
+                'Please wait...'
+              ) : mode === 'login' ? (
+                <><LogIn size={17} /> Sign In</>
+              ) : (
+                <><UserPlus size={17} /> Create Account</>
+              )}
             </button>
           </form>
 
@@ -217,9 +229,9 @@ export default function AuthView({ onLogin, onRegister, loading }) {
             textAlign: 'center',
             marginTop: '1.5rem',
             paddingTop: '1.25rem',
-            borderTop: '1px solid var(--border-light)',
+            borderTop: '1px solid var(--fp-border)',
           }}>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+            <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.85rem' }}>
               {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
               <button
                 onClick={() => {
@@ -229,7 +241,7 @@ export default function AuthView({ onLogin, onRegister, loading }) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#818cf8',
+                  color: 'var(--fp-primary)',
                   fontWeight: '600',
                   cursor: 'pointer',
                   fontSize: '0.85rem',
@@ -246,15 +258,21 @@ export default function AuthView({ onLogin, onRegister, loading }) {
             marginTop: '1rem',
             padding: '0.75rem 1rem',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(99, 102, 241, 0.08)',
-            border: '1px solid rgba(99, 102, 241, 0.2)',
+            background: 'var(--fp-primary-soft)',
+            border: '1px solid #C7D2FE',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.5rem',
           }}>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '600', marginBottom: '0.25rem' }}>
-              🎯 Demo Credentials
-            </p>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-sub)' }}>
-              Admin: admin@futurepath.com / admin123
-            </p>
+            <Info size={15} style={{ color: 'var(--fp-primary)', flexShrink: 0, marginTop: '2px' }} />
+            <div>
+              <p style={{ fontSize: '0.75rem', color: 'var(--fp-primary)', fontWeight: '700', marginBottom: '0.2rem' }}>
+                Demo Credentials
+              </p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--fp-text-secondary)' }}>
+                Admin: admin@futurepath.com / admin123
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -263,24 +281,12 @@ export default function AuthView({ onLogin, onRegister, loading }) {
 }
 
 const labelStyle = {
-  display: 'block',
-  fontSize: '0.8rem',
+  display: 'flex',
+  alignItems: 'center',
+  fontSize: '0.78rem',
   fontWeight: '600',
-  color: 'var(--text-muted)',
+  color: 'var(--fp-text-secondary)',
   marginBottom: '0.4rem',
   textTransform: 'uppercase',
-  letterSpacing: '0.05em',
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '0.75rem 1rem',
-  borderRadius: 'var(--radius-sm)',
-  background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid var(--border-light)',
-  color: 'var(--text-main)',
-  fontSize: '0.9rem',
-  outline: 'none',
-  transition: 'border-color 0.2s ease',
-  fontFamily: 'var(--font-body)',
+  letterSpacing: '0.04em',
 };
