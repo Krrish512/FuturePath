@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { LogIn, UserPlus, Eye, EyeOff, Mail, Lock, User, GraduationCap, AlertTriangle, Info } from 'lucide-react';
 
-export default function AuthView({ onLogin, onRegister, loading }) {
-  const [mode, setMode] = useState('login'); // 'login' or 'register'
+export default function AuthView({ onLogin, onRegister, loading, initialMode = 'login' }) {
+  const [mode, setMode] = useState(initialMode); // 'login' or 'register'
+
+  React.useEffect(() => {
+    if (initialMode) {
+      setMode(initialMode);
+    }
+  }, [initialMode]);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

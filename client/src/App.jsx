@@ -19,11 +19,15 @@ import ProfileView from './components/ProfileView';
 import AdminDashboard from './components/AdminDashboard';
 import EducationUpdates from './components/EducationUpdates';
 import AboutView from './components/AboutView';
+import ContactView from './components/ContactView';
+import PrivacyPolicyView from './components/PrivacyPolicyView';
+import TermsOfUseView from './components/TermsOfUseView';
 import MobileBottomNav from './components/MobileBottomNav';
 import Footer from './components/Footer';
 
 function App() {
   const [activeTab, setActiveTab] = useState('explore');
+  const [authInitialMode, setAuthMode] = useState('login');
   const [summary, setSummary] = useState(null);
   const [selectedQual, setSelectedQual] = useState('12th');
   const [selectedStream, setSelectedStream] = useState('Science');
@@ -105,6 +109,109 @@ function App() {
         wizardEl.scrollIntoView({ behavior: 'smooth' });
       }
     }, 100);
+  };
+
+  const handleFooterNavigate = (action) => {
+    if (action === 'home') {
+      setActiveTab('explore');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (action === 'guidance-wizard') {
+      setActiveTab('explore');
+      setTimeout(() => {
+        const el = document.getElementById('guidance-wizard');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } else if (action === 'pathways') {
+      setActiveTab('pathways');
+    } else if (action === 'courses') {
+      setActiveTab('courses');
+    } else if (action === 'careers') {
+      setActiveTab('careers');
+    } else if (action === 'colleges') {
+      setActiveTab('colleges');
+    } else if (action === 'faq') {
+      setActiveTab('faq');
+    } else if (action === 'quiz') {
+      setActiveTab('quiz');
+    } else if (action === 'bookmarks') {
+      setActiveTab('bookmarks');
+    } else if (action === 'compare') {
+      setActiveTab('courses');
+      if (compareList.length > 0) {
+        setIsCompareOpen(true);
+      }
+    } else if (action === 'login') {
+      if (isLoggedIn) {
+        setActiveTab('profile');
+      } else {
+        setAuthMode('login');
+        setActiveTab('auth');
+      }
+    } else if (action === 'register') {
+      if (isLoggedIn) {
+        setActiveTab('profile');
+      } else {
+        setAuthMode('register');
+        setActiveTab('auth');
+      }
+    } else if (action === 'pathway-10th') {
+      setSelectedQual('10th');
+      setSelectedStream('All');
+      setActiveTab('explore');
+      setTimeout(() => {
+        const el = document.getElementById('guidance-wizard');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } else if (action === 'pathway-12th-science') {
+      setSelectedQual('12th');
+      setSelectedStream('Science');
+      setActiveTab('explore');
+      setTimeout(() => {
+        const el = document.getElementById('guidance-wizard');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } else if (action === 'pathway-12th-commerce') {
+      setSelectedQual('12th');
+      setSelectedStream('Commerce');
+      setActiveTab('explore');
+      setTimeout(() => {
+        const el = document.getElementById('guidance-wizard');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } else if (action === 'pathway-12th-arts') {
+      setSelectedQual('12th');
+      setSelectedStream('Arts');
+      setActiveTab('explore');
+      setTimeout(() => {
+        const el = document.getElementById('guidance-wizard');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } else if (action === 'pathway-bca-it') {
+      setSelectedQual('12th');
+      setSelectedStream('Science');
+      setActiveTab('explore');
+      setTimeout(() => {
+        const el = document.getElementById('guidance-wizard');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } else if (action === 'about') {
+      setActiveTab('about');
+    } else if (action === 'contact') {
+      setActiveTab('contact');
+    } else if (action === 'privacy') {
+      setActiveTab('privacy');
+    } else if (action === 'terms') {
+      setActiveTab('terms');
+    } else if (action === 'admin-login') {
+      if (isLoggedIn && isAdmin) {
+        setActiveTab('admin');
+      } else {
+        setAuthMode('login');
+        setActiveTab('auth');
+      }
+    } else {
+      setActiveTab(action);
+    }
   };
 
   // Compare handlers
@@ -428,6 +535,29 @@ function App() {
           />
         )}
 
+        {/* Student Contact & Support View */}
+        {activeTab === 'contact' && (
+          <ContactView 
+            onGoToFAQ={() => setActiveTab('faq')}
+            onExplore={() => setActiveTab('explore')}
+          />
+        )}
+
+        {/* Privacy Policy View */}
+        {activeTab === 'privacy' && (
+          <PrivacyPolicyView 
+            onGoToContact={() => setActiveTab('contact')}
+          />
+        )}
+
+        {/* Terms of Use View */}
+        {activeTab === 'terms' && (
+          <TermsOfUseView 
+            onGoToContact={() => setActiveTab('contact')}
+            onExplore={() => setActiveTab('explore')}
+          />
+        )}
+
         {/* Guidance FAQ & Help Center View */}
         {activeTab === 'faq' && (
           <FAQView 
@@ -442,6 +572,7 @@ function App() {
             onLogin={login}
             onRegister={register}
             loading={authLoading}
+            initialMode={authInitialMode}
           />
         )}
 
@@ -484,7 +615,7 @@ function App() {
       />
 
       {/* Footer */}
-      <Footer onNavigate={setActiveTab} />
+      <Footer onNavigate={handleFooterNavigate} />
     </div>
   );
 }

@@ -386,21 +386,47 @@ button {
 }
 
 /* Footer link button */
-.btn-link-footer {
+.btn-link-footer,
+.footer-nav-link {
   background: none;
   border: none;
-  padding: 0;
-  font-size: 0.85rem;
-  color: var(--fp-text-secondary);
+  padding: 0.2rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6B7280;
   text-align: left;
   cursor: pointer;
   transition: color 0.15s ease, transform 0.15s ease;
   display: inline-block;
+  line-height: 1.4;
 }
 
-.btn-link-footer:hover {
-  color: var(--fp-primary);
-  transform: translateX(2px);
+.btn-link-footer:hover,
+.footer-nav-link:hover {
+  color: #4F46E5;
+  transform: translateX(3px);
+}
+
+/* Social Media Buttons in Footer */
+.social-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #E5E7EB;
+  color: #4B5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.social-btn:hover {
+  background: #4F46E5;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
 }
 
 /* Spinning animation for refresh */
