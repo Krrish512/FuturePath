@@ -67,14 +67,59 @@ export const api = {
         return fetchAPI(url);
     },
 
+    // Universities
+    getUniversities: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return fetchAPI(`/universities${qs ? `?${qs}` : ""}`);
+    },
+    createUniversity: (data) => mutateAPI("/universities", "POST", data, true),
+    updateUniversity: (id, data) => mutateAPI(`/universities/${id}`, "PUT", data, true),
+    deleteUniversity: (id) => mutateAPI(`/universities/${id}`, "DELETE", null, true),
+
+    // Courses
+    getCourses: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return fetchAPI(`/courses${qs ? `?${qs}` : ""}`);
+    },
+    getCourse: (id) => fetchAPI(`/courses/${id}`),
+    createCourse: (data) => mutateAPI("/courses", "POST", data, true),
+    updateCourse: (id, data) => mutateAPI(`/courses/${id}`, "PUT", data, true),
+    deleteCourse: (id) => mutateAPI(`/courses/${id}`, "DELETE", null, true),
+
+    // Curriculum
+    getCurriculum: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return fetchAPI(`/curriculum${qs ? `?${qs}` : ""}`);
+    },
+    createCurriculum: (data) => mutateAPI("/curriculum", "POST", data, true),
+    updateCurriculum: (id, data) => mutateAPI(`/curriculum/${id}`, "PUT", data, true),
+    deleteCurriculum: (id) => mutateAPI(`/curriculum/${id}`, "DELETE", null, true),
+
+    // Institutions
+    getInstitutions: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return fetchAPI(`/institutions${qs ? `?${qs}` : ""}`);
+    },
+    createInstitution: (data) => mutateAPI("/institutions", "POST", data, true),
+    updateInstitution: (id, data) => mutateAPI(`/institutions/${id}`, "PUT", data, true),
+    deleteInstitution: (id) => mutateAPI(`/institutions/${id}`, "DELETE", null, true),
+
     // Master Entities
     getQualifications: () => fetchAPI("/qualifications"),
     getStreams: (qualId) => fetchAPI(`/streams${qualId ? `?qualification=${qualId}` : ""}`),
     getPathways: () => fetchAPI("/pathways"),
-    getCourses: () => fetchAPI("/courses"),
-    getInstitutions: () => fetchAPI("/institutions"),
+    createPathway: (data) => mutateAPI("/pathways", "POST", data, true),
+    updatePathway: (id, data) => mutateAPI(`/pathways/${id}`, "PUT", data, true),
+    deletePathway: (id) => mutateAPI(`/pathways/${id}`, "DELETE", null, true),
+
     getCareers: () => fetchAPI("/careers"),
+    createCareer: (data) => mutateAPI("/careers", "POST", data, true),
+    updateCareer: (id, data) => mutateAPI(`/careers/${id}`, "PUT", data, true),
+    deleteCareer: (id) => mutateAPI(`/careers/${id}`, "DELETE", null, true),
+
     getCities: () => fetchAPI("/cities"),
+    createCity: (data) => mutateAPI("/cities", "POST", data, true),
+    deleteCity: (id) => mutateAPI(`/cities/${id}`, "DELETE", null, true),
 
     // Authentication
     register: (data) => mutateAPI("/auth/register", "POST", data),
@@ -82,8 +127,10 @@ export const api = {
     getProfile: () => fetchAPI("/auth/me", true),
     updateProfile: (data) => mutateAPI("/auth/profile", "PUT", data, true),
 
-    // Admin
+    // Admin & Analytics & Reports
     getAdminStats: () => fetchAPI("/auth/admin/stats", true),
     getAdminUsers: () => fetchAPI("/auth/admin/users", true),
     deleteUser: (id) => mutateAPI(`/auth/admin/users/${id}`, "DELETE", null, true),
+    getAnalytics: () => fetchAPI("/analytics/dashboard"),
+    generateReport: (data) => mutateAPI("/reports/generate", "POST", data),
 };

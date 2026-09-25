@@ -1,64 +1,92 @@
 import React from 'react';
+import { Briefcase, TrendingUp, Bookmark, Sparkles, AlertCircle } from 'lucide-react';
 
 export default function CareerCard({ career, onToggleBookmark, isSaved }) {
+  const skills = career.skills || career.requiredSkills || [];
+  const courses = career.courses || [];
+
   return (
-    <div className="glass-card fade-in" style={{ padding: '1.75rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Header with Salary Badge & Bookmark */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <h3 style={{ fontSize: '1.25rem', color: '#ffffff' }}>
+    <div 
+      style={{
+        background: 'var(--fp-surface, #FFFFFF)',
+        border: '1px solid var(--fp-border, #E5E7EB)',
+        borderRadius: '12px',
+        padding: '1.25rem',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+        transition: 'all 0.2s ease',
+        height: '100%'
+      }}
+    >
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: '700', color: 'var(--fp-text, #111827)', margin: 0 }}>
           {career.title}
         </h3>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          {career.salaryRange && (
-            <span className="badge badge-amber" style={{ whiteSpace: 'nowrap' }}>
-              💰 {career.salaryRange}
-            </span>
-          )}
-          {onToggleBookmark && (
-            <button
-              onClick={() => onToggleBookmark(career, 'career')}
-              title={isSaved ? 'Remove from shortlist' : 'Save career'}
-              style={{
-                background: isSaved ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                color: isSaved ? '#fbbf24' : 'var(--text-muted)',
-                border: isSaved ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid var(--border-light)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '0.35rem 0.65rem',
-                fontSize: '0.85rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3rem',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <span>{isSaved ? '⭐' : '☆'}</span>
-              <span style={{ fontSize: '0.75rem' }}>{isSaved ? 'Saved' : 'Save'}</span>
-            </button>
-          )}
-        </div>
+
+        {onToggleBookmark && (
+          <button
+            onClick={() => onToggleBookmark(career, 'career')}
+            title={isSaved ? 'Remove from shortlist' : 'Save career'}
+            style={{
+              background: isSaved ? '#FEF3C7' : '#F3F4F6',
+              color: isSaved ? '#D97706' : '#6B7280',
+              border: 'none',
+              padding: '0.35rem 0.6rem',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '0.8rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem'
+            }}
+          >
+            <Bookmark size={13} fill={isSaved ? '#D97706' : 'none'} />
+          </button>
+        )}
       </div>
 
+      {/* Salary Badge */}
+      {career.salaryRange && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <span style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.3rem',
+            background: 'rgba(245, 158, 11, 0.1)',
+            color: '#D97706',
+            border: '1px solid rgba(245, 158, 11, 0.25)',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            padding: '0.2rem 0.6rem',
+            borderRadius: '6px'
+          }}>
+            <TrendingUp size={12} /> {career.salaryRange}
+          </span>
+        </div>
+      )}
+
       {/* Description */}
-      <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.25rem', lineHeight: '1.5' }}>
+      <p style={{ fontSize: '0.85rem', color: 'var(--fp-secondary, #6B7280)', marginBottom: '1rem', lineHeight: '1.45' }}>
         {career.description}
       </p>
 
-      {/* Required Skills Chips */}
-      {career.requiredSkills && career.requiredSkills.length > 0 && (
-        <div style={{ marginBottom: '1.25rem' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--accent-cyan)', marginBottom: '0.5rem' }}>
+      {/* In Demand Skills */}
+      {skills.length > 0 && (
+        <div style={{ marginBottom: '1rem' }}>
+          <div style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', color: '#4F46E5', marginBottom: '0.4rem', letterSpacing: '0.04em' }}>
             In-Demand Skills:
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-            {career.requiredSkills.map((skill, idx) => (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+            {skills.map((skill, idx) => (
               <span key={idx} style={{
-                background: 'rgba(6, 182, 212, 0.1)',
-                color: '#38bdf8',
-                border: '1px solid rgba(6, 182, 212, 0.25)',
+                background: '#EEF2FF',
+                color: '#4F46E5',
                 fontSize: '0.75rem',
-                padding: '0.2rem 0.6rem',
-                borderRadius: 'var(--radius-sm)'
+                fontWeight: '500',
+                padding: '0.15rem 0.55rem',
+                borderRadius: '6px'
               }}>
                 {skill}
               </span>
@@ -67,17 +95,22 @@ export default function CareerCard({ career, onToggleBookmark, isSaved }) {
         </div>
       )}
 
-      {/* Job Roles */}
-      {career.jobRoles && career.jobRoles.length > 0 && (
-        <div style={{ marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid var(--border-light)' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-sub)', marginBottom: '0.35rem' }}>
-            Key Job Roles:
+      {/* Related Courses */}
+      {courses.length > 0 && (
+        <div style={{ marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid #F3F4F6' }}>
+          <div style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', color: '#6B7280', marginBottom: '0.3rem' }}>
+            Qualifying Degree Options:
           </div>
-          <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
-            {career.jobRoles.join(' • ')}
+          <div style={{ fontSize: '0.8rem', color: '#374151' }}>
+            {courses.map(c => typeof c === 'object' ? c.name : c).slice(0, 3).join(' • ')}
           </div>
         </div>
       )}
+
+      {/* Salary Disclaimer */}
+      <div style={{ marginTop: '0.75rem', fontSize: '0.7rem', color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+        <AlertCircle size={10} /> *Salary projections reflect typical industry averages in Gujarat / India.
+      </div>
     </div>
   );
 }

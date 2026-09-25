@@ -1,15 +1,12 @@
 const Course = require("../models/Course");
-const Qualification = require("../models/Qualification");
 
 // Create Course
 const createCourse = async (req, res) => {
     try {
-        console.log("REQUEST BODY:", req.body);
-
         if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).json({
                 success: false,
-                message: "Request body is empty or missing. Please provide JSON data and set Content-Type header to application/json in Postman."
+                message: "Request body is empty"
             });
         }
 
@@ -28,10 +25,69 @@ const createCourse = async (req, res) => {
     }
 };
 
-// Get All Courses
+// Get All Courses with filter & search
 const getCourses = async (req, res) => {
     try {
-        const courses = await Course.find().sort({ createdAt: -1 });
+        const {
+            search,
+            university,
+            university_id,
+            course_level,
+            field_of_study,
+            duration,
+            qualification,
+            stream,
+            verification_status
+        } = req.query;
+
+        let query = {};
+
+        if (university) {
+            query.$or = [
+                { university_name: { $regex: university, $options: "i" } },
+                { university_id: university }
+            ];
+        }
+
+        if (university_id) {
+            query.university_id = university_id;
+        }
+
+        if (course_level) {
+            query.course_level = { $regex: course_level, $options: "i" };
+        }
+
+        if (field_of_study) {
+            query.field_of_study = { $regex: field_of_study, $options: "i" };
+        }
+
+        if (duration) {
+            query.duration = { $regex: duration, $options: "i" };
+        }
+
+        if (qualification) {
+            query.qualification = qualification;
+        }
+
+        if (stream && stream !== "All") {
+            query.stream = stream;
+        }
+
+        if (verification_status) {
+            query.verification_status = verification_status;
+        }
+
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: "i" } },
+                { course_name: { $regex: search, $options: "i" } },
+                { university_name: { $regex: search, $options: "i" } },
+                { field_of_study: { $regex: search, $options: "i" } },
+                { eligibility: { $regex: search, $options: "i" } }
+            ];
+        }
+
+        const courses = await Course.find(query).sort({ university_name: 1, name: 1 });
 
         res.json({
             success: true,
@@ -73,8 +129,6 @@ const getCourse = async (req, res) => {
 // Update Course
 const updateCourse = async (req, res) => {
     try {
-        console.log("UPDATE REQUEST BODY:", req.body);
-
         if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).json({
                 success: false,

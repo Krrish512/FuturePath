@@ -1,169 +1,280 @@
 const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
 const dotenv = require("dotenv");
 
 dotenv.config();
 
+const University = require("../models/University");
+const Course = require("../models/Course");
+const Curriculum = require("../models/Curriculum");
 const Qualification = require("../models/Qualification");
 const Stream = require("../models/Stream");
 const City = require("../models/City");
-const Course = require("../models/Course");
 const Pathway = require("../models/Pathway");
 const Institution = require("../models/Institution");
 const Career = require("../models/Career");
 const User = require("../models/User");
 
+const parseCsv = (filePath) => {
+    if (!fs.existsSync(filePath)) {
+        console.warn(`CSV file not found: ${filePath}`);
+        return [];
+    }
+    const content = fs.readFileSync(filePath, "utf-8");
+    const lines = content.split(/\r?\n/).filter(line => line.trim().length > 0);
+    if (lines.length < 2) return [];
+
+    const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ""));
+    const records = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        // Simple CSV parser handling quotes
+        const line = lines[i];
+        const values = [];
+        let inQuotes = false;
+        let currentValue = "";
+
+        for (let j = 0; j < line.length; j++) {
+            const char = line[j];
+            if (char === '"' && (j === 0 || line[j - 1] !== "\\")) {
+                inQuotes = !inQuotes;
+            } else if (char === "," && !inQuotes) {
+                values.push(currentValue.trim().replace(/^"|"$/g, ""));
+                currentValue = "";
+            } else {
+                currentValue += char;
+            }
+        }
+        values.push(currentValue.trim().replace(/^"|"$/g, ""));
+
+        const record = {};
+        headers.forEach((header, index) => {
+            record[header] = values[index] || "";
+        });
+        records.push(record);
+    }
+    return records;
+};
+
 const seedDatabase = async () => {
     try {
         const mongoUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/futurepath";
-        console.log("Connecting to MongoDB:", mongoUri);
+        console.log("Connecting to MongoDB for Master Seeding:", mongoUri);
         await mongoose.connect(mongoUri);
-        console.log("MongoDB connected for seeding.");
+        console.log("MongoDB connected successfully.");
 
-        // Clear existing collections
-        console.log("Clearing existing data...");
+        // Clear existing collections safely
+        console.log("Clearing old collections...");
         await Promise.all([
+            University.deleteMany({}),
+            Course.deleteMany({}),
+            Curriculum.deleteMany({}),
             Qualification.deleteMany({}),
             Stream.deleteMany({}),
             City.deleteMany({}),
-            Course.deleteMany({}),
             Pathway.deleteMany({}),
             Institution.deleteMany({}),
             Career.deleteMany({}),
             User.deleteMany({})
         ]);
-        console.log("Existing data cleared.");
+        console.log("Collections cleared.");
 
-        // 1. Seed Qualifications
-        console.log("Seeding Qualifications...");
+        const workspaceRoot = path.resolve(__dirname, "../../");
+
+        // 1. Seed Universities from Universities.csv
+        const uniCsvPath = path.join(workspaceRoot, "Universities.csv");
+        const universitiesData = parseCsv(uniCsvPath);
+        console.log(`Importing ${universitiesData.length} Universities from CSV...`);
+        const createdUniversities = await University.insertMany(
+            universitiesData.map(u => ({
+                university_id: u.university_id,
+                university_name: u.university_name,
+                abbreviation: u.abbreviation,
+                location: u.location,
+                state: u.state || "Gujarat",
+                type: u.type,
+                official_website: u.official_website,
+                established_year: u.established_year
+            }))
+        );
+
+        // 2. Seed Courses from Courses.csv
+        const coursesCsvPath = path.join(workspaceRoot, "Courses.csv");
+        const coursesData = parseCsv(coursesCsvPath);
+        console.log(`Importing ${coursesData.length} Courses from CSV...`);
+        const courseDocuments = coursesData.map(c => {
+            // Determine stream & qualification based on course level / field
+            let qualification = "12th";
+            let stream = "General";
+            if (c.course_level === "Postgraduate") {
+                qualification = "12th"; // or Graduate
+            }
+            if (c.field_of_study.includes("Engineering") || c.field_of_study.includes("Science") || c.field_of_study.includes("Chemical") || c.field_of_study.includes("Physical") || c.field_of_study.includes("Biological") || c.field_of_study.includes("Mathematical")) {
+                stream = "Science";
+            } else if (c.field_of_study.includes("Commerce") || c.field_of_study.includes("Management")) {
+                stream = "Commerce";
+            } else if (c.field_of_study.includes("Humanities") || c.field_of_study.includes("Arts")) {
+                stream = "Arts";
+            }
+
+            return {
+                course_id: c.course_id,
+                name: c.course_name,
+                course_name: c.course_name,
+                university_id: c.university_id,
+                university_name: c.university_name,
+                course_level: c.course_level,
+                field_of_study: c.field_of_study,
+                duration: c.duration,
+                eligibility: c.eligibility,
+                official_source_url: c.official_source_url,
+                verification_status: c.verification_status || "VERIFIED",
+                last_verified: c.last_verified,
+                qualification,
+                stream,
+                description: `${c.course_name} offered under ${c.university_name}. Focuses on comprehensive ${c.field_of_study} education and industry-aligned competencies.`,
+                careerOptions: [
+                    "Software Engineer",
+                    "Business Analyst",
+                    "Data Specialist",
+                    "Domain Consultant"
+                ],
+                subjects: [
+                    "Core Fundamentals",
+                    "Applied Discipline Studies",
+                    "Practical Lab & Project",
+                    "Professional Development"
+                ]
+            };
+        });
+        const createdCourses = await Course.insertMany(courseDocuments);
+
+        // 3. Seed Curriculum from Curriculum.csv
+        const currCsvPath = path.join(workspaceRoot, "Curriculum.csv");
+        const currData = parseCsv(currCsvPath);
+        console.log(`Importing ${currData.length} Curriculum records from CSV...`);
+        await Curriculum.insertMany(
+            currData.map(curr => ({
+                curriculum_id: curr.curriculum_id,
+                university_id: curr.university_id,
+                university_name: curr.university_name,
+                course_id: curr.course_id,
+                course_name: curr.course_name,
+                academic_year: curr.academic_year,
+                semester_number: Number(curr.semester_number),
+                semester_name: curr.semester_name,
+                subject_code: curr.subject_code,
+                subject_name: curr.subject_name,
+                subject_type: curr.subject_type,
+                credits: curr.credits,
+                theory_practical: curr.theory_practical,
+                official_source_url: curr.official_source_url,
+                verification_status: curr.verification_status || "VERIFIED",
+                last_verified: curr.last_verified
+            }))
+        );
+
+        // 4. Seed Qualifications & Streams
+        console.log("Seeding Qualifications and Streams...");
         const qual10th = await Qualification.create({
             name: "10th",
-            description: "Students who have completed secondary school examination (SSC / 10th Boards)."
+            description: "Secondary School Certificate (SSC / 10th Standard)."
         });
-
         const qual12th = await Qualification.create({
             name: "12th",
-            description: "Students who have completed higher secondary certificate examination (HSC / 12th Boards)."
+            description: "Higher Secondary Certificate (HSC / 12th Standard)."
         });
 
-        // 2. Seed Streams
-        console.log("Seeding Streams...");
         const streamScience = await Stream.create({
             name: "Science",
             qualification: qual12th._id,
-            description: "Covers Physics, Chemistry, Mathematics (PCM) and Biology (PCB) preparing for engineering, medical, and research fields."
+            description: "Physics, Chemistry, Mathematics (PCM) and Biology (PCB) preparing for engineering, tech, and medicine."
         });
-
         const streamCommerce = await Stream.create({
             name: "Commerce",
             qualification: qual12th._id,
-            description: "Focuses on Accounting, Economics, Business Studies, and Finance preparing for business, management, and CA."
+            description: "Accounting, Business Studies, Economics, and Statistics preparing for management and finance."
         });
-
         const streamArts = await Stream.create({
             name: "Arts",
             qualification: qual12th._id,
-            description: "Humanities and social sciences including History, Psychology, Sociology, Literature, and Political Science."
+            description: "Humanities, Psychology, Sociology, and Literature."
         });
 
-        // 3. Seed Gujarat Cities
-        console.log("Seeding Gujarat Cities...");
+        // 5. Seed Gujarat Cities
+        console.log("Seeding Cities...");
         const cityAhmedabad = await City.create({ name: "Ahmedabad", state: "Gujarat" });
-        const cityVadodara = await City.create({ name: "Vadodara", state: "Gujarat" });
         const citySurat = await City.create({ name: "Surat", state: "Gujarat" });
+        const cityVadodara = await City.create({ name: "Vadodara", state: "Gujarat" });
+        const cityAnand = await City.create({ name: "Anand / Vallabh Vidyanagar", state: "Gujarat" });
         const cityRajkot = await City.create({ name: "Rajkot", state: "Gujarat" });
         const cityGandhinagar = await City.create({ name: "Gandhinagar", state: "Gujarat" });
 
-        // 4. Seed Courses
-        console.log("Seeding Courses...");
-        const courseDiplomaCE = await Course.create({
-            name: "Diploma in Computer Engineering",
-            qualification: "10th",
-            stream: "General",
-            duration: "3 Years",
-            description: "Practical technical diploma covering fundamental computer hardware, programming, and networking concepts.",
-            eligibility: "10th Standard pass with minimum 35% and Science/Maths subjects",
-            careerOptions: ["Junior Software Developer", "Network Technician", "Hardware Support Engineer"],
-            subjects: ["C Programming", "Digital Electronics", "Computer Networks", "DBMS", "Operating Systems"]
-        });
+        // 6. Seed Gujarat Institutions (Verified)
+        console.log("Seeding Verified Institutions...");
+        const cseCourses = createdCourses.filter(c => c.name.includes("Computer") || c.name.includes("BCA") || c.name.includes("IT"));
+        const bcomCourses = createdCourses.filter(c => c.name.includes("Commerce") || c.name.includes("B.Com"));
 
-        const courseDiplomaME = await Course.create({
-            name: "Diploma in Mechanical Engineering",
-            qualification: "10th",
-            stream: "General",
-            duration: "3 Years",
-            description: "Foundational engineering diploma dealing with machinery design, manufacturing, and mechanics.",
-            eligibility: "10th Standard pass with Science and Maths",
-            careerOptions: ["Junior Mechanical Engineer", "CAD Designer", "Maintenance Technician"],
-            subjects: ["Engineering Mechanics", "Thermodynamics", "Manufacturing Processes", "CAD/CAM"]
-        });
+        await Institution.create([
+            {
+                name: "Gujarat University Campus & Affiliated Departments",
+                city: cityAhmedabad._id,
+                state: "Gujarat",
+                type: "University",
+                affiliation: "Gujarat University (GU)",
+                address: "Navrangpura, Ahmedabad – 380009",
+                website: "https://www.gujaratuniversity.ac.in",
+                contactNumber: "+91-79-26301341",
+                coursesOffered: cseCourses.slice(0, 5).map(c => c._id)
+            },
+            {
+                name: "Veer Narmad South Gujarat University Departmental Campus",
+                city: citySurat._id,
+                state: "Gujarat",
+                type: "University",
+                affiliation: "Veer Narmad South Gujarat University (VNSGU)",
+                address: "University Campus, Udhna-Magdalla Road, Surat – 395007",
+                website: "https://vnsgu.ac.in",
+                contactNumber: "+91-261-2227141",
+                coursesOffered: cseCourses.slice(0, 5).map(c => c._id)
+            },
+            {
+                name: "Sardar Patel University Campus & Constituent Institutes",
+                city: cityAnand._id,
+                state: "Gujarat",
+                type: "University",
+                affiliation: "Sardar Patel University (SPU)",
+                address: "Vallabh Vidyanagar – 388120, Gujarat",
+                website: "https://www.spuvvn.edu",
+                contactNumber: "+91-2692-226801",
+                coursesOffered: cseCourses.slice(0, 5).map(c => c._id)
+            },
+            {
+                name: "Sarvajanik University Main Campus",
+                city: citySurat._id,
+                state: "Gujarat",
+                type: "University",
+                affiliation: "Sarvajanik University (SU)",
+                address: "Sarvajanik College Campus, Athwalines, Surat – 395001",
+                website: "https://www.sarvajanikuniversity.ac.in",
+                contactNumber: "+91-261-2240146",
+                coursesOffered: cseCourses.slice(0, 5).map(c => c._id)
+            },
+            {
+                name: "Sardar Vallabhbhai National Institute of Technology (SVNIT)",
+                city: citySurat._id,
+                state: "Gujarat",
+                type: "Institute",
+                affiliation: "Ministry of Education (Institute of National Importance)",
+                address: "Ichchhanath, Surat – 395007, Gujarat",
+                website: "https://www.svnit.ac.in",
+                contactNumber: "+91-261-2259571",
+                coursesOffered: cseCourses.slice(0, 5).map(c => c._id)
+            }
+        ]);
 
-        const courseBCA = await Course.create({
-            name: "Bachelor of Computer Applications (BCA)",
-            qualification: "12th",
-            stream: "General",
-            duration: "3 Years",
-            description: "Undergraduate degree focusing on modern computer applications, software engineering, databases, and full-stack web development.",
-            eligibility: "12th Standard pass in any stream (Science/Commerce/Arts) with English and Mathematics or Statistics or Computer",
-            careerOptions: ["Full Stack Developer", "Software Engineer", "Web Developer", "Database Administrator"],
-            subjects: ["C++", "Java", "Python", "Data Structures", "Advanced Web Designing", "DBMS", "Software Engineering"]
-        });
-
-        const courseBTechCSE = await Course.create({
-            name: "B.Tech in Computer Science and Engineering",
-            qualification: "12th",
-            stream: "Science",
-            duration: "4 Years",
-            description: "Comprehensive 4-year undergraduate engineering program covering computer hardware, architecture, advanced algorithms, and cloud systems.",
-            eligibility: "12th Science with Physics, Chemistry, and Mathematics (PCM) + GUJCET / JEE Main scores",
-            careerOptions: ["Software Development Engineer", "Cloud Architect", "AI/ML Engineer", "System Architect"],
-            subjects: ["Data Structures & Algorithms", "Theory of Computation", "Computer Networks", "Compiler Design", "Cloud Computing"]
-        });
-
-        const courseBCom = await Course.create({
-            name: "Bachelor of Commerce (B.Com)",
-            qualification: "12th",
-            stream: "Commerce",
-            duration: "3 Years",
-            description: "Undergraduate degree in business principles, financial accounting, banking, corporate taxation, and business law.",
-            eligibility: "12th Standard pass in Commerce stream",
-            careerOptions: ["Accountant", "Tax Consultant", "Financial Analyst", "Audit Assistant"],
-            subjects: ["Financial Accounting", "Corporate Law", "Business Economics", "Income Tax", "Auditing"]
-        });
-
-        const courseBBA = await Course.create({
-            name: "Bachelor of Business Administration (BBA)",
-            qualification: "12th",
-            stream: "Commerce",
-            duration: "3 Years",
-            description: "Leadership and management degree developing skills in marketing, human resources, organizational strategy, and entrepreneurship.",
-            eligibility: "12th Standard pass from any stream with English",
-            careerOptions: ["Business Development Manager", "Marketing Executive", "HR Specialist", "Entrepreneur"],
-            subjects: ["Principles of Management", "Marketing Management", "Organizational Behavior", "Financial Management"]
-        });
-
-        const courseBA = await Course.create({
-            name: "Bachelor of Arts (BA)",
-            qualification: "12th",
-            stream: "Arts",
-            duration: "3 Years",
-            description: "Undergraduate degree in humanities with specializations in Literature, Psychology, History, and Sociology.",
-            eligibility: "12th Standard pass in Arts / any stream",
-            careerOptions: ["Content Writer", "Civil Services Aspirant", "Public Relations Specialist", "Journalist"],
-            subjects: ["English Literature", "Psychology", "Sociology", "Political Science"]
-        });
-
-        const courseMBBS = await Course.create({
-            name: "MBBS (Bachelor of Medicine, Bachelor of Surgery)",
-            qualification: "12th",
-            stream: "Science",
-            duration: "5.5 Years",
-            description: "Professional medical degree to become a registered physician, covering human anatomy, pathology, surgery, and clinical medicine.",
-            eligibility: "12th Science with PCB + Qualifying NEET-UG score",
-            careerOptions: ["Medical Doctor", "Physician", "Medical Officer", "Clinical Researcher"],
-            subjects: ["Anatomy", "Physiology", "Biochemistry", "Pathology", "Pharmacology", "General Medicine", "Surgery"]
-        });
-
-        // 5. Seed Pathways (Roadmaps)
+        // 7. Seed Pathways (Roadmaps)
         console.log("Seeding Pathways...");
         await Pathway.create([
             {
@@ -173,280 +284,110 @@ const seedDatabase = async () => {
                 description: "Direct technical pathway from 10th board exams to Diploma, followed by direct 2nd-year lateral entry into B.Tech degree.",
                 steps: [
                     "Complete 10th Standard (SSC) with good marks in Science and Mathematics",
-                    "Apply for ACPDC Diploma Admission in Gujarat (e.g. Computer / Mechanical / Civil)",
+                    "Apply for ACPDC Diploma Admission in Gujarat (Computer / IT / Mechanical)",
                     "Complete 3-Year Diploma in Engineering with a strong CGPA",
-                    "Apply for D2D (Diploma to Degree) admission directly into 2nd year of B.E. / B.Tech",
-                    "Complete 3 years of Degree Engineering and graduate as a qualified engineer"
+                    "Apply for D2D admission directly into 2nd year of B.E. / B.Tech",
+                    "Complete 3 years of Degree Engineering and graduate as an Engineer"
                 ]
             },
             {
-                title: "12th Science (PCM) → Engineering Degree → Tech Careers",
+                title: "12th Science (PCM) → Engineering / Computing Degree → Tech Careers",
                 qualification: qual12th._id,
                 stream: streamScience._id,
-                description: "The traditional path for students passionate about technology, programming, and hardware innovation.",
+                description: "Traditional path for technology innovation, software development, AI, and systems engineering.",
                 steps: [
                     "Choose 12th Science with Physics, Chemistry, and Mathematics (PCM)",
-                    "Prepare for Entrance Exams: GUJCET (State Engineering) and JEE Main / Advanced (National)",
-                    "Participate in ACPC Counselling and secure admission in B.Tech / B.E. Computer Engineering or IT",
-                    "Learn core computer science concepts, build real-world web/mobile projects, and do internships",
-                    "Graduate and join top tech companies as a Software Development Engineer (SDE)"
+                    "Prepare for Entrance Exams: GUJCET (State) and JEE Main (National)",
+                    "Participate in ACPC / JoSAA counselling and join B.Tech CSE / AI / IT",
+                    "Learn data structures, full-stack development, and complete industry internships",
+                    "Graduate and join top tech companies as a Software Development Engineer"
                 ]
             },
             {
-                title: "12th Science (PCB) → Medical Entrance → Healthcare Professional",
-                qualification: qual12th._id,
-                stream: streamScience._id,
-                description: "Dedicated pathway to becoming a Doctor, Dentist, Pharmacist, or Paramedical Specialist.",
-                steps: [
-                    "Choose 12th Science with Physics, Chemistry, and Biology (PCB)",
-                    "Prepare intensively and appear for the NEET-UG entrance exam",
-                    "Secure admission in MBBS / BDS / BAMS / BHMS based on merit score",
-                    "Complete 4.5 to 5 years of rigorous academic coursework followed by a 1-year mandatory rotatory internship",
-                    "Register with the Medical Council of India (MCI) and practice or pursue MD/MS specialization"
-                ]
-            },
-            {
-                title: "12th Commerce → B.Com / BBA → Chartered Accountancy (CA) / Finance",
+                title: "12th (Any Stream) → BCA (Honours) NEP → MCA / Software Engineering",
                 qualification: qual12th._id,
                 stream: streamCommerce._id,
-                description: "Structured pathway for students aiming for top-tier corporate finance, accounting, and business leadership roles.",
+                description: "Accessible, high-growth technology roadmap for Science, Commerce, and Arts students.",
                 steps: [
-                    "Complete 12th Commerce with focus on Accounts, Statistics, and Economics",
-                    "Register for ICAI CA Foundation exam or enroll in B.Com / BBA at a recognized university",
-                    "Clear CA Intermediate exams and complete 2 to 3 years of practical articleship training",
-                    "Clear CA Final examinations and earn the prestigious Chartered Accountant credential",
-                    "Join Big 4 accounting firms, multinational corporations, or establish an independent audit practice"
+                    "Complete 12th Standard with English and Maths/Statistics/Computer",
+                    "Enrol in 4-Year BCA (Honours) under NEP 2020 at GU, VNSGU, SPU, or SU",
+                    "Master modern web technologies, databases, cloud architecture, and algorithms",
+                    "Optionally pursue MCA (2 Years) or join high-growth tech startups directly",
+                    "Advance to Senior Full Stack Engineer or Solutions Architect"
                 ]
             },
             {
-                title: "12th Arts → BA / Law / Design → Civil Services & Creative Careers",
-                qualification: qual12th._id,
-                stream: streamArts._id,
-                description: "Flexible pathway leading to Public Administration, Judicial Services, Journalism, and Design.",
-                steps: [
-                    "Complete 12th Arts with humanities subjects",
-                    "Enroll in a 3-Year BA program (Political Science/History) or 5-Year Integrated BA-LLB Law degree",
-                    "Build strong analytical reading, writing, and general awareness skills",
-                    "Appear for competitive exams such as UPSC Civil Services, GPSC, CLAT, or design entrance exams",
-                    "Serve as a Civil Servant (IAS/IPS/GAS Officer), practicing Advocate, or Creative Professional"
-                ]
-            },
-            {
-                title: "12th Any Stream → BCA / B.Sc IT → Full-Stack Software Developer",
+                title: "12th Commerce → B.Com / BBA → CA / MBA / Corporate Finance",
                 qualification: qual12th._id,
                 stream: streamCommerce._id,
-                description: "The most accessible and practical route for any student to enter the thriving IT and software industry.",
+                description: "Business leadership and finance roadmap from higher secondary to corporate executive.",
                 steps: [
-                    "Complete 12th Standard from Science, Commerce, or Arts with English",
-                    "Enroll in a 3-Year Bachelor of Computer Applications (BCA) program",
-                    "Master core programming: C++, Java, JavaScript, DBMS, and Web Technologies",
-                    "Build dynamic portfolio websites, practical capstone projects, and participate in hackathons",
-                    "Get campus placed or apply for Full-Stack Developer / Frontend Developer positions"
+                    "Complete 12th Standard in Commerce stream with Accountancy & Economics",
+                    "Enrol in B.Com (Honours) or BBA in top Gujarat universities",
+                    "Appear for CMAT / CAT or CA Foundation / Intermediate examinations",
+                    "Complete corporate internships in financial analysis or management",
+                    "Graduate as a Financial Analyst, Chartered Accountant, or Business Manager"
                 ]
             }
         ]);
 
-        // 6. Seed Careers
+        // 8. Seed Careers
         console.log("Seeding Careers...");
         await Career.create([
             {
-                title: "Full-Stack Web Developer",
-                description: "Architects and develops end-to-end web applications including responsive frontends, RESTful APIs, and database schemas.",
-                requiredSkills: ["JavaScript", "React.js", "Node.js", "Express.js", "MongoDB", "REST APIs", "Git"],
-                salaryRange: "₹4,00,000 - ₹14,00,000 per annum",
-                jobRoles: ["Frontend Developer", "Backend Developer", "MERN Stack Developer", "API Specialist"],
-                relatedCourses: [courseBCA._id, courseBTechCSE._id, courseDiplomaCE._id]
+                title: "Full Stack Software Engineer",
+                description: "Designs, develops, and deploys scalable web applications, REST APIs, and microservices.",
+                salaryRange: "₹4,50,000 - ₹18,00,000 / year",
+                skills: ["JavaScript", "React", "Node.js", "MongoDB", "Data Structures", "System Design"],
+                courses: cseCourses.slice(0, 4).map(c => c._id)
             },
             {
                 title: "Data Scientist & AI Specialist",
-                description: "Leverages machine learning algorithms, statistical analysis, and deep learning to extract actionable insights from big data.",
-                requiredSkills: ["Python", "Machine Learning", "SQL", "Pandas", "TensorFlow", "Statistics"],
-                salaryRange: "₹6,00,000 - ₹20,00,000 per annum",
-                jobRoles: ["Data Scientist", "Machine Learning Engineer", "BI Analyst", "Data Engineer"],
-                relatedCourses: [courseBTechCSE._id, courseBCA._id]
+                description: "Builds predictive machine learning models, statistical analyses, and data pipelines.",
+                salaryRange: "₹6,00,000 - ₹24,00,000 / year",
+                skills: ["Python", "Machine Learning", "SQL", "Deep Learning", "Data Visualization"],
+                courses: cseCourses.slice(0, 4).map(c => c._id)
             },
             {
-                title: "Chartered Accountant (CA)",
-                description: "Expert financial professional handling corporate auditing, tax compliance, financial planning, and forensic accounting.",
-                requiredSkills: ["Financial Accounting", "Corporate Taxation", "Auditing", "Financial Modeling", "GST Law"],
-                salaryRange: "₹7,00,000 - ₹25,00,000 per annum",
-                jobRoles: ["Statutory Auditor", "Tax Consultant", "Chief Financial Officer (CFO)", "Investment Advisor"],
-                relatedCourses: [courseBCom._id, courseBBA._id]
-            },
-            {
-                title: "Medical Doctor / Surgeon",
-                description: "Licensed healthcare professional diagnosed with diagnosing illnesses, prescribing treatments, performing surgical procedures, and saving lives.",
-                requiredSkills: ["Clinical Diagnosis", "Patient Care", "Human Anatomy", "Medical Ethics", "Surgical Skills"],
-                salaryRange: "₹8,00,000 - ₹30,00,000 per annum",
-                jobRoles: ["General Physician", "Surgeon", "Medical Officer", "Specialist Consultant"],
-                relatedCourses: [courseMBBS._id]
-            },
-            {
-                title: "UI/UX & Graphic Designer",
-                description: "Creates intuitive, aesthetically pleasing user interfaces and graphic assets for modern web and mobile applications.",
-                requiredSkills: ["Figma", "Adobe XD", "Wireframing", "User Research", "Color Theory", "Prototyping"],
-                salaryRange: "₹3,50,000 - ₹12,00,000 per annum",
-                jobRoles: ["UI/UX Designer", "Product Designer", "Visual Designer", "Interaction Designer"],
-                relatedCourses: [courseBCA._id, courseBA._id]
+                title: "Financial Analyst & Portfolio Consultant",
+                description: "Evaluates financial data, conducts market valuation, and optimizes corporate investments.",
+                salaryRange: "₹4,00,000 - ₹15,00,000 / year",
+                skills: ["Financial Modeling", "Corporate Accounting", "Excel", "Taxation", "Valuation"],
+                courses: bcomCourses.slice(0, 3).map(c => c._id)
             }
         ]);
 
-        // 7. Seed Curated Authentic Gujarat Institutions (Covering School, College, University, Institute, Polytechnic)
-        console.log("Seeding Gujarat Institutions...");
-        await Institution.create([
+        // 9. Seed Users (Student and Admin)
+        console.log("Seeding Users...");
+        await User.create([
             {
-                name: "Gujarat University",
-                city: cityAhmedabad._id,
-                state: "Gujarat",
-                type: "University",
-                affiliation: "UGC / State University (NAAC A+)",
-                address: "Navrangpura, Ahmedabad, Gujarat 380009",
-                website: "https://www.gujaratuniversity.ac.in",
-                contactNumber: "079-26301341",
-                coursesOffered: [courseBCA._id, courseBCom._id, courseBA._id, courseBBA._id]
+                name: "Admin User",
+                email: "admin@futurepath.edu",
+                password: "adminpassword123",
+                role: "admin",
+                qualification: "12th",
+                stream: "Science"
             },
             {
-                name: "The Maharaja Sayajirao University of Baroda (MSU)",
-                city: cityVadodara._id,
-                state: "Gujarat",
-                type: "University",
-                affiliation: "UGC / State University (NAAC A+)",
-                address: "Pratapgunj, Vadodara, Gujarat 390002",
-                website: "https://www.msubaroda.ac.in",
-                contactNumber: "0265-2795555",
-                coursesOffered: [courseBTechCSE._id, courseBCom._id, courseBA._id, courseBCA._id]
-            },
-            {
-                name: "Veer Narmad South Gujarat University (VNSGU)",
-                city: citySurat._id,
-                state: "Gujarat",
-                type: "University",
-                affiliation: "UGC / State University",
-                address: "University Road, Surat, Gujarat 395007",
-                website: "https://www.vnsgu.ac.in",
-                contactNumber: "0261-2227141",
-                coursesOffered: [courseBCA._id, courseBCom._id, courseBBA._id]
-            },
-            {
-                name: "Pandit Deendayal Energy University (PDEU)",
-                city: cityGandhinagar._id,
-                state: "Gujarat",
-                type: "University",
-                affiliation: "UGC / NAAC A++ Accredited",
-                address: "Knowledge Corridor, Raisan Village, Gandhinagar, Gujarat 382007",
-                website: "https://www.pdeu.ac.in",
-                contactNumber: "079-23275060",
-                coursesOffered: [courseBTechCSE._id, courseBBA._id]
-            },
-            {
-                name: "L.D. College of Engineering (LDCE)",
-                city: cityAhmedabad._id,
-                state: "Gujarat",
-                type: "College",
-                affiliation: "Gujarat Technological University (GTU) / AICTE",
-                address: "120 Circular Road, University Area, Ahmedabad, Gujarat 380015",
-                website: "https://www.ldce.ac.in",
-                contactNumber: "079-26306752",
-                coursesOffered: [courseBTechCSE._id]
-            },
-            {
-                name: "Ahmedabad Institute of Technology (AIT)",
-                city: cityAhmedabad._id,
-                state: "Gujarat",
-                type: "College",
-                affiliation: "Gujarat Technological University (GTU)",
-                address: "Gota-Ognaj Road, Gota, Ahmedabad, Gujarat 382481",
-                website: "https://www.aitindia.in",
-                contactNumber: "079-27660251",
-                coursesOffered: [courseBTechCSE._id, courseBCA._id]
-            },
-            {
-                name: "B.J. Medical College & Civil Hospital",
-                city: cityAhmedabad._id,
-                state: "Gujarat",
-                type: "College",
-                affiliation: "Gujarat University / NMC",
-                address: "Asarwa, Ahmedabad, Gujarat 380016",
-                website: "https://www.bjmcabd.edu.in",
-                contactNumber: "079-22680074",
-                coursesOffered: [courseMBBS._id]
-            },
-            {
-                name: "Government Engineering College, Rajkot (GEC Rajkot)",
-                city: cityRajkot._id,
-                state: "Gujarat",
-                type: "College",
-                affiliation: "Gujarat Technological University (GTU)",
-                address: "Mavadi Kankot Road, Rajkot, Gujarat 360005",
-                website: "https://www.gecrj.cteguj.in",
-                contactNumber: "0281-2924162",
-                coursesOffered: [courseBTechCSE._id]
-            },
-            {
-                name: "Dhirubhai Ambani Institute of Information and Communication Technology (DA-IICT)",
-                city: cityGandhinagar._id,
-                state: "Gujarat",
-                type: "Institute",
-                affiliation: "UGC / AICTE Approved",
-                address: "Near Indroda Circle, Gandhinagar, Gujarat 382007",
-                website: "https://www.daiict.ac.in",
-                contactNumber: "079-68261700",
-                coursesOffered: [courseBTechCSE._id]
-            },
-            {
-                name: "Government Polytechnic Ahmedabad",
-                city: cityAhmedabad._id,
-                state: "Gujarat",
-                type: "Polytechnic",
-                affiliation: "Gujarat Technological University (GTU) / TEB",
-                address: "Panjrapole Cross Road, Ambawadi, Ahmedabad, Gujarat 380015",
-                website: "https://www.gpahmedabad.ac.in",
-                contactNumber: "079-26305516",
-                coursesOffered: [courseDiplomaCE._id, courseDiplomaME._id]
-            },
-            {
-                name: "A.V. Parekh Technical Institute",
-                city: cityRajkot._id,
-                state: "Gujarat",
-                type: "Polytechnic",
-                affiliation: "Gujarat Technological University (GTU)",
-                address: "Dr. Yagnik Road, Rajkot, Gujarat 360001",
-                website: "https://www.avptiorg.in",
-                contactNumber: "0281-2480175",
-                coursesOffered: [courseDiplomaCE._id, courseDiplomaME._id]
-            },
-            {
-                name: "Surat District Community Science Centre & Higher Secondary Model School",
-                city: citySurat._id,
-                state: "Gujarat",
-                type: "School",
-                affiliation: "GSEB (Gujarat Secondary and Higher Secondary Education Board)",
-                address: "Athwa Lines, Surat, Gujarat 395001",
-                website: "https://gseb.org",
-                contactNumber: "0261-2669145",
-                coursesOffered: []
+                name: "Krish Patel",
+                email: "student@futurepath.edu",
+                password: "studentpassword123",
+                role: "student",
+                qualification: "12th",
+                stream: "Commerce"
             }
         ]);
 
-        console.log("\n=======================================================");
-        console.log("  GUJARAT EDUCATION DATABASE SEEDED SUCCESSFULLY!");
-        console.log("  Curated Gujarat institutions across 5 categories ready.");
-        console.log("=======================================================\n");
+        console.log("\n==============================================");
+        console.log("MASTER SEEDING COMPLETED SUCCESSFULLY!");
+        console.log(`- Universities: ${createdUniversities.length}`);
+        console.log(`- Courses: ${createdCourses.length}`);
+        console.log(`- Curriculum Records: ${currData.length}`);
+        console.log("==============================================");
 
-        // Seed default admin user
-        console.log("Creating default admin user...");
-        await User.create({
-            name: "Admin",
-            email: "admin@futurepath.com",
-            password: "admin123",
-            role: "admin"
-        });
-        console.log("Admin user created: admin@futurepath.com / admin123");
-
-        await mongoose.connection.close();
         process.exit(0);
     } catch (error) {
-        console.error("Error seeding database:", error);
+        console.error("Seeding Error:", error);
         process.exit(1);
     }
 };

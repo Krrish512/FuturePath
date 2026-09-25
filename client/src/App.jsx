@@ -46,20 +46,31 @@ function App() {
   const [allCourses, setAllCourses] = useState([]);
   const [allCareers, setAllCareers] = useState([]);
   const [allColleges, setAllColleges] = useState([]);
+  const [universitiesList, setUniversitiesList] = useState([]);
   const [loadingView, setLoadingView] = useState(false);
   const [catalogSearch, setCatalogSearch] = useState('');
+
+  // Course specific filters
+  const [selectedCourseUniFilter, setSelectedCourseUniFilter] = useState('All');
+  const [selectedCourseLevelFilter, setSelectedCourseLevelFilter] = useState('All');
 
   // College specific city & type filters
   const [selectedCityFilter, setSelectedCityFilter] = useState('All');
   const [selectedTypeFilter, setSelectedTypeFilter] = useState('All');
 
-  // Load summary statistics on mount
+  // Load summary statistics and dynamic universities on mount
   useEffect(() => {
     api.getSummary()
       .then((res) => {
         if (res.success) setSummary(res.summary);
       })
       .catch((err) => console.error('Error fetching summary:', err));
+
+    api.getUniversities()
+      .then((res) => {
+        if (res.success) setUniversitiesList(res.data || []);
+      })
+      .catch((err) => console.error('Error fetching universities:', err));
   }, []);
 
   // Fetch full data when navigating to specific dedicated tabs
@@ -185,14 +196,6 @@ function App() {
         const el = document.getElementById('guidance-wizard');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }, 50);
-    } else if (action === 'pathway-bca-it') {
-      setSelectedQual('12th');
-      setSelectedStream('Science');
-      setActiveTab('explore');
-      setTimeout(() => {
-        const el = document.getElementById('guidance-wizard');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 50);
     } else if (action === 'about') {
       setActiveTab('about');
     } else if (action === 'contact') {
@@ -251,9 +254,16 @@ function App() {
     });
   };
 
+  // Courses filtered list
+  const filteredCourses = filterCatalog(allCourses, ['name', 'course_name', 'description', 'subjects', 'eligibility', 'university_name', 'field_of_study']).filter((c) => {
+    const uniMatch = selectedCourseUniFilter === 'All' || (c.university_name && c.university_name.includes(selectedCourseUniFilter));
+    const levelMatch = selectedCourseLevelFilter === 'All' || c.course_level === selectedCourseLevelFilter;
+    return uniMatch && levelMatch;
+  });
+
   // College filtered list
   const filteredColleges = filterCatalog(allColleges, ['name', 'address', 'affiliation']).filter((inst) => {
-    const cityMatch = selectedCityFilter === 'All' || inst.city?.name === selectedCityFilter;
+    const cityMatch = selectedCityFilter === 'All' || (typeof inst.city === 'object' ? inst.city?.name === selectedCityFilter : inst.city === selectedCityFilter);
     const typeMatch = selectedTypeFilter === 'All' || inst.type === selectedTypeFilter;
     return cityMatch && typeMatch;
   });
@@ -306,11 +316,11 @@ function App() {
           <section className="container" style={{ padding: '3.5rem 1.5rem 5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
               <span className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>Full Catalog</span>
-              <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-                All Educational <span className="gradient-text">Roadmaps & Pathways</span>
+              <h2 style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
+                Educational <span className="gradient-text">Roadmaps & Pathways</span>
               </h2>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                Step-by-step career progression paths mapped from 10th and 12th standards.
+              <p style={{ color: 'var(--fp-secondary, #6B7280)', marginBottom: '1.5rem', maxWidth: '600px', margin: '0 auto 1.5rem' }}>
+                Step-by-step career progression milestones mapped from 10th and 12th standards.
               </p>
 
               {/* Search Bar */}
@@ -319,16 +329,17 @@ function App() {
                   type="text"
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
-                  placeholder="🔍 Search roadmaps (e.g. Engineering, Medical, CA)..."
-                  style={searchInputStyle}
+                  placeholder="🔍 Search roadmaps (e.g. Engineering, Medical, BCA, CA)..."
+                  className="fp-input"
+                  style={{ width: '100%', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-full)' }}
                 />
               </div>
             </div>
 
             {loadingView ? (
-              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)' }}>Loading roadmaps...</div>
+              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--fp-secondary, #6B7280)' }}>Loading roadmaps...</div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
                 {filterCatalog(allPathways, ['title', 'description', 'steps']).map((p) => (
                   <PathwayCard 
                     key={p._id} 
@@ -344,33 +355,100 @@ function App() {
 
         {/* Dedicated Courses View */}
         {activeTab === 'courses' && (
-          <section className="container" style={{ padding: '3.5rem 1.5rem 5rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-              <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>Degree & Diploma</span>
-              <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-                Undergraduate & Diploma <span className="gradient-text">Programs</span>
+          <section className="container-xl px-3 px-sm-4" style={{ padding: '3.5rem 1.5rem 5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>Accredited Degrees</span>
+              <h2 style={{ fontSize: '2.25rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
+                Explore Verified <span className="gradient-text">University Programmes</span>
               </h2>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                Explore degree durations, entry eligibility, and core academic subjects. Select 2+ courses to compare side-by-side.
+              <p style={{ color: 'var(--fp-secondary, #6B7280)', maxWidth: '680px', margin: '0 auto 1.5rem' }}>
+                Official undergraduate, postgraduate, and integrated programs from Gujarat University, VNSGU, SPU, Sarvajanik University, and SVNIT Surat.
               </p>
 
+              {/* University & Level Filter Pills */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  <button
+                    onClick={() => setSelectedCourseUniFilter('All')}
+                    style={{
+                      padding: '0.35rem 0.85rem',
+                      fontSize: '0.8rem',
+                      fontWeight: selectedCourseUniFilter === 'All' ? '700' : '500',
+                      borderRadius: 'var(--radius-full)',
+                      background: selectedCourseUniFilter === 'All' ? 'var(--fp-primary)' : 'var(--fp-surface)',
+                      color: selectedCourseUniFilter === 'All' ? '#FFFFFF' : 'var(--fp-text-secondary)',
+                      border: '1px solid var(--fp-border)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    All Universities ({allCourses.length})
+                  </button>
+                  {universitiesList.map((u) => {
+                    const isSel = selectedCourseUniFilter === u.university_name || selectedCourseUniFilter === u.abbreviation;
+                    return (
+                      <button
+                        key={u._id}
+                        onClick={() => setSelectedCourseUniFilter(u.university_name)}
+                        style={{
+                          padding: '0.35rem 0.85rem',
+                          fontSize: '0.8rem',
+                          fontWeight: isSel ? '700' : '500',
+                          borderRadius: 'var(--radius-full)',
+                          background: isSel ? 'var(--fp-primary)' : 'var(--fp-surface)',
+                          color: isSel ? '#FFFFFF' : 'var(--fp-text-secondary)',
+                          border: isSel ? '1px solid var(--fp-primary)' : '1px solid var(--fp-border)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        🏛️ {u.abbreviation || u.university_name}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {['All', 'Undergraduate', 'Postgraduate', 'Integrated (UG+PG)'].map((lvl) => {
+                    const isSel = selectedCourseLevelFilter === lvl;
+                    return (
+                      <button
+                        key={lvl}
+                        onClick={() => setSelectedCourseLevelFilter(lvl)}
+                        style={{
+                          padding: '0.25rem 0.75rem',
+                          fontSize: '0.75rem',
+                          fontWeight: isSel ? '700' : '500',
+                          borderRadius: 'var(--radius-full)',
+                          background: isSel ? '#EEF2FF' : 'transparent',
+                          color: isSel ? '#4F46E5' : '#6B7280',
+                          border: isSel ? '1px solid #4F46E5' : '1px solid #E5E7EB',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {lvl}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Search Bar */}
-              <div style={{ maxWidth: '480px', margin: '0 auto' }}>
+              <div style={{ maxWidth: '520px', margin: '0 auto' }}>
                 <input
                   type="text"
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
-                  placeholder="🔍 Search courses (e.g. BCA, B.Tech, B.Com, Diploma)..."
-                  style={searchInputStyle}
+                  placeholder="🔍 Search degrees, duration, eligibility (e.g. BCA, AI, B.Tech, MCA)..."
+                  className="fp-input"
+                  style={{ width: '100%', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-full)' }}
                 />
               </div>
             </div>
 
             {loadingView ? (
-              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)' }}>Loading courses...</div>
+              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--fp-secondary, #6B7280)' }}>Loading courses...</div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-                {filterCatalog(allCourses, ['name', 'description', 'subjects', 'eligibility']).map((c) => (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
+                {filteredCourses.map((c) => (
                   <CourseCard 
                     key={c._id} 
                     course={c} 
@@ -390,10 +468,10 @@ function App() {
           <section className="container" style={{ padding: '3.5rem 1.5rem 5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
               <span className="badge badge-amber" style={{ marginBottom: '0.5rem' }}>Career Opportunities</span>
-              <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-                Future <span className="gradient-text">Career Trajectories</span>
+              <h2 style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
+                Industry Career <span className="gradient-text">Profiles</span>
               </h2>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+              <p style={{ color: 'var(--fp-secondary, #6B7280)', marginBottom: '1.5rem', maxWidth: '600px', margin: '0 auto 1.5rem' }}>
                 Industry skill requirements, salary projections, and linked academic degrees.
               </p>
 
@@ -403,17 +481,18 @@ function App() {
                   type="text"
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
-                  placeholder="🔍 Search careers by role or skills (e.g. Developer, Python, Doctor)..."
-                  style={searchInputStyle}
+                  placeholder="🔍 Search careers by role or skills (e.g. Developer, Python, Analyst)..."
+                  className="fp-input"
+                  style={{ width: '100%', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-full)' }}
                 />
               </div>
             </div>
 
             {loadingView ? (
-              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)' }}>Loading careers...</div>
+              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--fp-secondary, #6B7280)' }}>Loading careers...</div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-                {filterCatalog(allCareers, ['title', 'description', 'requiredSkills', 'jobRoles']).map((car) => (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+                {filterCatalog(allCareers, ['title', 'description', 'skills', 'requiredSkills']).map((car) => (
                   <CareerCard 
                     key={car._id} 
                     career={car} 
@@ -437,7 +516,7 @@ function App() {
                 Explore Gujarat <span className="gradient-text">Institutions</span>
               </h2>
               <p style={{ color: 'var(--fp-text-secondary)', fontSize: '1rem', maxWidth: '640px', margin: '0 auto 1.5rem', lineHeight: '1.6' }}>
-                Curated database of accredited schools, colleges, universities, institutes, and polytechnics across Gujarat.
+                Accredited colleges, universities, and institutes across Gujarat.
               </p>
 
               {/* City & Type Filter Pills */}
@@ -449,8 +528,8 @@ function App() {
                     { id: 'Ahmedabad', label: 'Ahmedabad' },
                     { id: 'Surat', label: 'Surat' },
                     { id: 'Vadodara', label: 'Vadodara' },
-                    { id: 'Rajkot', label: 'Rajkot' },
-                    { id: 'Gandhinagar', label: 'Gandhinagar' }
+                    { id: 'Anand / Vallabh Vidyanagar', label: 'Anand / V.V.Nagar' },
+                    { id: 'Rajkot', label: 'Rajkot' }
                   ].map((city) => {
                     const isSelected = selectedCityFilter === city.id;
                     return (
@@ -480,10 +559,9 @@ function App() {
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                   {[
                     { id: 'All', label: 'All Types' },
-                    { id: 'School', label: 'School' },
-                    { id: 'College', label: 'College' },
                     { id: 'University', label: 'University' },
                     { id: 'Institute', label: 'Institute' },
+                    { id: 'College', label: 'College' },
                     { id: 'Polytechnic', label: 'Polytechnic' }
                   ].map((type) => {
                     const isSelected = selectedTypeFilter === type.id;
@@ -517,7 +595,7 @@ function App() {
                   type="text"
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
-                  placeholder="🔍 Search Gujarat institutions by name or affiliation (e.g. GTU, MSU, AIT)..."
+                  placeholder="🔍 Search Gujarat institutions by name or affiliation..."
                   className="fp-input"
                   style={{ padding: '0.75rem 1.25rem', fontSize: '0.9rem', borderRadius: 'var(--radius-full)' }}
                 />
@@ -610,7 +688,7 @@ function App() {
 
         {/* Admin Dashboard */}
         {activeTab === 'admin' && isLoggedIn && isAdmin && (
-          <AdminDashboard />
+          <AdminDashboard onLogout={handleLogout} />
         )}
       </main>
 
@@ -642,17 +720,5 @@ function App() {
     </div>
   );
 }
-
-// Shared search input style
-const searchInputStyle = {
-  width: '100%',
-  padding: '0.75rem 1.25rem',
-  borderRadius: 'var(--radius-full)',
-  background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid var(--border-light)',
-  color: 'var(--text-main)',
-  fontSize: '0.9rem',
-  outline: 'none',
-};
 
 export default App;
