@@ -6,16 +6,14 @@ import {
   BookOpen, 
   Building2, 
   Briefcase, 
-  ShieldCheck, 
   Sparkles, 
-  Code2, 
-  Layers, 
-  Database, 
   CheckCircle2, 
   ArrowRight,
   HelpCircle,
   Award,
-  Users
+  Users,
+  Layers,
+  HeartHandshake
 } from 'lucide-react';
 
 export default function AboutView({ onExplore, onTakeQuiz }) {
@@ -28,16 +26,16 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
         borderBottom: '1px solid var(--fp-border)',
         padding: '4rem 1.5rem 3.5rem'
       }}>
-        <div className="container-xl" style={{ maxWidth: '900px', textAlign: 'center' }}>
+        <div className="container-xl" style={{ maxWidth: '850px', textAlign: 'center' }}>
           <span className="badge badge-indigo mb-3" style={{ padding: '0.4rem 0.95rem', fontSize: '0.8rem' }}>
-            🎓 About FuturePath Portal
+            🎓 About FuturePath
           </span>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: '800', letterSpacing: '-0.03em', lineHeight: '1.2', marginBottom: '1rem', color: 'var(--fp-text)' }}>
-            Empowering Students to Make <br className="d-none d-sm-inline" />
-            <span className="gradient-text">Informed Education Decisions</span>
+          <h1 style={{ fontSize: '2.4rem', fontWeight: '800', letterSpacing: '-0.03em', lineHeight: '1.2', marginBottom: '1rem', color: '#111827' }}>
+            Guiding Students Towards <br className="d-none d-sm-inline" />
+            <span className="gradient-text">Brighter Educational Futures</span>
           </h1>
-          <p style={{ fontSize: '1.1rem', color: 'var(--fp-text-secondary)', lineHeight: '1.6', maxWidth: '720px', margin: '0 auto 2rem' }}>
-            FuturePath is an end-to-end academic roadmap and career guidance platform built specifically for 10th and 12th standard students across Gujarat and India to navigate post-secondary education with clarity.
+          <p style={{ fontSize: '1.05rem', color: '#6B7280', lineHeight: '1.6', maxWidth: '680px', margin: '0 auto 2rem' }}>
+            FuturePath is an educational guidance platform designed to help 10th and 12th standard students explore academic options, discover Gujarat institutions, compare degrees, and plan rewarding careers with clarity.
           </p>
           <div className="d-flex justify-content-center gap-3 flex-wrap">
             <button 
@@ -51,27 +49,27 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
             <button 
               onClick={onTakeQuiz}
               className="btn btn-secondary d-flex align-items-center gap-2"
-              style={{ padding: '0.65rem 1.35rem', fontSize: '0.95rem' }}
+              style={{ padding: '0.65rem 1.35rem', fontSize: '0.95rem', background: '#FFFFFF', color: '#111827', borderColor: '#E5E7EB' }}
             >
               <Sparkles size={18} />
-              <span>Take Aptitude Quiz</span>
+              <span>Take Career Quiz</span>
             </button>
           </div>
         </div>
       </section>
 
-      <div className="container-xl px-3 px-sm-4 pt-5" style={{ maxWidth: '1080px' }}>
+      <div className="container-xl px-3 px-sm-4 pt-5" style={{ maxWidth: '1000px' }}>
         
-        {/* Mission & Vision Cards */}
+        {/* Why FuturePath & Core Mission */}
         <div className="row g-4 mb-5">
           <div className="col-12 col-md-6">
-            <div className="card h-100 p-4" style={{ borderLeft: '4px solid var(--fp-primary)' }}>
+            <div className="card h-100 p-4" style={{ borderLeft: '4px solid #4F46E5', background: '#FFFFFF' }}>
               <div style={{
                 width: '44px',
                 height: '44px',
                 borderRadius: '10px',
-                background: 'var(--fp-primary-soft)',
-                color: 'var(--fp-primary)',
+                background: '#EEF2FF',
+                color: '#4F46E5',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -79,61 +77,61 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
               }}>
                 <Target size={22} />
               </div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--fp-text)', marginBottom: '0.5rem' }}>
-                Our Mission
+              <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#111827', marginBottom: '0.5rem' }}>
+                Why FuturePath?
               </h2>
-              <p style={{ fontSize: '0.9rem', color: 'var(--fp-text-secondary)', lineHeight: '1.6', marginBottom: 0 }}>
-                To bridge the critical guidance gap that millions of high school students face after 10th (SSC) and 12th (HSC) by offering structured, verified, and transparent educational pathways, course details, eligibility criteria, and college affiliations.
+              <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: '1.6', marginBottom: 0 }}>
+                Choosing an academic path after 10th SSC or 12th HSC is one of the most important decisions a student makes. FuturePath simplifies this journey by bringing together verified educational roadmaps, eligibility criteria, admission details, and career trajectories in one easy-to-use guide.
               </p>
             </div>
           </div>
 
           <div className="col-12 col-md-6">
-            <div className="card h-100 p-4" style={{ borderLeft: '4px solid #059669' }}>
+            <div className="card h-100 p-4" style={{ borderLeft: '4px solid #10B981', background: '#FFFFFF' }}>
               <div style={{
                 width: '44px',
                 height: '44px',
                 borderRadius: '10px',
-                background: 'var(--fp-success-soft)',
-                color: 'var(--fp-success)',
+                background: '#ECFDF5',
+                color: '#10B981',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '1rem'
               }}>
-                <Sparkles size={22} />
+                <HeartHandshake size={22} />
               </div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--fp-text)', marginBottom: '0.5rem' }}>
-                Our Core Philosophy
+              <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#111827', marginBottom: '0.5rem' }}>
+                Student-First Guidance
               </h2>
-              <p style={{ fontSize: '0.9rem', color: 'var(--fp-text-secondary)', lineHeight: '1.6', marginBottom: 0 }}>
-                Every student has distinct talents and interests. Rather than forcing generic choices, FuturePath empowers personalized exploration through interactive stream selectors, career aptitude quizzes, course comparisons, and direct links to authentic government portals.
+              <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: '1.6', marginBottom: 0 }}>
+                Every student has distinct strengths and interests. FuturePath empowers students to explore diverse streams — Science, Commerce, Arts, Polytechnic Diplomas, and IT careers — so they can make confident, well-informed decisions without pressure or confusion.
               </p>
             </div>
           </div>
         </div>
 
-        {/* How FuturePath Works: 3-Step Framework */}
+        {/* How Students Explore Options: 3-Step Journey */}
         <div className="mb-5">
           <div className="text-center mb-4">
-            <span className="badge badge-indigo mb-2">Methodology</span>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--fp-text)' }}>
-              How FuturePath Guides You
+            <span className="badge badge-indigo mb-2">Student Journey</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#111827' }}>
+              How You Can Explore Your Options
             </h2>
-            <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.95rem' }}>
-              A structured 3-step decision framework designed for students and parents.
+            <p style={{ color: '#6B7280', fontSize: '0.95rem' }}>
+              A simple, structured approach to discovering your ideal educational trajectory.
             </p>
           </div>
 
           <div className="row g-4">
             <div className="col-12 col-md-4">
-              <div className="card h-100 p-4 text-center">
+              <div className="card h-100 p-4 text-center" style={{ background: '#FFFFFF' }}>
                 <div style={{
                   width: '48px',
                   height: '48px',
                   borderRadius: '50%',
-                  background: 'var(--fp-primary-soft)',
-                  color: 'var(--fp-primary)',
+                  background: '#EEF2FF',
+                  color: '#4F46E5',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -143,17 +141,17 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
                 }}>
                   1
                 </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--fp-text)', marginBottom: '0.5rem' }}>
-                  Select Qualification
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#111827', marginBottom: '0.5rem' }}>
+                  Select Qualification & Stream
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--fp-text-secondary)', lineHeight: '1.5' }}>
-                  Pick your current qualification (10th SSC or 12th HSC) and stream (Science, Commerce, Arts, or Vocational) to filter relevant paths.
+                <p style={{ fontSize: '0.85rem', color: '#6B7280', lineHeight: '1.5' }}>
+                  Choose your current level — 10th Standard or 12th Science, Commerce, or Arts — to filter tailored roadmaps and eligible programs.
                 </p>
               </div>
             </div>
 
             <div className="col-12 col-md-4">
-              <div className="card h-100 p-4 text-center">
+              <div className="card h-100 p-4 text-center" style={{ background: '#FFFFFF' }}>
                 <div style={{
                   width: '48px',
                   height: '48px',
@@ -169,23 +167,23 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
                 }}>
                   2
                 </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--fp-text)', marginBottom: '0.5rem' }}>
-                  Explore Roadmaps & Courses
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#111827', marginBottom: '0.5rem' }}>
+                  Compare Degrees & Diplomas
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--fp-text-secondary)', lineHeight: '1.5' }}>
-                  Inspect curated academic roadmaps, compare courses side-by-side on duration, eligibility, fees, and career prospects.
+                <p style={{ fontSize: '0.85rem', color: '#6B7280', lineHeight: '1.5' }}>
+                  Review program duration, eligibility criteria, subjects, and compare multiple courses side-by-side using the comparison tool.
                 </p>
               </div>
             </div>
 
             <div className="col-12 col-md-4">
-              <div className="card h-100 p-4 text-center">
+              <div className="card h-100 p-4 text-center" style={{ background: '#FFFFFF' }}>
                 <div style={{
                   width: '48px',
                   height: '48px',
                   borderRadius: '50%',
-                  background: 'var(--fp-success-soft)',
-                  color: 'var(--fp-success)',
+                  background: '#ECFDF5',
+                  color: '#10B981',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -195,57 +193,81 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
                 }}>
                   3
                 </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--fp-text)', marginBottom: '0.5rem' }}>
-                  Colleges & Action Plan
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#111827', marginBottom: '0.5rem' }}>
+                  Find Gujarat Institutions
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--fp-text-secondary)', lineHeight: '1.5' }}>
-                  Discover affiliated colleges in Ahmedabad, Vadodara, and Surat, shortlist your preferences, and access admission portals.
+                <p style={{ fontSize: '0.85rem', color: '#6B7280', lineHeight: '1.5' }}>
+                  Discover accredited schools, colleges, universities, and polytechnics across Ahmedabad, Surat, Vadodara, Rajkot, and Gandhinagar.
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Feature Highlights Grid */}
+        {/* Key Features for Students */}
         <div className="mb-5">
           <div className="text-center mb-4">
-            <span className="badge badge-indigo mb-2">Platform Capabilities</span>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--fp-text)' }}>
-              Comprehensive Feature Set
+            <span className="badge badge-indigo mb-2">Features & Tools</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#111827' }}>
+              Everything You Need in One Place
             </h2>
           </div>
 
           <div className="row g-3">
             {[
-              { icon: Compass, title: 'Guidance Wizard', desc: 'Step-by-step interactive stream & qualification filter engine with real-time aggregated recommendations.' },
-              { icon: BookOpen, title: 'Course Comparison Matrix', desc: 'Side-by-side multi-course comparison comparing duration, fee range, eligibility, and salary outlook.' },
-              { icon: Sparkles, title: 'Career Aptitude Quiz', desc: '8-question interactive assessment that maps student interests to optimal career tracks and streams.' },
-              { icon: Building2, title: 'College Directory', desc: 'Verified institutions across Gujarat with city filters, accreditation details, and official website links.' },
-              { icon: Briefcase, title: 'Career Profiles', desc: 'Detailed career outlooks including required skills, job roles, salary bands, and top recruiters.' },
-              { icon: ShieldCheck, title: 'Role-Based Authentication', desc: 'Secure JWT authentication with student bookmarks persistence and full administrative CRUD dashboard.' }
+              { 
+                icon: Compass, 
+                title: 'Guidance Explorer', 
+                desc: 'Step-by-step stream filtering and recommendations tailored to your exact 10th or 12th marks and interests.' 
+              },
+              { 
+                icon: Layers, 
+                title: 'Academic Roadmaps', 
+                desc: 'Clear, multi-step pathways showing how to progress from school to diploma, degree, and professional certifications.' 
+              },
+              { 
+                icon: BookOpen, 
+                title: 'Course Comparison', 
+                desc: 'Compare up to 3 courses simultaneously on duration, entry requirements, subjects, and future career outcomes.' 
+              },
+              { 
+                icon: Building2, 
+                title: 'Gujarat Institutions', 
+                desc: 'Curated directory of universities, colleges, and polytechnics across major Gujarat cities with contact details and courses.' 
+              },
+              { 
+                icon: Briefcase, 
+                title: 'Career Trajectories', 
+                desc: 'Realistic career profiles with required industry skills, job roles, salary bands, and connected academic degrees.' 
+              },
+              { 
+                icon: Sparkles, 
+                title: 'Career Aptitude Quiz', 
+                desc: 'A quick, friendly interactive assessment that analyzes your interests and suggests the best matching educational streams.' 
+              }
             ].map((feat, idx) => {
               const Icon = feat.icon;
               return (
                 <div key={idx} className="col-12 col-md-6 col-lg-4">
-                  <div className="card h-100 p-3">
+                  <div className="card h-100 p-3" style={{ background: '#FFFFFF' }}>
                     <div className="d-flex align-items-center gap-2 mb-2">
                       <div style={{
-                        width: '32px',
-                        height: '32px',
+                        width: '34px',
+                        height: '34px',
                         borderRadius: '8px',
-                        background: 'var(--fp-primary-soft)',
-                        color: 'var(--fp-primary)',
+                        background: '#EEF2FF',
+                        color: '#4F46E5',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
                       }}>
                         <Icon size={18} />
                       </div>
-                      <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--fp-text)', marginBottom: 0 }}>
+                      <h4 style={{ fontSize: '0.975rem', fontWeight: '700', color: '#111827', marginBottom: 0 }}>
                         {feat.title}
                       </h4>
                     </div>
-                    <p style={{ fontSize: '0.825rem', color: 'var(--fp-text-secondary)', lineHeight: '1.5', marginBottom: 0 }}>
+                    <p style={{ fontSize: '0.825rem', color: '#6B7280', lineHeight: '1.5', marginBottom: 0 }}>
                       {feat.desc}
                     </p>
                   </div>
@@ -255,106 +277,43 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
           </div>
         </div>
 
-        {/* Academic Context & Tech Stack Architecture */}
-        <div className="card p-4 p-md-5 mb-5" style={{ background: '#F8FAFC', borderColor: 'var(--fp-border)' }}>
-          <div className="row g-4 align-items-center">
-            <div className="col-12 col-lg-6">
-              <span className="badge badge-indigo mb-2">Academic Project Details</span>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--fp-text)', marginBottom: '0.75rem' }}>
-                BCA Semester 5 — Advanced Web Designing (AWD)
-              </h3>
-              <p style={{ fontSize: '0.9rem', color: 'var(--fp-text-secondary)', lineHeight: '1.6', marginBottom: '1.25rem' }}>
-                This portal was developed as an end-to-end full-stack capstone for the BCA curriculum, demonstrating modern web standards, responsive design, RESTful API architecture, database modeling, and state management.
-              </p>
-              
-              <div className="d-flex flex-column gap-2">
-                <div className="d-flex align-items-center gap-2" style={{ fontSize: '0.85rem', color: 'var(--fp-text)' }}>
-                  <CheckCircle2 size={16} color="var(--fp-success)" />
-                  <span><strong>Full MERN Stack:</strong> MongoDB, Express.js 5, React 19, Node.js</span>
-                </div>
-                <div className="d-flex align-items-center gap-2" style={{ fontSize: '0.85rem', color: 'var(--fp-text)' }}>
-                  <CheckCircle2 size={16} color="var(--fp-success)" />
-                  <span><strong>Clean Architecture:</strong> Controllers, Models, Routes, Services, Middlewares</span>
-                </div>
-                <div className="d-flex align-items-center gap-2" style={{ fontSize: '0.85rem', color: 'var(--fp-success)' }}>
-                  <CheckCircle2 size={16} color="var(--fp-success)" />
-                  <span><strong>Security:</strong> JWT tokens, bcryptjs hashing, RBAC, input sanitization</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-12 col-lg-6">
-              <div className="card p-4" style={{ background: '#FFFFFF', borderColor: 'var(--fp-border)' }}>
-                <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--fp-text)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Code2 size={18} color="var(--fp-primary)" />
-                  <span>Architecture Stack Breakdown</span>
-                </h4>
-                
-                <div className="d-flex flex-column gap-3">
-                  <div className="d-flex justify-content-between align-items-center pb-2" style={{ borderBottom: '1px solid var(--fp-border)', fontSize: '0.85rem' }}>
-                    <span style={{ color: 'var(--fp-text-secondary)' }}>Frontend</span>
-                    <span style={{ fontWeight: '700', color: 'var(--fp-text)' }}>React 19 + Vite + CSS System</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center pb-2" style={{ borderBottom: '1px solid var(--fp-border)', fontSize: '0.85rem' }}>
-                    <span style={{ color: 'var(--fp-text-secondary)' }}>Backend Server</span>
-                    <span style={{ fontWeight: '700', color: 'var(--fp-text)' }}>Node.js + Express 5.x REST API</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center pb-2" style={{ borderBottom: '1px solid var(--fp-border)', fontSize: '0.85rem' }}>
-                    <span style={{ color: 'var(--fp-text-secondary)' }}>Database</span>
-                    <span style={{ fontWeight: '700', color: 'var(--fp-text)' }}>MongoDB + Mongoose 8.x ODM</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center pb-2" style={{ borderBottom: '1px solid var(--fp-border)', fontSize: '0.85rem' }}>
-                    <span style={{ color: 'var(--fp-text-secondary)' }}>Iconography & UI</span>
-                    <span style={{ fontWeight: '700', color: 'var(--fp-text)' }}>Lucide React + Custom FP Tokens</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center" style={{ fontSize: '0.85rem' }}>
-                    <span style={{ color: 'var(--fp-text-secondary)' }}>External Sources</span>
-                    <span style={{ fontWeight: '700', color: 'var(--fp-text)' }}>data.gov.in + Official Portals</span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Bottom CTA Box */}
         <div className="card p-4 p-md-5 text-center" style={{
-          background: 'var(--grad-primary)',
-          color: '#ffffff',
+          background: 'linear-gradient(135deg, #4F46E5 0%, #3730A3 100%)',
+          color: '#FFFFFF',
           borderRadius: 'var(--radius-lg)'
         }}>
-          <h2 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#ffffff', marginBottom: '0.75rem' }}>
-            Ready to Discover Your Academic Future?
+          <h2 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.75rem' }}>
+            Ready to Plan Your Educational Future?
           </h2>
           <p style={{ fontSize: '1rem', color: 'rgba(255, 255, 255, 0.9)', maxWidth: '600px', margin: '0 auto 1.5rem', lineHeight: '1.6' }}>
-            Start exploring tailored guidance pathways right now or consult our detailed FAQ center.
+            Explore tailored guidance pathways or test your stream suitability with our career aptitude quiz.
           </p>
           <div className="d-flex justify-content-center gap-3 flex-wrap">
             <button
               onClick={onExplore}
               className="btn btn-secondary"
               style={{
-                background: '#ffffff',
-                color: 'var(--fp-primary)',
+                background: '#FFFFFF',
+                color: '#4F46E5',
                 fontWeight: '700',
                 padding: '0.6rem 1.4rem'
               }}
             >
-              Launch Guidance Wizard
+              Start Guidance Explorer
             </button>
             <button
               onClick={onTakeQuiz}
               className="btn"
               style={{
                 background: 'rgba(255, 255, 255, 0.15)',
-                color: '#ffffff',
+                color: '#FFFFFF',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
                 fontWeight: '600',
                 padding: '0.6rem 1.4rem'
               }}
             >
-              Start Aptitude Quiz
+              Take Career Quiz
             </button>
           </div>
         </div>

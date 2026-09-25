@@ -65,8 +65,8 @@ const seedDatabase = async () => {
             description: "Humanities and social sciences including History, Psychology, Sociology, Literature, and Political Science."
         });
 
-        // 3. Seed Cities
-        console.log("Seeding Cities...");
+        // 3. Seed Gujarat Cities
+        console.log("Seeding Gujarat Cities...");
         const cityAhmedabad = await City.create({ name: "Ahmedabad", state: "Gujarat" });
         const cityVadodara = await City.create({ name: "Vadodara", state: "Gujarat" });
         const citySurat = await City.create({ name: "Surat", state: "Gujarat" });
@@ -239,7 +239,7 @@ const seedDatabase = async () => {
                 steps: [
                     "Complete 12th Standard from Science, Commerce, or Arts with English",
                     "Enroll in a 3-Year Bachelor of Computer Applications (BCA) program",
-                    "Master core programming: C++, Java, JavaScript, DBMS, and Web Technologies (MERN Stack)",
+                    "Master core programming: C++, Java, JavaScript, DBMS, and Web Technologies",
                     "Build dynamic portfolio websites, practical capstone projects, and participate in hackathons",
                     "Get campus placed or apply for Full-Stack Developer / Frontend Developer positions"
                 ]
@@ -291,24 +291,15 @@ const seedDatabase = async () => {
             }
         ]);
 
-        // 7. Seed Institutions
-        console.log("Seeding Institutions...");
+        // 7. Seed Curated Authentic Gujarat Institutions (Covering School, College, University, Institute, Polytechnic)
+        console.log("Seeding Gujarat Institutions...");
         await Institution.create([
-            {
-                name: "Ahmedabad Institute of Technology (AIT)",
-                city: cityAhmedabad._id,
-                type: "College",
-                affiliation: "Gujarat Technological University (GTU)",
-                address: "Gota-Ognaj Road, Gota, Ahmedabad, Gujarat 382481",
-                website: "https://www.aitindia.in",
-                contactNumber: "079-27660251",
-                coursesOffered: [courseBTechCSE._id, courseBCA._id]
-            },
             {
                 name: "Gujarat University",
                 city: cityAhmedabad._id,
+                state: "Gujarat",
                 type: "University",
-                affiliation: "UGC / State University",
+                affiliation: "UGC / State University (NAAC A+)",
                 address: "Navrangpura, Ahmedabad, Gujarat 380009",
                 website: "https://www.gujaratuniversity.ac.in",
                 contactNumber: "079-26301341",
@@ -317,6 +308,7 @@ const seedDatabase = async () => {
             {
                 name: "The Maharaja Sayajirao University of Baroda (MSU)",
                 city: cityVadodara._id,
+                state: "Gujarat",
                 type: "University",
                 affiliation: "UGC / State University (NAAC A+)",
                 address: "Pratapgunj, Vadodara, Gujarat 390002",
@@ -325,18 +317,53 @@ const seedDatabase = async () => {
                 coursesOffered: [courseBTechCSE._id, courseBCom._id, courseBA._id, courseBCA._id]
             },
             {
-                name: "Government Polytechnic Ahmedabad",
+                name: "Veer Narmad South Gujarat University (VNSGU)",
+                city: citySurat._id,
+                state: "Gujarat",
+                type: "University",
+                affiliation: "UGC / State University",
+                address: "University Road, Surat, Gujarat 395007",
+                website: "https://www.vnsgu.ac.in",
+                contactNumber: "0261-2227141",
+                coursesOffered: [courseBCA._id, courseBCom._id, courseBBA._id]
+            },
+            {
+                name: "Pandit Deendayal Energy University (PDEU)",
+                city: cityGandhinagar._id,
+                state: "Gujarat",
+                type: "University",
+                affiliation: "UGC / NAAC A++ Accredited",
+                address: "Knowledge Corridor, Raisan Village, Gandhinagar, Gujarat 382007",
+                website: "https://www.pdeu.ac.in",
+                contactNumber: "079-23275060",
+                coursesOffered: [courseBTechCSE._id, courseBBA._id]
+            },
+            {
+                name: "L.D. College of Engineering (LDCE)",
                 city: cityAhmedabad._id,
-                type: "Polytechnic",
-                affiliation: "Gujarat Technological University (GTU) / TEB",
-                address: "Panjrapole Cross Road, Ambawadi, Ahmedabad, Gujarat 380015",
-                website: "https://www.gpahmedabad.ac.in",
-                contactNumber: "079-26305516",
-                coursesOffered: [courseDiplomaCE._id, courseDiplomaME._id]
+                state: "Gujarat",
+                type: "College",
+                affiliation: "Gujarat Technological University (GTU) / AICTE",
+                address: "120 Circular Road, University Area, Ahmedabad, Gujarat 380015",
+                website: "https://www.ldce.ac.in",
+                contactNumber: "079-26306752",
+                coursesOffered: [courseBTechCSE._id]
+            },
+            {
+                name: "Ahmedabad Institute of Technology (AIT)",
+                city: cityAhmedabad._id,
+                state: "Gujarat",
+                type: "College",
+                affiliation: "Gujarat Technological University (GTU)",
+                address: "Gota-Ognaj Road, Gota, Ahmedabad, Gujarat 382481",
+                website: "https://www.aitindia.in",
+                contactNumber: "079-27660251",
+                coursesOffered: [courseBTechCSE._id, courseBCA._id]
             },
             {
                 name: "B.J. Medical College & Civil Hospital",
                 city: cityAhmedabad._id,
+                state: "Gujarat",
                 type: "College",
                 affiliation: "Gujarat University / NMC",
                 address: "Asarwa, Ahmedabad, Gujarat 380016",
@@ -345,20 +372,65 @@ const seedDatabase = async () => {
                 coursesOffered: [courseMBBS._id]
             },
             {
-                name: "Veer Narmad South Gujarat University (VNSGU)",
+                name: "Government Engineering College, Rajkot (GEC Rajkot)",
+                city: cityRajkot._id,
+                state: "Gujarat",
+                type: "College",
+                affiliation: "Gujarat Technological University (GTU)",
+                address: "Mavadi Kankot Road, Rajkot, Gujarat 360005",
+                website: "https://www.gecrj.cteguj.in",
+                contactNumber: "0281-2924162",
+                coursesOffered: [courseBTechCSE._id]
+            },
+            {
+                name: "Dhirubhai Ambani Institute of Information and Communication Technology (DA-IICT)",
+                city: cityGandhinagar._id,
+                state: "Gujarat",
+                type: "Institute",
+                affiliation: "UGC / AICTE Approved",
+                address: "Near Indroda Circle, Gandhinagar, Gujarat 382007",
+                website: "https://www.daiict.ac.in",
+                contactNumber: "079-68261700",
+                coursesOffered: [courseBTechCSE._id]
+            },
+            {
+                name: "Government Polytechnic Ahmedabad",
+                city: cityAhmedabad._id,
+                state: "Gujarat",
+                type: "Polytechnic",
+                affiliation: "Gujarat Technological University (GTU) / TEB",
+                address: "Panjrapole Cross Road, Ambawadi, Ahmedabad, Gujarat 380015",
+                website: "https://www.gpahmedabad.ac.in",
+                contactNumber: "079-26305516",
+                coursesOffered: [courseDiplomaCE._id, courseDiplomaME._id]
+            },
+            {
+                name: "A.V. Parekh Technical Institute",
+                city: cityRajkot._id,
+                state: "Gujarat",
+                type: "Polytechnic",
+                affiliation: "Gujarat Technological University (GTU)",
+                address: "Dr. Yagnik Road, Rajkot, Gujarat 360001",
+                website: "https://www.avptiorg.in",
+                contactNumber: "0281-2480175",
+                coursesOffered: [courseDiplomaCE._id, courseDiplomaME._id]
+            },
+            {
+                name: "Surat District Community Science Centre & Higher Secondary Model School",
                 city: citySurat._id,
-                type: "University",
-                affiliation: "UGC / State University",
-                address: "University Road, Surat, Gujarat 395007",
-                website: "https://www.vnsgu.ac.in",
-                contactNumber: "0261-2227141",
-                coursesOffered: [courseBCA._id, courseBCom._id, courseBBA._id]
+                state: "Gujarat",
+                type: "School",
+                affiliation: "GSEB (Gujarat Secondary and Higher Secondary Education Board)",
+                address: "Athwa Lines, Surat, Gujarat 395001",
+                website: "https://gseb.org",
+                contactNumber: "0261-2669145",
+                coursesOffered: []
             }
         ]);
 
         console.log("\n=======================================================");
-        console.log("  DATABASE SEEDING COMPLETED SUCCESSFULLY!");
-        console.log("  Real-world guidance data for 10th & 12th is ready.");
+        console.log("  GUJARAT EDUCATION DATABASE SEEDED SUCCESSFULLY!");
+        console.log("  Curated Gujarat institutions across 5 categories ready.");
         console.log("=======================================================\n");
 
         // Seed default admin user

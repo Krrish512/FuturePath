@@ -65,7 +65,7 @@ export default function Hero({ summary, onSelectCategory }) {
               padding: '0.75rem',
               borderRadius: 'var(--radius-md)'
             }}>
-              
+             🎒 
             </div>
             <div>
               <div className="badge badge-cyan" style={{ marginBottom: '0.35rem' }}>Secondary School</div>

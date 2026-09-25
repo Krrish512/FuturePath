@@ -14,6 +14,12 @@ const institutionSchema = new mongoose.Schema(
             required: true
         },
 
+        state: {
+            type: String,
+            default: "Gujarat",
+            trim: true
+        },
+
         type: {
             type: String,
             required: true,

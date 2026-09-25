@@ -17,7 +17,6 @@ import CompareModal from './components/CompareModal';
 import AuthView from './components/AuthView';
 import ProfileView from './components/ProfileView';
 import AdminDashboard from './components/AdminDashboard';
-import EducationUpdates from './components/EducationUpdates';
 import AboutView from './components/AboutView';
 import ContactView from './components/ContactView';
 import PrivacyPolicyView from './components/PrivacyPolicyView';
@@ -427,77 +426,106 @@ function App() {
           </section>
         )}
 
-        {/* Dedicated Colleges View */}
+        {/* Dedicated Gujarat Institutions View */}
         {activeTab === 'colleges' && (
-          <section className="container" style={{ padding: '3.5rem 1.5rem 5rem' }}>
+          <section className="container-xl px-3 px-sm-4" style={{ padding: '3.5rem 1.5rem 5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-              <span className="badge badge-cyan" style={{ marginBottom: '0.5rem' }}>Higher Education</span>
-              <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-                Colleges, Universities & <span className="gradient-text">Polytechnics</span>
+              <span className="badge badge-indigo mb-2" style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem' }}>
+                📍 Gujarat Institutions Directory
+              </span>
+              <h2 style={{ fontSize: '2.25rem', fontWeight: '800', letterSpacing: '-0.03em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
+                Explore Gujarat <span className="gradient-text">Institutions</span>
               </h2>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                Top accredited educational institutions across Gujarat offering these programs.
+              <p style={{ color: 'var(--fp-text-secondary)', fontSize: '1rem', maxWidth: '640px', margin: '0 auto 1.5rem', lineHeight: '1.6' }}>
+                Curated database of accredited schools, colleges, universities, institutes, and polytechnics across Gujarat.
               </p>
 
               {/* City & Type Filter Pills */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', alignItems: 'center', marginBottom: '1.5rem' }}>
                 {/* City Pills */}
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {['All', 'Ahmedabad', 'Vadodara', 'Surat'].map((city) => (
-                    <button
-                      key={city}
-                      onClick={() => setSelectedCityFilter(city)}
-                      style={{
-                        padding: '0.35rem 0.85rem',
-                        fontSize: '0.8rem',
-                        fontWeight: '600',
-                        borderRadius: 'var(--radius-full)',
-                        background: selectedCityFilter === city ? 'var(--grad-primary)' : 'rgba(255, 255, 255, 0.05)',
-                        color: selectedCityFilter === city ? '#ffffff' : 'var(--text-muted)',
-                        border: selectedCityFilter === city ? '1px solid transparent' : '1px solid var(--border-light)'
-                      }}
-                    >
-                      📍 {city}
-                    </button>
-                  ))}
+                  {[
+                    { id: 'All', label: 'All Gujarat' },
+                    { id: 'Ahmedabad', label: 'Ahmedabad' },
+                    { id: 'Surat', label: 'Surat' },
+                    { id: 'Vadodara', label: 'Vadodara' },
+                    { id: 'Rajkot', label: 'Rajkot' },
+                    { id: 'Gandhinagar', label: 'Gandhinagar' }
+                  ].map((city) => {
+                    const isSelected = selectedCityFilter === city.id;
+                    return (
+                      <button
+                        key={city.id}
+                        type="button"
+                        onClick={() => setSelectedCityFilter(city.id)}
+                        style={{
+                          padding: '0.4rem 0.95rem',
+                          fontSize: '0.825rem',
+                          fontWeight: isSelected ? '700' : '500',
+                          borderRadius: 'var(--radius-full)',
+                          background: isSelected ? 'var(--fp-primary)' : 'var(--fp-surface)',
+                          color: isSelected ? '#FFFFFF' : 'var(--fp-text-secondary)',
+                          border: isSelected ? '1px solid var(--fp-primary)' : '1px solid var(--fp-border)',
+                          transition: 'all 0.15s ease',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        📍 {city.label}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Type Pills */}
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {['All', 'College', 'University', 'Polytechnic'].map((type) => (
-                    <button
-                      key={type}
-                      onClick={() => setSelectedTypeFilter(type)}
-                      style={{
-                        padding: '0.35rem 0.85rem',
-                        fontSize: '0.8rem',
-                        fontWeight: '600',
-                        borderRadius: 'var(--radius-full)',
-                        background: selectedTypeFilter === type ? 'rgba(6, 182, 212, 0.25)' : 'rgba(255, 255, 255, 0.05)',
-                        color: selectedTypeFilter === type ? '#38bdf8' : 'var(--text-muted)',
-                        border: selectedTypeFilter === type ? '1px solid #38bdf8' : '1px solid var(--border-light)'
-                      }}
-                    >
-                      🏛️ {type}
-                    </button>
-                  ))}
+                  {[
+                    { id: 'All', label: 'All Types' },
+                    { id: 'School', label: 'School' },
+                    { id: 'College', label: 'College' },
+                    { id: 'University', label: 'University' },
+                    { id: 'Institute', label: 'Institute' },
+                    { id: 'Polytechnic', label: 'Polytechnic' }
+                  ].map((type) => {
+                    const isSelected = selectedTypeFilter === type.id;
+                    return (
+                      <button
+                        key={type.id}
+                        type="button"
+                        onClick={() => setSelectedTypeFilter(type.id)}
+                        style={{
+                          padding: '0.35rem 0.85rem',
+                          fontSize: '0.8rem',
+                          fontWeight: isSelected ? '700' : '500',
+                          borderRadius: 'var(--radius-full)',
+                          background: isSelected ? 'var(--fp-primary-soft)' : 'var(--fp-surface)',
+                          color: isSelected ? 'var(--fp-primary)' : 'var(--fp-text-secondary)',
+                          border: isSelected ? '1px solid var(--fp-primary)' : '1px solid var(--fp-border)',
+                          transition: 'all 0.15s ease',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        🏛️ {type.label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Search Bar */}
-              <div style={{ maxWidth: '480px', margin: '0 auto' }}>
+              <div style={{ maxWidth: '520px', margin: '0 auto' }}>
                 <input
                   type="text"
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
-                  placeholder="🔍 Search colleges by name or affiliation (e.g. GTU, MSU, AIT)..."
-                  style={searchInputStyle}
+                  placeholder="🔍 Search Gujarat institutions by name or affiliation (e.g. GTU, MSU, AIT)..."
+                  className="fp-input"
+                  style={{ padding: '0.75rem 1.25rem', fontSize: '0.9rem', borderRadius: 'var(--radius-full)' }}
                 />
               </div>
             </div>
 
             {loadingView ? (
-              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)' }}>Loading colleges...</div>
+              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)' }}>Loading institutions...</div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
                 {filteredColleges.map((inst) => (
@@ -522,12 +550,7 @@ function App() {
           />
         )}
 
-        {/* Live & Verified Education Updates / Official Portals */}
-        {activeTab === 'updates' && (
-          <EducationUpdates />
-        )}
-
-        {/* About FuturePath Portal View */}
+        {/* About FuturePath View */}
         {activeTab === 'about' && (
           <AboutView 
             onExplore={() => setActiveTab('explore')}

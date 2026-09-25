@@ -13,7 +13,6 @@ import {
   ShieldCheck, 
   Menu, 
   X,
-  Bell,
   Info
 } from 'lucide-react';
 
@@ -33,7 +32,6 @@ export default function Navbar({
     { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'careers', label: 'Careers', icon: Briefcase },
     { id: 'colleges', label: 'Colleges', icon: GraduationCap },
-    { id: 'updates', label: 'Updates', icon: Bell },
     { id: 'about', label: 'About', icon: Info },
     { id: 'faq', label: 'FAQ', icon: HelpCircle },
   ];
@@ -95,25 +93,14 @@ export default function Navbar({
               }}>
                 <GraduationCap size={22} />
               </div>
-              <div>
-                <div style={{ 
-                  fontSize: '1.25rem', 
-                  fontWeight: '800', 
-                  letterSpacing: '-0.03em', 
-                  lineHeight: '1.1',
-                  color: 'var(--fp-text)'
-                }}>
-                  Future<span style={{ color: 'var(--fp-primary)' }}>Path</span>
-                </div>
-                <div style={{ 
-                  fontSize: '0.65rem', 
-                  color: 'var(--fp-text-secondary)', 
-                  letterSpacing: '0.04em', 
-                  textTransform: 'uppercase',
-                  fontWeight: '600'
-                }}>
-                  Education & Career Portal
-                </div>
+              <div style={{ 
+                fontSize: '1.3rem', 
+                fontWeight: '800', 
+                letterSpacing: '-0.03em', 
+                lineHeight: '1.2',
+                color: 'var(--fp-text)'
+              }}>
+                Future<span style={{ color: 'var(--fp-primary)' }}>Path</span>
               </div>
             </div>
 
@@ -329,13 +316,8 @@ export default function Navbar({
                 }}>
                   <GraduationCap size={20} />
                 </div>
-                <div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--fp-text)' }}>
-                    Future<span style={{ color: 'var(--fp-primary)' }}>Path</span>
-                  </div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--fp-text-secondary)', textTransform: 'uppercase', fontWeight: '600' }}>
-                    Career Guidance
-                  </div>
+                <div style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--fp-text)' }}>
+                  Future<span style={{ color: 'var(--fp-primary)' }}>Path</span>
                 </div>
               </div>
               <button 
