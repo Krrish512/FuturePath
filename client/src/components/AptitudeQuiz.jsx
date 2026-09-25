@@ -142,8 +142,8 @@ export default function AptitudeQuiz({ onExplorePath }) {
   };
 
   return (
-    <section className="container" style={{ padding: '3.5rem 1.5rem 5rem' }}>
-      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+    <section className="container" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <span className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>Aptitude Assessment</span>
         <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
           Interactive Career & Stream <span className="gradient-text">Decision Quiz</span>
@@ -154,39 +154,39 @@ export default function AptitudeQuiz({ onExplorePath }) {
       </div>
 
       {!result ? (
-        <div className="glass-card fade-in" style={{ maxWidth: '720px', margin: '0 auto', padding: '2.5rem' }}>
+        <div className="glass-card fade-in" style={{ maxWidth: '720px', margin: '0 auto', padding: '2rem' }}>
           {/* Progress Bar */}
-          <div style={{ marginBottom: '2rem' }}>
+          <div style={{ marginBottom: '1.75rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
               <span>Question {currentStep + 1} of {QUIZ_QUESTIONS.length}</span>
               <span>{Math.round(((currentStep + 1) / QUIZ_QUESTIONS.length) * 100)}% Completed</span>
             </div>
-            <div style={{ height: '6px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '6px', background: '#E5E7EB', borderRadius: '3px', overflow: 'hidden' }}>
               <div style={{
                 height: '100%',
                 width: `${((currentStep + 1) / QUIZ_QUESTIONS.length) * 100}%`,
-                background: 'var(--grad-primary)',
+                background: 'var(--fp-primary, #4F46E5)',
                 transition: 'width 0.3s ease'
               }} />
             </div>
           </div>
 
           {/* Question Text */}
-          <h3 style={{ fontSize: '1.35rem', marginBottom: '1.75rem', lineHeight: '1.4', color: '#ffffff' }}>
+          <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', lineHeight: '1.4', color: 'var(--fp-text, #111827)' }}>
             {QUIZ_QUESTIONS[currentStep].question}
           </h3>
 
           {/* Options Grid */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {QUIZ_QUESTIONS[currentStep].options.map((opt, idx) => (
               <div
                 key={idx}
                 onClick={() => handleSelectOption(opt.track)}
                 style={{
-                  padding: '1.25rem 1.5rem',
+                  padding: '1rem 1.25rem',
                   borderRadius: 'var(--radius-md)',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid var(--border-light)',
+                  background: 'var(--fp-surface, #FFFFFF)',
+                  border: '1px solid var(--fp-border, #E5E7EB)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -194,25 +194,25 @@ export default function AptitudeQuiz({ onExplorePath }) {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.5)';
-                  e.currentTarget.style.background = 'rgba(99, 102, 241, 0.08)';
+                  e.currentTarget.style.borderColor = '#C7D2FE';
+                  e.currentTarget.style.background = '#F8FAFC';
                   e.currentTarget.style.transform = 'translateX(4px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-light)';
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                  e.currentTarget.style.borderColor = 'var(--fp-border, #E5E7EB)';
+                  e.currentTarget.style.background = 'var(--fp-surface, #FFFFFF)';
                   e.currentTarget.style.transform = 'translateX(0)';
                 }}
               >
                 <div style={{
                   fontSize: '1.5rem',
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  padding: '0.5rem',
+                  background: '#EEF2FF',
+                  padding: '0.4rem',
                   borderRadius: 'var(--radius-sm)'
                 }}>
                   {opt.icon}
                 </div>
-                <div style={{ fontSize: '0.95rem', color: 'var(--text-main)', fontWeight: '500' }}>
+                <div style={{ fontSize: '0.95rem', color: 'var(--fp-text, #111827)', fontWeight: '500' }}>
                   {opt.text}
                 </div>
               </div>
@@ -221,8 +221,8 @@ export default function AptitudeQuiz({ onExplorePath }) {
         </div>
       ) : (
         /* Result Screen */
-        <div className="glass-card fade-in" style={{ maxWidth: '780px', margin: '0 auto', padding: '3rem', textAlign: 'center' }}>
-          <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>
+        <div className="glass-card fade-in" style={{ maxWidth: '780px', margin: '0 auto', padding: '2.5rem', textAlign: 'center' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>
             {result.icon}
           </div>
 
@@ -230,7 +230,7 @@ export default function AptitudeQuiz({ onExplorePath }) {
             🎯 {result.matchPercentage}% Alignment Match
           </span>
 
-          <h3 style={{ fontSize: '1.85rem', marginBottom: '0.75rem', color: '#ffffff' }}>
+          <h3 style={{ fontSize: '1.75rem', marginBottom: '0.75rem', color: 'var(--fp-text, #111827)' }}>
             {result.title}
           </h3>
 
@@ -247,15 +247,15 @@ export default function AptitudeQuiz({ onExplorePath }) {
           }}>
             {/* Recommended Degrees */}
             <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
+              background: '#F9FAFB',
               padding: '1.25rem',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-light)'
+              borderRadius: '8px',
+              border: '1px solid #E5E7EB'
             }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--accent-cyan)', marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', color: '#0284C7', marginBottom: '0.5rem' }}>
                 Recommended Degrees:
               </div>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.875rem', color: 'var(--text-main)' }}>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.875rem', color: 'var(--fp-text, #111827)' }}>
                 {result.recommendedDegrees.map((deg, i) => (
                   <li key={i}>• {deg}</li>
                 ))}
@@ -264,15 +264,15 @@ export default function AptitudeQuiz({ onExplorePath }) {
 
             {/* Target Careers */}
             <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
+              background: '#F9FAFB',
               padding: '1.25rem',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-light)'
+              borderRadius: '8px',
+              border: '1px solid #E5E7EB'
             }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--accent-emerald)', marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', color: '#059669', marginBottom: '0.5rem' }}>
                 Future Career Opportunities:
               </div>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.875rem', color: 'var(--text-main)' }}>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.875rem', color: 'var(--fp-text, #111827)' }}>
                 {result.targetCareers.map((car, i) => (
                   <li key={i}>• {car}</li>
                 ))}

@@ -18,7 +18,7 @@ import {
 
 export default function AboutView({ onExplore, onTakeQuiz }) {
   return (
-    <div style={{ minHeight: '80vh', paddingBottom: '4rem' }}>
+    <div style={{ paddingBottom: '2.5rem' }}>
       
       {/* Hero Section */}
       <section style={{

@@ -12,13 +12,14 @@ import {
 
 export default function TermsOfUseView({ onGoToContact, onExplore }) {
   return (
-    <div style={{ minHeight: '80vh', paddingBottom: '4rem' }}>
+    <div style={{ paddingBottom: '2.5rem' }}>
       
       {/* Header Banner */}
       <section style={{
         background: 'linear-gradient(180deg, #EEF2FF 0%, #FFFFFF 100%)',
         borderBottom: '1px solid var(--fp-border)',
         padding: '3.5rem 1.5rem 3rem'
+        
       }}>
         <div className="container-xl" style={{ maxWidth: '800px', textAlign: 'center' }}>
           <span className="badge badge-indigo mb-2" style={{ padding: '0.4rem 0.95rem', fontSize: '0.8rem' }}>

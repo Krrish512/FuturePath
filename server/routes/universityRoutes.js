@@ -7,15 +7,15 @@ const {
     updateUniversity,
     deleteUniversity
 } = require("../controllers/universityController");
-const { protect, admin } = require("../middleware/auth");
+const { protect, adminOnly } = require("../middleware/auth");
 
 router.route("/")
     .get(getAllUniversities)
-    .post(protect, admin, createUniversity);
+    .post(protect, adminOnly, createUniversity);
 
 router.route("/:id")
     .get(getUniversityById)
-    .put(protect, admin, updateUniversity)
-    .delete(protect, admin, deleteUniversity);
+    .put(protect, adminOnly, updateUniversity)
+    .delete(protect, adminOnly, deleteUniversity);
 
 module.exports = router;

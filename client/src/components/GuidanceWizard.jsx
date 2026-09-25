@@ -261,11 +261,7 @@ export default function GuidanceWizard({
           <div>
             {/* Section 1: Pathways */}
             {activeSection === 'pathways' && (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-                gap: '1.5rem'
-              }}>
+              <div className="fp-grid-cards">
                 {filteredPathways && filteredPathways.length > 0 ? (
                   filteredPathways.map((pathway) => (
                     <PathwayCard 
@@ -285,11 +281,7 @@ export default function GuidanceWizard({
 
             {/* Section 2: Courses */}
             {activeSection === 'courses' && (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: '1.5rem'
-              }}>
+              <div className="fp-grid-cards">
                 {filteredCourses && filteredCourses.length > 0 ? (
                   filteredCourses.map((course) => (
                     <CourseCard 
@@ -309,11 +301,7 @@ export default function GuidanceWizard({
 
             {/* Section 3: Careers */}
             {activeSection === 'careers' && (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: '1.5rem'
-              }}>
+              <div className="fp-grid-cards">
                 {filteredCareers && filteredCareers.length > 0 ? (
                   filteredCareers.map((career) => (
                     <CareerCard 
@@ -333,11 +321,7 @@ export default function GuidanceWizard({
 
             {/* Section 4: Institutions */}
             {activeSection === 'institutions' && (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: '1.5rem'
-              }}>
+              <div className="fp-grid-cards">
                 {filteredInstitutions && filteredInstitutions.length > 0 ? (
                   filteredInstitutions.map((inst) => (
                     <InstitutionCard 

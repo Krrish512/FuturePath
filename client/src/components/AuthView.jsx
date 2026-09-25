@@ -56,11 +56,10 @@ export default function AuthView({ onLogin, onRegister, loading, initialMode = '
 
   return (
     <section style={{
-      minHeight: 'calc(100vh - 72px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '2rem 1.5rem',
+      padding: '3rem 1.5rem 4rem',
       background: 'var(--fp-bg)',
     }}>
       <div style={{

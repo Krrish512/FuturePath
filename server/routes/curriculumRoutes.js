@@ -7,15 +7,15 @@ const {
     updateCurriculum,
     deleteCurriculum
 } = require("../controllers/curriculumController");
-const { protect, admin } = require("../middleware/auth");
+const { protect, adminOnly } = require("../middleware/auth");
 
 router.route("/")
     .get(getAllCurriculum)
-    .post(protect, admin, createCurriculum);
+    .post(protect, adminOnly, createCurriculum);
 
 router.route("/:id")
     .get(getCurriculumById)
-    .put(protect, admin, updateCurriculum)
-    .delete(protect, admin, deleteCurriculum);
+    .put(protect, adminOnly, updateCurriculum)
+    .delete(protect, adminOnly, deleteCurriculum);
 
 module.exports = router;

@@ -94,7 +94,7 @@ export default function FAQView({ onExploreGuidance, onTakeQuiz }) {
   };
 
   return (
-    <section className="container-xl px-3 px-sm-4 py-4 py-lg-5" style={{ minHeight: '80vh' }}>
+    <section className="container-xl px-3 px-sm-4 py-4 py-lg-4" style={{ paddingBottom: '3rem' }}>
       
       {/* FAQ Hero Header */}
       <div style={{ textAlign: 'center', maxWidth: '850px', margin: '0 auto 2.5rem' }}>

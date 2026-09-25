@@ -20,8 +20,18 @@ export default function CareerCard({ career, onToggleBookmark, isSaved }) {
       }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-        <h3 style={{ fontSize: '1.15rem', fontWeight: '700', color: 'var(--fp-text, #111827)', margin: 0 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.65rem' }}>
+        <h3 
+          className="clamp-2"
+          style={{ 
+            fontSize: '1.1rem', 
+            fontWeight: '700', 
+            color: 'var(--fp-text, #111827)', 
+            margin: 0,
+            lineHeight: '1.35',
+            minHeight: '2.8rem'
+          }}
+        >
           {career.title}
         </h3>
 
@@ -39,7 +49,8 @@ export default function CareerCard({ career, onToggleBookmark, isSaved }) {
               fontSize: '0.8rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.25rem'
+              gap: '0.25rem',
+              flexShrink: 0
             }}
           >
             <Bookmark size={13} fill={isSaved ? '#D97706' : 'none'} />
@@ -49,7 +60,7 @@ export default function CareerCard({ career, onToggleBookmark, isSaved }) {
 
       {/* Salary Badge */}
       {career.salaryRange && (
-        <div style={{ marginBottom: '0.75rem' }}>
+        <div style={{ marginBottom: '0.65rem' }}>
           <span style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -68,7 +79,16 @@ export default function CareerCard({ career, onToggleBookmark, isSaved }) {
       )}
 
       {/* Description */}
-      <p style={{ fontSize: '0.85rem', color: 'var(--fp-secondary, #6B7280)', marginBottom: '1rem', lineHeight: '1.45' }}>
+      <p 
+        className="clamp-3"
+        style={{ 
+          fontSize: '0.85rem', 
+          color: 'var(--fp-secondary, #6B7280)', 
+          marginBottom: '0.85rem', 
+          lineHeight: '1.45',
+          minHeight: '3.6rem'
+        }}
+      >
         {career.description}
       </p>
 

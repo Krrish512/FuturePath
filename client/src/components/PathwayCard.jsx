@@ -73,13 +73,32 @@ export default function PathwayCard({ pathway, onToggleBookmark, isSaved }) {
         </div>
 
         {/* Title */}
-        <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--fp-text, #111827)', marginBottom: '0.4rem', lineHeight: '1.4' }}>
+        <h3 
+          className="clamp-2"
+          style={{ 
+            fontSize: '1.05rem', 
+            fontWeight: '700', 
+            color: 'var(--fp-text, #111827)', 
+            marginBottom: '0.4rem', 
+            lineHeight: '1.35',
+            minHeight: '2.7rem'
+          }}
+        >
           {pathway.title}
         </h3>
 
         {/* Short Description */}
-        <p style={{ fontSize: '0.825rem', color: 'var(--fp-secondary, #6B7280)', marginBottom: '1rem', lineHeight: '1.4' }}>
-          {pathway.description ? (pathway.description.length > 100 ? pathway.description.slice(0, 100) + '...' : pathway.description) : 'Comprehensive career transition steps.'}
+        <p 
+          className="clamp-3"
+          style={{ 
+            fontSize: '0.825rem', 
+            color: 'var(--fp-secondary, #6B7280)', 
+            marginBottom: '0.85rem', 
+            lineHeight: '1.45',
+            minHeight: '3.4rem'
+          }}
+        >
+          {pathway.description || 'Comprehensive career transition steps.'}
         </p>
 
         {/* 3-Step Preview */}

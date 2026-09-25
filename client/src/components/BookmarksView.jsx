@@ -11,12 +11,12 @@ export default function BookmarksView({ bookmarks, onToggleBookmark, onClearAll 
   const colleges = bookmarks.filter((b) => b.type === 'institution');
 
   return (
-    <section className="container" style={{ padding: '3.5rem 1.5rem 5rem' }}>
+    <section className="container" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '2.5rem',
+        marginBottom: '2rem',
         flexWrap: 'wrap',
         gap: '1rem'
       }}>
@@ -42,7 +42,7 @@ export default function BookmarksView({ bookmarks, onToggleBookmark, onClearAll 
       </div>
 
       {bookmarks.length === 0 ? (
-        <div className="glass-card" style={{ padding: '4rem 2rem', textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+        <div className="glass-card" style={{ padding: '3.5rem 2rem', textAlign: 'center', maxWidth: '560px', margin: '0 auto' }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⭐</div>
           <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Your Shortlist is Empty</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
@@ -50,14 +50,14 @@ export default function BookmarksView({ bookmarks, onToggleBookmark, onClearAll 
           </p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
           {/* Saved Pathways */}
           {pathways.length > 0 && (
             <div>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '0.85rem', color: 'var(--fp-text, #111827)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span>🗺️</span> Saved Roadmaps ({pathways.length})
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.5rem' }}>
+              <div className="fp-grid-cards">
                 {pathways.map((p) => (
                   <PathwayCard
                     key={p._id}
@@ -73,10 +73,10 @@ export default function BookmarksView({ bookmarks, onToggleBookmark, onClearAll 
           {/* Saved Courses */}
           {courses.length > 0 && (
             <div>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '0.85rem', color: 'var(--fp-text, #111827)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span>📚</span> Saved Degree Programs ({courses.length})
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+              <div className="fp-grid-cards">
                 {courses.map((c) => (
                   <CourseCard
                     key={c._id}
@@ -92,10 +92,10 @@ export default function BookmarksView({ bookmarks, onToggleBookmark, onClearAll 
           {/* Saved Careers */}
           {careers.length > 0 && (
             <div>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '0.85rem', color: 'var(--fp-text, #111827)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span>💼</span> Saved Career Options ({careers.length})
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+              <div className="fp-grid-cards">
                 {careers.map((car) => (
                   <CareerCard
                     key={car._id}
@@ -111,10 +111,10 @@ export default function BookmarksView({ bookmarks, onToggleBookmark, onClearAll 
           {/* Saved Colleges */}
           {colleges.length > 0 && (
             <div>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '0.85rem', color: 'var(--fp-text, #111827)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span>🏛️</span> Saved Colleges & Universities ({colleges.length})
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+              <div className="fp-grid-cards">
                 {colleges.map((inst) => (
                   <InstitutionCard
                     key={inst._id}

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Mail, GraduationCap, Shield, Calendar, Sparkles, Compass, LogOut } from 'lucide-react';
 
@@ -14,11 +15,10 @@ export default function ProfileView({ user, onLogout, onGoExplore }) {
 
   return (
     <section style={{
-      minHeight: 'calc(100vh - 72px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '2rem 1.5rem',
+      padding: '3rem 1.5rem 4rem',
       background: 'var(--fp-bg)',
     }}>
       <div style={{

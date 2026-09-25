@@ -66,20 +66,30 @@ export default function InstitutionCard({ institution, onToggleBookmark, isSaved
       </div>
 
       {/* Name */}
-      <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--fp-text, #111827)', marginBottom: '0.35rem', lineHeight: '1.4' }}>
+      <h3 
+        className="clamp-2"
+        style={{ 
+          fontSize: '1.05rem', 
+          fontWeight: '700', 
+          color: 'var(--fp-text, #111827)', 
+          marginBottom: '0.35rem', 
+          lineHeight: '1.35',
+          minHeight: '2.7rem'
+        }}
+      >
         {institution.name}
       </h3>
 
       {/* Affiliation */}
       {institution.affiliation && (
-        <div style={{ fontSize: '0.8rem', color: '#4F46E5', fontWeight: '500', marginBottom: '0.65rem' }}>
+        <div className="clamp-1" style={{ fontSize: '0.8rem', color: '#4F46E5', fontWeight: '500', marginBottom: '0.5rem' }}>
           Affiliation: {institution.affiliation}
         </div>
       )}
 
       {/* Address */}
       {institution.address && (
-        <p style={{ fontSize: '0.825rem', color: 'var(--fp-secondary, #6B7280)', marginBottom: '0.75rem', lineHeight: '1.4' }}>
+        <p className="clamp-2" style={{ fontSize: '0.825rem', color: 'var(--fp-secondary, #6B7280)', marginBottom: '0.65rem', lineHeight: '1.4', minHeight: '2.3rem' }}>
           {institution.address}
         </p>
       )}

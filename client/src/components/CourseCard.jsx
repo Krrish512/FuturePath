@@ -63,13 +63,17 @@ export default function CourseCard({
         </div>
 
         {/* Course Title */}
-        <h3 style={{ 
-          fontSize: '1.05rem', 
-          fontWeight: '700', 
-          color: 'var(--fp-text, #111827)', 
-          marginBottom: '0.5rem', 
-          lineHeight: '1.4' 
-        }}>
+        <h3 
+          className="clamp-2"
+          style={{ 
+            fontSize: '1.05rem', 
+            fontWeight: '700', 
+            color: 'var(--fp-text, #111827)', 
+            marginBottom: '0.4rem', 
+            lineHeight: '1.35',
+            minHeight: '2.7rem'
+          }}
+        >
           {course.course_name || course.name}
         </h3>
 
@@ -93,12 +97,12 @@ export default function CourseCard({
           borderRadius: '6px',
           padding: '0.5rem 0.75rem',
           fontSize: '0.8rem',
-          marginBottom: '1rem',
+          marginBottom: '0.85rem',
           lineHeight: '1.4'
         }}>
           <strong style={{ color: 'var(--fp-text, #111827)' }}>Eligibility: </strong>
-          <span style={{ color: 'var(--fp-secondary, #6B7280)' }}>
-            {course.eligibility ? (course.eligibility.length > 85 ? course.eligibility.slice(0, 85) + '...' : course.eligibility) : '12th Standard or Equivalent'}
+          <span className="clamp-2" style={{ color: 'var(--fp-secondary, #6B7280)' }}>
+            {course.eligibility || '12th Standard or Equivalent'}
           </span>
         </div>
 

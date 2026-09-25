@@ -86,6 +86,38 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   letter-spacing: -0.02em;
 }
 
+h1, .h1 {
+  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+h2, .h2 {
+  font-size: clamp(1.4rem, 3vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+h3, .h3 {
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+h4, .h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+p, .body-text {
+  font-size: 0.925rem;
+  line-height: 1.6;
+}
+
 a {
   color: var(--fp-primary);
   text-decoration: none;
@@ -103,19 +135,73 @@ button {
   outline: none;
 }
 
-/* Cards */
-.glass-card, .fp-card {
+/* Universal Card System */
+.glass-card, .fp-card, .course-card-compact, .card {
   background: var(--fp-surface);
   border: 1px solid var(--fp-border);
   border-radius: var(--radius-md);
+  padding: 1.25rem 1.35rem;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
 }
 
-.glass-card:hover, .fp-card:hover {
+.glass-card:hover, .fp-card:hover, .course-card-compact:hover, .card:hover {
   border-color: #C7D2FE;
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
+}
+
+/* Responsive Card Grid */
+.fp-grid-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem 1.5rem;
+}
+
+@media (max-width: 991.98px) {
+  .fp-grid-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .fp-grid-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Card Text Clamping Utilities */
+.clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Badges */
@@ -146,7 +232,8 @@ button {
 
 .badge-cyan {
   background: var(--fp-cyan-soft);
-  color: #0369A1;
+  
+  
   border: 1px solid #BAE6FD;
 }
 
@@ -360,10 +447,16 @@ button {
 }
 
 /* Container utility */
-.container {
-  max-width: 1200px;
+.container, .container-xl {
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container, .container-xl {
+    padding: 0 1.5rem;
+  }
 }
 
 /* Scrollbar styling */
@@ -385,12 +478,148 @@ button {
   background: #94A3B8;
 }
 
+/* ==========================================================================
+   Footer Component — Compact & Modern
+   ========================================================================== */
+.fp-footer {
+  border-top: 1px solid #E5E7EB;
+  background: #FAFAFA;
+  padding: 2.5rem 0 1.25rem;
+  margin-top: auto;
+  color: #111827;
+}
+
+.fp-footer-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .fp-footer-grid {
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .fp-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.fp-footer-brand-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.fp-footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  outline: none;
+}
+
+.fp-footer-logo-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #4F46E5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
+  flex-shrink: 0;
+}
+
+.fp-footer-logo-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #111827;
+  line-height: 1.1;
+}
+
+.fp-footer-logo-title span {
+  color: #4F46E5;
+}
+
+.fp-footer-logo-sub {
+  font-size: 0.72rem;
+  color: #6B7280;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.fp-footer-desc {
+  font-size: 0.875rem;
+  color: #6B7280;
+  line-height: 1.6;
+  max-width: 320px;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.fp-footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fp-footer-nav-cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem 1.75rem;
+}
+
+@media (max-width: 991.98px) {
+  .fp-footer-nav-cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fp-footer-nav-cols {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.fp-footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.fp-footer-heading {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #111827;
+  margin-bottom: 0.65rem;
+}
+
+.fp-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
 /* Footer link button */
 .btn-link-footer,
 .footer-nav-link {
   background: none;
   border: none;
-  padding: 0.2rem 0;
+  padding: 0.15rem 0;
   font-size: 0.875rem;
   font-weight: 500;
   color: #6B7280;
@@ -398,23 +627,23 @@ button {
   cursor: pointer;
   transition: color 0.15s ease, transform 0.15s ease;
   display: inline-block;
-  line-height: 1.4;
+  line-height: 1.6;
 }
 
 .btn-link-footer:hover,
 .footer-nav-link:hover {
   color: #4F46E5;
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 /* Social Media Buttons in Footer */
 .social-btn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: #E5E7EB;
+  background: #F3F4F6;
   color: #4B5563;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
@@ -426,7 +655,22 @@ button {
   background: #4F46E5;
   color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 8px rgba(79, 70, 229, 0.25);
+}
+
+.fp-footer-bottom {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fp-footer-copyright {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* Spinning animation for refresh */

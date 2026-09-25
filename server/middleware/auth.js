@@ -68,4 +68,4 @@ function adminOnly(req, res, next) {
   }
 }
 
-module.exports = { generateToken, protect, adminOnly };
+module.exports = { generateToken, protect, adminOnly, admin: adminOnly };

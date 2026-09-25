@@ -33,7 +33,7 @@ export default function ContactView({ onGoToFAQ, onExplore }) {
   };
 
   return (
-    <div style={{ minHeight: '80vh', paddingBottom: '4rem' }}>
+    <div style={{ paddingBottom: '2.5rem' }}>
       
       {/* Header Banner */}
       <section style={{

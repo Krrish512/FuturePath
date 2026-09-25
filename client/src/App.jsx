@@ -196,6 +196,14 @@ function App() {
         const el = document.getElementById('guidance-wizard');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }, 50);
+    } else if (action === 'pathway-bca-it') {
+      setSelectedQual('12th');
+      setSelectedStream('All');
+      setActiveTab('explore');
+      setTimeout(() => {
+        const el = document.getElementById('guidance-wizard');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
     } else if (action === 'about') {
       setActiveTab('about');
     } else if (action === 'contact') {
@@ -313,13 +321,13 @@ function App() {
 
         {/* Dedicated Roadmaps View */}
         {activeTab === 'pathways' && (
-          <section className="container" style={{ padding: '3.5rem 1.5rem 5rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <section className="container" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <span className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>Full Catalog</span>
               <h2 style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
                 Educational <span className="gradient-text">Roadmaps & Pathways</span>
               </h2>
-              <p style={{ color: 'var(--fp-secondary, #6B7280)', marginBottom: '1.5rem', maxWidth: '600px', margin: '0 auto 1.5rem' }}>
+              <p style={{ color: 'var(--fp-secondary, #6B7280)', marginBottom: '1.25rem', maxWidth: '600px', margin: '0 auto 1.25rem' }}>
                 Step-by-step career progression milestones mapped from 10th and 12th standards.
               </p>
 
@@ -339,7 +347,7 @@ function App() {
             {loadingView ? (
               <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--fp-secondary, #6B7280)' }}>Loading roadmaps...</div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+              <div className="fp-grid-cards">
                 {filterCatalog(allPathways, ['title', 'description', 'steps']).map((p) => (
                   <PathwayCard 
                     key={p._id} 
@@ -355,18 +363,18 @@ function App() {
 
         {/* Dedicated Courses View */}
         {activeTab === 'courses' && (
-          <section className="container-xl px-3 px-sm-4" style={{ padding: '3.5rem 1.5rem 5rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <section className="container-xl px-3 px-sm-4" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
               <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>Accredited Degrees</span>
               <h2 style={{ fontSize: '2.25rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
                 Explore Verified <span className="gradient-text">University Programmes</span>
               </h2>
-              <p style={{ color: 'var(--fp-secondary, #6B7280)', maxWidth: '680px', margin: '0 auto 1.5rem' }}>
+              <p style={{ color: 'var(--fp-secondary, #6B7280)', maxWidth: '680px', margin: '0 auto 1.25rem' }}>
                 Official undergraduate, postgraduate, and integrated programs from Gujarat University, VNSGU, SPU, Sarvajanik University, and SVNIT Surat.
               </p>
 
               {/* University & Level Filter Pills */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center', marginBottom: '1.25rem' }}>
                 <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                   <button
                     onClick={() => setSelectedCourseUniFilter('All')}
@@ -447,7 +455,7 @@ function App() {
             {loadingView ? (
               <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--fp-secondary, #6B7280)' }}>Loading courses...</div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
+              <div className="fp-grid-cards">
                 {filteredCourses.map((c) => (
                   <CourseCard 
                     key={c._id} 
@@ -465,13 +473,13 @@ function App() {
 
         {/* Dedicated Careers View */}
         {activeTab === 'careers' && (
-          <section className="container" style={{ padding: '3.5rem 1.5rem 5rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <section className="container" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <span className="badge badge-amber" style={{ marginBottom: '0.5rem' }}>Career Opportunities</span>
               <h2 style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
                 Industry Career <span className="gradient-text">Profiles</span>
               </h2>
-              <p style={{ color: 'var(--fp-secondary, #6B7280)', marginBottom: '1.5rem', maxWidth: '600px', margin: '0 auto 1.5rem' }}>
+              <p style={{ color: 'var(--fp-secondary, #6B7280)', marginBottom: '1.25rem', maxWidth: '600px', margin: '0 auto 1.25rem' }}>
                 Industry skill requirements, salary projections, and linked academic degrees.
               </p>
 
@@ -491,7 +499,7 @@ function App() {
             {loadingView ? (
               <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--fp-secondary, #6B7280)' }}>Loading careers...</div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+              <div className="fp-grid-cards">
                 {filterCatalog(allCareers, ['title', 'description', 'skills', 'requiredSkills']).map((car) => (
                   <CareerCard 
                     key={car._id} 
@@ -507,20 +515,20 @@ function App() {
 
         {/* Dedicated Gujarat Institutions View */}
         {activeTab === 'colleges' && (
-          <section className="container-xl px-3 px-sm-4" style={{ padding: '3.5rem 1.5rem 5rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <section className="container-xl px-3 px-sm-4" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <span className="badge badge-indigo mb-2" style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem' }}>
                 📍 Gujarat Institutions Directory
               </span>
               <h2 style={{ fontSize: '2.25rem', fontWeight: '800', letterSpacing: '-0.03em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
                 Explore Gujarat <span className="gradient-text">Institutions</span>
               </h2>
-              <p style={{ color: 'var(--fp-text-secondary)', fontSize: '1rem', maxWidth: '640px', margin: '0 auto 1.5rem', lineHeight: '1.6' }}>
+              <p style={{ color: 'var(--fp-text-secondary)', fontSize: '1rem', maxWidth: '640px', margin: '0 auto 1.25rem', lineHeight: '1.6' }}>
                 Accredited colleges, universities, and institutes across Gujarat.
               </p>
 
               {/* City & Type Filter Pills */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', alignItems: 'center', marginBottom: '1.25rem' }}>
                 {/* City Pills */}
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                   {[
@@ -605,7 +613,7 @@ function App() {
             {loadingView ? (
               <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)' }}>Loading institutions...</div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+              <div className="fp-grid-cards">
                 {filteredColleges.map((inst) => (
                   <InstitutionCard 
                     key={inst._id} 
