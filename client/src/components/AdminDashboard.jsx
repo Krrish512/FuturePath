@@ -375,17 +375,17 @@ export default function AdminDashboard({ onLogout }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontWeight: '800'
+                fontWeight: '700'
               }}>
                 FP
               </div>
               <div>
-                <div style={{ fontSize: '0.95rem', fontWeight: '800', color: '#0F172A' }}>FuturePath</div>
+                <div style={{ fontSize: '0.95rem', fontWeight: '700', color: '#0F172A' }}>FuturePath</div>
                 <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: '600' }}>ADMIN PORTAL</div>
               </div>
             </div>
           ) : (
-            <div style={{ margin: '0 auto', fontWeight: '800', color: '#4F46E5' }}>FP</div>
+            <div style={{ margin: '0 auto', fontWeight: '700', color: '#4F46E5' }}>FP</div>
           )}
 
           <button
@@ -420,7 +420,7 @@ export default function AdminDashboard({ onLogout }) {
           </div>
 
           {/* Section: Content */}
-          {sidebarOpen && <div style={{ fontSize: '0.65rem', fontWeight: '800', color: '#94A3B8', textTransform: 'uppercase', padding: '0.5rem 0.85rem', letterSpacing: '0.05em' }}>Education Data</div>}
+          {sidebarOpen && <div style={{ fontSize: '0.65rem', fontWeight: '700', color: '#94A3B8', textTransform: 'uppercase', padding: '0.5rem 0.85rem', letterSpacing: '0.05em' }}>Education Data</div>}
           {[
             { id: 'universities', label: 'Universities', icon: GraduationCap },
             { id: 'courses', label: 'Courses Master', icon: BookOpen },
@@ -458,7 +458,7 @@ export default function AdminDashboard({ onLogout }) {
           })}
 
           {/* Section: Reports */}
-          {sidebarOpen && <div style={{ fontSize: '0.65rem', fontWeight: '800', color: '#94A3B8', textTransform: 'uppercase', padding: '0.75rem 0.85rem 0.35rem', letterSpacing: '0.05em' }}>Reporting & Insights</div>}
+          {sidebarOpen && <div style={{ fontSize: '0.65rem', fontWeight: '700', color: '#94A3B8', textTransform: 'uppercase', padding: '0.75rem 0.85rem 0.35rem', letterSpacing: '0.05em' }}>Reporting & Insights</div>}
           {[
             { id: 'analytics', label: 'Analytics Dashboard', icon: BarChart3 },
             { id: 'report-builder', label: 'Report Builder', icon: FileSpreadsheet }
@@ -490,7 +490,7 @@ export default function AdminDashboard({ onLogout }) {
           })}
 
           {/* Section: Users */}
-          {sidebarOpen && <div style={{ fontSize: '0.65rem', fontWeight: '800', color: '#94A3B8', textTransform: 'uppercase', padding: '0.75rem 0.85rem 0.35rem', letterSpacing: '0.05em' }}>User Management</div>}
+          {sidebarOpen && <div style={{ fontSize: '0.65rem', fontWeight: '700', color: '#94A3B8', textTransform: 'uppercase', padding: '0.75rem 0.85rem 0.35rem', letterSpacing: '0.05em' }}>User Management</div>}
           <div
             onClick={() => { setActiveSection('users'); setCurrentPage(1); }}
             style={{
@@ -543,7 +543,7 @@ export default function AdminDashboard({ onLogout }) {
         {activeSection === 'dashboard' && (
           <div>
             <div style={{ marginBottom: '1.75rem' }}>
-              <h1 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#0F172A', marginBottom: '0.25rem' }}>
+              <h1 style={{ fontSize: '1.75rem', fontWeight: '700', color: '#0F172A', marginBottom: '0.25rem' }}>
                 Platform <span style={{ color: '#4F46E5' }}>Overview & Insights</span>
               </h1>
               <p style={{ color: '#64748B', fontSize: '0.9rem' }}>
@@ -570,7 +570,7 @@ export default function AdminDashboard({ onLogout }) {
                         <Icon size={18} />
                       </div>
                     </div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#0F172A' }}>{card.val}</div>
+                    <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#0F172A' }}>{card.val}</div>
                   </div>
                 );
               })}
@@ -635,7 +635,7 @@ export default function AdminDashboard({ onLogout }) {
             {/* Header with Title and Add Button */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0F172A', textTransform: 'capitalize' }}>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#0F172A', textTransform: 'capitalize' }}>
                   {activeSection} Master Directory
                 </h2>
                 <p style={{ color: '#64748B', fontSize: '0.85rem' }}>
@@ -824,7 +824,7 @@ export default function AdminDashboard({ onLogout }) {
         {activeSection === 'analytics' && (
           <div>
             <div style={{ marginBottom: '1.75rem' }}>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#0F172A' }}>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '700', color: '#0F172A' }}>
                 Education Dataset <span style={{ color: '#4F46E5' }}>Analytics</span>
               </h2>
               <p style={{ color: '#64748B', fontSize: '0.9rem' }}>
@@ -881,7 +881,7 @@ export default function AdminDashboard({ onLogout }) {
         {activeSection === 'report-builder' && (
           <div>
             <div style={{ marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#0F172A' }}>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '700', color: '#0F172A' }}>
                 FuturePath <span style={{ color: '#4F46E5' }}>Report Builder</span>
               </h2>
               <p style={{ color: '#64748B', fontSize: '0.9rem' }}>
@@ -982,7 +982,7 @@ export default function AdminDashboard({ onLogout }) {
                 {/* Print Header */}
                 <div style={{ borderBottom: '2px solid #4F46E5', paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: '#0F172A', margin: 0 }}>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: '700', color: '#0F172A', margin: 0 }}>
                       FuturePath Education Portal
                     </h3>
                     <div style={{ fontSize: '0.9rem', color: '#4F46E5', fontWeight: '700' }}>
@@ -1084,7 +1084,7 @@ export default function AdminDashboard({ onLogout }) {
             border: '1px solid #E2E8F0'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', textTransform: 'capitalize' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#0F172A', textTransform: 'capitalize' }}>
                 {modalMode} {modalEntity}
               </h3>
               <button onClick={handleCloseModal} style={{ background: 'transparent', border: 'none', fontSize: '1.25rem', color: '#64748B', cursor: 'pointer' }}>✕</button>
@@ -1187,7 +1187,7 @@ export default function AdminDashboard({ onLogout }) {
             boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
           }}>
             <AlertTriangle size={36} color="#EF4444" style={{ margin: '0 auto 0.75rem' }} />
-            <h4 style={{ fontSize: '1.15rem', fontWeight: '800', color: '#0F172A', marginBottom: '0.5rem' }}>Confirm Delete</h4>
+            <h4 style={{ fontSize: '1.15rem', fontWeight: '700', color: '#0F172A', marginBottom: '0.5rem' }}>Confirm Delete</h4>
             <p style={{ fontSize: '0.85rem', color: '#64748B', marginBottom: '1.25rem' }}>
               Are you sure you want to permanently delete <strong>{deleteConfirm.name}</strong>? This action cannot be undone.
             </p>

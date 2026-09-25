@@ -30,7 +30,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
           <span className="badge badge-indigo mb-3" style={{ padding: '0.4rem 0.95rem', fontSize: '0.8rem' }}>
             🎓 About FuturePath
           </span>
-          <h1 style={{ fontSize: '2.4rem', fontWeight: '800', letterSpacing: '-0.03em', lineHeight: '1.2', marginBottom: '1rem', color: '#111827' }}>
+          <h1 style={{ fontSize: '2.4rem', fontWeight: '700', letterSpacing: '-0.025em', lineHeight: '1.2', marginBottom: '1rem', color: '#111827' }}>
             Guiding Students Towards <br className="d-none d-sm-inline" />
             <span className="gradient-text">Brighter Educational Futures</span>
           </h1>
@@ -77,7 +77,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
               }}>
                 <Target size={22} />
               </div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#111827', marginBottom: '0.5rem' }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#111827', marginBottom: '0.5rem' }}>
                 Why FuturePath?
               </h2>
               <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: '1.6', marginBottom: 0 }}>
@@ -101,7 +101,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
               }}>
                 <HeartHandshake size={22} />
               </div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#111827', marginBottom: '0.5rem' }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#111827', marginBottom: '0.5rem' }}>
                 Student-First Guidance
               </h2>
               <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: '1.6', marginBottom: 0 }}>
@@ -115,7 +115,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
         <div className="mb-5">
           <div className="text-center mb-4">
             <span className="badge badge-indigo mb-2">Student Journey</span>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#111827' }}>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: '700', color: '#111827' }}>
               How You Can Explore Your Options
             </h2>
             <p style={{ color: '#6B7280', fontSize: '0.95rem' }}>
@@ -136,7 +136,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '1.25rem',
-                  fontWeight: '800',
+                  fontWeight: '700',
                   margin: '0 auto 1rem'
                 }}>
                   1
@@ -162,7 +162,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '1.25rem',
-                  fontWeight: '800',
+                  fontWeight: '700',
                   margin: '0 auto 1rem'
                 }}>
                   2
@@ -188,7 +188,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '1.25rem',
-                  fontWeight: '800',
+                  fontWeight: '700',
                   margin: '0 auto 1rem'
                 }}>
                   3
@@ -208,7 +208,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
         <div className="mb-5">
           <div className="text-center mb-4">
             <span className="badge badge-indigo mb-2">Features & Tools</span>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#111827' }}>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: '700', color: '#111827' }}>
               Everything You Need in One Place
             </h2>
           </div>
@@ -283,7 +283,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
           color: '#FFFFFF',
           borderRadius: 'var(--radius-lg)'
         }}>
-          <h2 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.75rem' }}>
+          <h2 style={{ fontSize: '1.85rem', fontWeight: '700', color: '#FFFFFF', marginBottom: '0.75rem' }}>
             Ready to Plan Your Educational Future?
           </h2>
           <p style={{ fontSize: '1rem', color: 'rgba(255, 255, 255, 0.9)', maxWidth: '600px', margin: '0 auto 1.5rem', lineHeight: '1.6' }}>

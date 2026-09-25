@@ -36,7 +36,7 @@ export default function MobileBottomNav({ activeTab, setActiveTab, bookmarkCount
                     background: 'var(--fp-accent)',
                     color: '#ffffff',
                     fontSize: '0.6rem',
-                    fontWeight: '800',
+                    fontWeight: '600',
                     minWidth: '16px',
                     height: '16px',
                     borderRadius: 'var(--radius-full)',

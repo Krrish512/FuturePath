@@ -25,7 +25,7 @@ export default function PrivacyPolicyView({ onGoToContact }) {
           <span className="badge badge-indigo mb-2" style={{ padding: '0.4rem 0.95rem', fontSize: '0.8rem' }}>
             🔒 Privacy & Data Protection
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: '800', letterSpacing: '-0.03em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: '700', letterSpacing: '-0.025em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
             FuturePath <span className="gradient-text">Privacy Policy</span>
           </h1>
           <p style={{ fontSize: '1rem', color: 'var(--fp-text-secondary)', lineHeight: '1.6', maxWidth: '640px', margin: '0 auto' }}>
@@ -41,7 +41,7 @@ export default function PrivacyPolicyView({ onGoToContact }) {
         
         {/* Quick Highlights Summary */}
         <div className="card p-4 mb-4" style={{ background: '#F8FAFC', borderColor: 'var(--fp-border)' }}>
-          <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--fp-text)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--fp-text)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <ShieldCheck size={20} color="var(--fp-primary)" />
             <span>Our Privacy Commitment to Students</span>
           </h3>
@@ -74,7 +74,7 @@ export default function PrivacyPolicyView({ onGoToContact }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <UserCheck size={20} color="var(--fp-primary)" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 1. Account Information We Collect
               </h2>
             </div>
@@ -92,7 +92,7 @@ export default function PrivacyPolicyView({ onGoToContact }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <Bookmark size={20} color="#D97706" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 2. Saved Shortlists and Bookmarks
               </h2>
             </div>
@@ -109,7 +109,7 @@ export default function PrivacyPolicyView({ onGoToContact }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <Lock size={20} color="var(--fp-primary)" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 3. Security & Password Protection
               </h2>
             </div>
@@ -122,7 +122,7 @@ export default function PrivacyPolicyView({ onGoToContact }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <Eye size={20} color="var(--fp-primary)" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 4. How Your Information is Used
               </h2>
             </div>
@@ -140,7 +140,7 @@ export default function PrivacyPolicyView({ onGoToContact }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <Globe size={20} color="var(--fp-primary)" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 5. External Sources & Government Data
               </h2>
             </div>

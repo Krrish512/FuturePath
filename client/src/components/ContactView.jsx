@@ -45,7 +45,7 @@ export default function ContactView({ onGoToFAQ, onExplore }) {
           <span className="badge badge-indigo mb-2" style={{ padding: '0.4rem 0.95rem', fontSize: '0.8rem' }}>
             💬 Student Support & Contact
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: '800', letterSpacing: '-0.03em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: '700', letterSpacing: '-0.025em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
             We're Here to Help Your <span className="gradient-text">Academic Journey</span>
           </h1>
           <p style={{ fontSize: '1rem', color: 'var(--fp-text-secondary)', lineHeight: '1.6', maxWidth: '640px', margin: '0 auto' }}>
@@ -163,7 +163,7 @@ export default function ContactView({ onGoToFAQ, onExplore }) {
                   }}>
                     <CheckCircle2 size={36} />
                   </div>
-                  <h2 style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--fp-text)', marginBottom: '0.5rem' }}>
+                  <h2 style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--fp-text)', marginBottom: '0.5rem' }}>
                     Message Sent Successfully!
                   </h2>
                   <p style={{ fontSize: '0.925rem', color: 'var(--fp-text-secondary)', maxWidth: '440px', margin: '0 auto 1.5rem', lineHeight: '1.6' }}>
@@ -190,7 +190,7 @@ export default function ContactView({ onGoToFAQ, onExplore }) {
                 <form onSubmit={handleSubmit}>
                   <div className="d-flex align-items-center gap-2 mb-3">
                     <MessageSquare size={20} color="var(--fp-primary)" />
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                       Send an Academic Enquiry
                     </h2>
                   </div>

@@ -103,7 +103,7 @@ export default function FAQView({ onExploreGuidance, onTakeQuiz }) {
             <HelpCircle size={14} /> Guidance Help Center
           </span>
         </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: '800', letterSpacing: '-0.03em', marginBottom: '0.75rem', color: '#111827' }}>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: '700', letterSpacing: '-0.025em', marginBottom: '0.75rem', color: '#111827' }}>
           Frequently Asked <span className="gradient-text">Student Questions</span>
         </h1>
         <p style={{ color: '#6B7280', fontSize: '1rem', lineHeight: '1.6', maxWidth: '680px', margin: '0 auto' }}>
@@ -252,7 +252,7 @@ export default function FAQView({ onExploreGuidance, onTakeQuiz }) {
           borderRadius: 'var(--radius-lg)'
         }}
       >
-        <h2 style={{ fontSize: '1.4rem', fontWeight: '800', color: '#111827', marginBottom: '0.5rem' }}>
+        <h2 style={{ fontSize: '1.35rem', fontWeight: '700', color: '#111827', marginBottom: '0.5rem' }}>
           Still Unsure Which Stream or Degree Fits You?
         </h2>
         <p style={{ color: '#6B7280', fontSize: '0.925rem', marginBottom: '1.5rem', maxWidth: '600px', margin: '0 auto 1.5rem', lineHeight: '1.6' }}>

@@ -1,3 +1,6 @@
+/* ==========================================================================
+   Global Design Tokens & Typography
+   ========================================================================== */
 :root {
   /* Approved FuturePath Design Tokens */
   --fp-primary: #4F46E5;
@@ -21,7 +24,7 @@
   --fp-purple: #7C3AED;
   --fp-purple-soft: #F5F3FF;
 
-  /* Typography */
+  /* Standard Typography Fonts */
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
@@ -68,54 +71,81 @@
   padding: 0;
 }
 
-html, body {
+html, body, #root {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
   font-family: var(--font-body);
+  font-size: 15px;
   background-color: var(--fp-bg);
   color: var(--fp-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Headings System */
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: var(--font-heading);
-  font-weight: 700;
   color: var(--fp-text);
   letter-spacing: -0.02em;
 }
 
 h1, .h1 {
-  font-size: clamp(1.75rem, 4vw, 2.35rem);
-  font-weight: 800;
+  font-size: clamp(1.75rem, 4vw, 2.35rem); /* 28px - 38px */
+  font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.03em;
-}
-
-h2, .h2 {
-  font-size: clamp(1.4rem, 3vw, 1.85rem);
-  font-weight: 800;
-  line-height: 1.25;
   letter-spacing: -0.025em;
 }
 
-h3, .h3 {
-  font-size: clamp(1.05rem, 2vw, 1.2rem);
+h2, .h2 {
+  font-size: clamp(1.35rem, 3vw, 1.85rem); /* 22px - 30px */
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.25;
   letter-spacing: -0.02em;
 }
 
+h3, .h3 {
+  font-size: clamp(1.1rem, 2vw, 1.3rem); /* 18px - 21px */
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
 h4, .h4 {
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 1.05rem; /* ~17px */
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+h5, .h5 {
+  font-size: 0.95rem; /* ~15px */
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+h6, .h6 {
+  font-size: 0.85rem; /* ~13.5px */
+  font-weight: 600;
   line-height: 1.4;
 }
 
 p, .body-text {
-  font-size: 0.925rem;
+  font-size: 0.9375rem; /* 15px */
+  font-weight: 400;
   line-height: 1.6;
+}
+
+.text-secondary {
+  font-size: 0.875rem; /* 14px */
+  font-weight: 400;
+  color: var(--fp-text-secondary);
+}
+
+.text-meta {
+  font-size: 0.8125rem; /* 13px */
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 a {
@@ -128,8 +158,11 @@ a:hover {
   color: var(--fp-primary-dark);
 }
 
-button {
+button, input, select, textarea, optgroup {
   font-family: var(--font-body);
+}
+
+button {
   cursor: pointer;
   border: none;
   outline: none;
@@ -484,29 +517,30 @@ button {
 .fp-footer {
   border-top: 1px solid #E5E7EB;
   background: #FAFAFA;
-  padding: 2.5rem 0 1.25rem;
+  padding: 1.75rem 0 1rem;
   margin-top: auto;
   color: #111827;
 }
 
 .fp-footer-grid {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 2.5rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 1024px) {
   .fp-footer-grid {
-    grid-template-columns: 280px 1fr;
-    gap: 2rem;
+    grid-template-columns: 240px 1fr;
+    gap: 1.5rem;
   }
 }
 
 @media (max-width: 768px) {
   .fp-footer-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    margin-bottom: 0.75rem;
   }
 }
 
@@ -518,15 +552,15 @@ button {
 .fp-footer-brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   cursor: pointer;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   outline: none;
 }
 
 .fp-footer-logo-icon {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
   background: #4F46E5;
   display: flex;
@@ -538,8 +572,8 @@ button {
 }
 
 .fp-footer-logo-title {
-  font-size: 1.2rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: #111827;
   line-height: 1.1;
@@ -557,37 +591,37 @@ button {
 }
 
 .fp-footer-desc {
-  font-size: 0.875rem;
+  font-size: 0.825rem;
   color: #6B7280;
-  line-height: 1.6;
-  max-width: 320px;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
+  line-height: 1.5;
+  max-width: 290px;
+  margin-top: 0.35rem;
+  margin-bottom: 0.75rem;
 }
 
 .fp-footer-socials {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .fp-footer-nav-cols {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem 1.75rem;
+  gap: 1.25rem 1.5rem;
 }
 
 @media (max-width: 991.98px) {
   .fp-footer-nav-cols {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+    gap: 1.25rem 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .fp-footer-nav-cols {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1rem;
   }
 }
 
@@ -602,7 +636,7 @@ button {
   text-transform: uppercase;
   letter-spacing: 0.03em;
   color: #111827;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.5rem;
 }
 
 .fp-footer-links {
@@ -611,7 +645,7 @@ button {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 /* Footer link button */
@@ -619,15 +653,15 @@ button {
 .footer-nav-link {
   background: none;
   border: none;
-  padding: 0.15rem 0;
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.1rem 0;
+  font-size: 0.845rem;
+  font-weight: 400;
   color: #6B7280;
   text-align: left;
   cursor: pointer;
   transition: color 0.15s ease, transform 0.15s ease;
   display: inline-block;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .btn-link-footer:hover,
@@ -638,8 +672,8 @@ button {
 
 /* Social Media Buttons in Footer */
 .social-btn {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: #F3F4F6;
   color: #4B5563;
@@ -660,7 +694,8 @@ button {
 
 .fp-footer-bottom {
   border-top: 1px solid #E5E7EB;
-  padding-top: 1.25rem;
+  padding-top: 0.85rem;
+  margin-top: 0.85rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -668,9 +703,10 @@ button {
 
 .fp-footer-copyright {
   font-size: 0.8125rem;
+  font-weight: 400;
   color: #6B7280;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 /* Spinning animation for refresh */

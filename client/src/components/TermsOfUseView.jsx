@@ -25,7 +25,7 @@ export default function TermsOfUseView({ onGoToContact, onExplore }) {
           <span className="badge badge-indigo mb-2" style={{ padding: '0.4rem 0.95rem', fontSize: '0.8rem' }}>
             📜 Terms & Guidelines
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: '800', letterSpacing: '-0.03em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: '700', letterSpacing: '-0.025em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
             FuturePath <span className="gradient-text">Terms of Use</span>
           </h1>
           <p style={{ fontSize: '1rem', color: 'var(--fp-text-secondary)', lineHeight: '1.6', maxWidth: '640px', margin: '0 auto' }}>
@@ -44,7 +44,7 @@ export default function TermsOfUseView({ onGoToContact, onExplore }) {
           <div className="d-flex align-items-start gap-3">
             <AlertTriangle size={24} color="#D97706" style={{ flexShrink: 0, marginTop: '2px' }} />
             <div>
-              <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#92400E', marginBottom: '0.35rem' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: '700', color: '#92400E', marginBottom: '0.35rem' }}>
                 Important Educational Disclaimer
               </h3>
               <p style={{ fontSize: '0.875rem', color: '#B45309', lineHeight: '1.5', margin: 0 }}>
@@ -61,7 +61,7 @@ export default function TermsOfUseView({ onGoToContact, onExplore }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <BookOpen size={20} color="var(--fp-primary)" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 1. Educational Guidance Purpose
               </h2>
             </div>
@@ -74,7 +74,7 @@ export default function TermsOfUseView({ onGoToContact, onExplore }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <Scale size={20} color="var(--fp-primary)" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 2. Verification with Official Authorities
               </h2>
             </div>
@@ -92,7 +92,7 @@ export default function TermsOfUseView({ onGoToContact, onExplore }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <UserCheck size={20} color="var(--fp-primary)" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 3. User Account & Security Responsibility
               </h2>
             </div>
@@ -105,7 +105,7 @@ export default function TermsOfUseView({ onGoToContact, onExplore }) {
           <div className="card p-4">
             <div className="d-flex align-items-center gap-2 mb-2">
               <ShieldCheck size={20} color="var(--fp-primary)" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--fp-text)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--fp-text)', margin: 0 }}>
                 4. Acceptable Platform Use
               </h2>
             </div>

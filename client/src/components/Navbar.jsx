@@ -95,7 +95,7 @@ export default function Navbar({
               </div>
               <div style={{ 
                 fontSize: '1.3rem', 
-                fontWeight: '800', 
+                fontWeight: '700', 
                 letterSpacing: '-0.03em', 
                 lineHeight: '1.2',
                 color: 'var(--fp-text)'
@@ -158,7 +158,7 @@ export default function Navbar({
                     background: activeTab === 'bookmarks' ? '#ffffff' : 'var(--fp-accent)',
                     color: activeTab === 'bookmarks' ? 'var(--fp-accent)' : '#ffffff',
                     fontSize: '0.7rem',
-                    fontWeight: '800',
+                    fontWeight: '600',
                     padding: '0.1rem 0.45rem',
                     borderRadius: 'var(--radius-full)'
                   }}>
@@ -213,7 +213,7 @@ export default function Navbar({
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '0.7rem',
-                      fontWeight: '800'
+                      fontWeight: '700'
                     }}>
                       {userName?.charAt(0).toUpperCase() || 'U'}
                     </div>
@@ -253,7 +253,7 @@ export default function Navbar({
                     background: 'var(--fp-accent)',
                     color: '#ffffff',
                     fontSize: '0.65rem',
-                    fontWeight: '800',
+                    fontWeight: '600',
                     width: '18px',
                     height: '18px',
                     borderRadius: '50%',
@@ -316,7 +316,7 @@ export default function Navbar({
                 }}>
                   <GraduationCap size={20} />
                 </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--fp-text)' }}>
+                <div style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--fp-text)' }}>
                   Future<span style={{ color: 'var(--fp-primary)' }}>Path</span>
                 </div>
               </div>
@@ -443,7 +443,7 @@ export default function Navbar({
                     background: 'var(--fp-accent)',
                     color: '#ffffff',
                     fontSize: '0.7rem',
-                    fontWeight: '800',
+                    fontWeight: '600',
                     padding: '0.15rem 0.5rem',
                     borderRadius: 'var(--radius-full)'
                   }}>

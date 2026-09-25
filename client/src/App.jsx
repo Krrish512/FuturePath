@@ -324,7 +324,7 @@ function App() {
           <section className="container" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <span className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>Full Catalog</span>
-              <h2 style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
+              <h2 style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
                 Educational <span className="gradient-text">Roadmaps & Pathways</span>
               </h2>
               <p style={{ color: 'var(--fp-secondary, #6B7280)', marginBottom: '1.25rem', maxWidth: '600px', margin: '0 auto 1.25rem' }}>
@@ -366,7 +366,7 @@ function App() {
           <section className="container-xl px-3 px-sm-4" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
               <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>Accredited Degrees</span>
-              <h2 style={{ fontSize: '2.25rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
+              <h2 style={{ fontSize: '2.25rem', fontWeight: '700', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
                 Explore Verified <span className="gradient-text">University Programmes</span>
               </h2>
               <p style={{ color: 'var(--fp-secondary, #6B7280)', maxWidth: '680px', margin: '0 auto 1.25rem' }}>
@@ -476,7 +476,7 @@ function App() {
           <section className="container" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <span className="badge badge-amber" style={{ marginBottom: '0.5rem' }}>Career Opportunities</span>
-              <h2 style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
+              <h2 style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
                 Industry Career <span className="gradient-text">Profiles</span>
               </h2>
               <p style={{ color: 'var(--fp-secondary, #6B7280)', marginBottom: '1.25rem', maxWidth: '600px', margin: '0 auto 1.25rem' }}>
@@ -520,7 +520,7 @@ function App() {
               <span className="badge badge-indigo mb-2" style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem' }}>
                 📍 Gujarat Institutions Directory
               </span>
-              <h2 style={{ fontSize: '2.25rem', fontWeight: '800', letterSpacing: '-0.03em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
+              <h2 style={{ fontSize: '2.25rem', fontWeight: '700', letterSpacing: '-0.03em', marginBottom: '0.75rem', color: 'var(--fp-text)' }}>
                 Explore Gujarat <span className="gradient-text">Institutions</span>
               </h2>
               <p style={{ color: 'var(--fp-text-secondary)', fontSize: '1rem', maxWidth: '640px', margin: '0 auto 1.25rem', lineHeight: '1.6' }}>

@@ -192,7 +192,7 @@ export default function PathwayCard({ pathway, onToggleBookmark, isSaved }) {
                 <span style={{ fontSize: '0.75rem', color: '#4F46E5', fontWeight: '600', background: '#EEF2FF', padding: '0.2rem 0.55rem', borderRadius: '6px' }}>
                   {pathway.qualification?.name} • {pathway.stream?.name} Stream
                 </span>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', color: '#111827', marginTop: '0.5rem', marginBottom: '0.25rem' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '700', color: '#111827', marginTop: '0.5rem', marginBottom: '0.25rem' }}>
                   {pathway.title}
                 </h3>
                 <p style={{ fontSize: '0.85rem', color: '#6B7280' }}>{pathway.description}</p>
