@@ -43,70 +43,110 @@ export default function Hero({ summary, onSelectCategory }) {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '1.25rem',
-          maxWidth: '850px',
+          gap: '1.5rem',
+          maxWidth: '820px',
           margin: '0 auto 2.5rem'
         }}>
-          {/* 10th Option */}
+          {/* After 10th Card */}
           <div 
             onClick={() => onSelectCategory('10th', 'General')}
             className="glass-card"
             style={{
-              padding: '1.5rem',
+              padding: '1.75rem 1.5rem',
               cursor: 'pointer',
               textAlign: 'left',
               display: 'flex',
-              alignItems: 'center',
-              gap: '1.25rem',
-              borderLeft: '4px solid var(--accent-cyan)'
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              borderLeft: '4px solid var(--accent-cyan)',
+              borderRadius: 'var(--radius-lg)',
+              background: 'var(--fp-surface, #FFFFFF)',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             <div style={{
-              fontSize: '2.25rem',
-              background: 'rgba(6, 182, 212, 0.1)',
-              padding: '0.65rem',
-              borderRadius: 'var(--radius-md)'
+              width: '52px',
+              height: '52px',
+              fontSize: '1.75rem',
+              background: 'rgba(6, 182, 212, 0.12)',
+              borderRadius: 'var(--radius-md)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1.15rem'
             }}>
-             🎒 
+              🎒
             </div>
-            <div>
-              <div className="badge badge-cyan" style={{ marginBottom: '0.35rem' }}>Class 10 Completed</div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.25rem', color: 'var(--fp-text)' }}>After 10th</h3>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.4' }}>
-                Explore school, diploma, ITI and vocational pathways.
-              </p>
-            </div>
+            <h3 style={{
+              fontSize: '1.35rem',
+              fontWeight: '700',
+              color: 'var(--fp-text, #111827)',
+              marginBottom: '0.45rem',
+              lineHeight: '1.3'
+            }}>
+              After 10th
+            </h3>
+            <p style={{
+              fontSize: '0.9rem',
+              color: 'var(--fp-text-secondary, #6B7280)',
+              margin: 0,
+              lineHeight: '1.5',
+              flex: 1
+            }}>
+              Explore school, diploma, ITI and vocational pathways.
+            </p>
           </div>
 
-          {/* 12th Option */}
+          {/* After 12th Card */}
           <div 
             onClick={() => onSelectCategory('12th', 'Science')}
             className="glass-card"
             style={{
-              padding: '1.5rem',
+              padding: '1.75rem 1.5rem',
               cursor: 'pointer',
               textAlign: 'left',
               display: 'flex',
-              alignItems: 'center',
-              gap: '1.25rem',
-              borderLeft: '4px solid var(--primary)'
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              borderLeft: '4px solid var(--fp-primary, #4F46E5)',
+              borderRadius: 'var(--radius-lg)',
+              background: 'var(--fp-surface, #FFFFFF)',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             <div style={{
-              fontSize: '2.25rem',
-              background: 'rgba(99, 102, 241, 0.1)',
-              padding: '0.65rem',
-              borderRadius: 'var(--radius-md)'
+              width: '52px',
+              height: '52px',
+              fontSize: '1.75rem',
+              background: 'rgba(79, 70, 229, 0.12)',
+              borderRadius: 'var(--radius-md)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1.15rem'
             }}>
               🎓
             </div>
-            <div>
-              <div className="badge badge-primary" style={{ marginBottom: '0.35rem' }}>Class 12 Completed</div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.25rem', color: 'var(--fp-text)' }}>After 12th</h3>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.4' }}>
-                Explore degrees, integrated programmes, medical pathways and careers.
-              </p>
-            </div>
+            <h3 style={{
+              fontSize: '1.35rem',
+              fontWeight: '700',
+              color: 'var(--fp-text, #111827)',
+              marginBottom: '0.45rem',
+              lineHeight: '1.3'
+            }}>
+              After 12th
+            </h3>
+            <p style={{
+              fontSize: '0.9rem',
+              color: 'var(--fp-text-secondary, #6B7280)',
+              margin: 0,
+              lineHeight: '1.5',
+              flex: 1
+            }}>
+              Explore degrees, integrated programmes, medical pathways and careers.
+            </p>
           </div>
         </div>
 
