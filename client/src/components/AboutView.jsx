@@ -81,7 +81,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
                 Why FuturePath?
               </h2>
               <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: '1.6', marginBottom: 0 }}>
-                Choosing an academic path after 10th SSC or 12th HSC is one of the most important decisions a student makes. FuturePath simplifies this journey by bringing together verified educational roadmaps, eligibility criteria, admission details, and career trajectories in one easy-to-use guide.
+                Choosing an academic path after 10th SSC or 12th HSC is one of the most important decisions a student makes. FuturePath simplifies this journey by bringing together verified educational roadmaps, eligibility criteria, admission details, and career paths in one easy-to-use guide.
               </p>
             </div>
           </div>
@@ -237,7 +237,7 @@ export default function AboutView({ onExplore, onTakeQuiz }) {
               },
               { 
                 icon: Briefcase, 
-                title: 'Career Trajectories', 
+                title: 'Career Paths', 
                 desc: 'Realistic career profiles with required industry skills, job roles, salary bands, and connected academic degrees.' 
               },
               { 

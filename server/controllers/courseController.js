@@ -37,6 +37,7 @@ const getCourses = async (req, res) => {
             duration,
             qualification,
             stream,
+            programmeType,
             verification_status
         } = req.query;
 
@@ -53,8 +54,12 @@ const getCourses = async (req, res) => {
             query.university_id = university_id;
         }
 
-        if (course_level) {
+        if (course_level && course_level !== "All") {
             query.course_level = { $regex: course_level, $options: "i" };
+        }
+
+        if (programmeType && programmeType !== "All") {
+            query.programmeType = { $regex: programmeType, $options: "i" };
         }
 
         if (field_of_study) {

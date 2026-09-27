@@ -53,6 +53,16 @@ const courseSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        programmeType: {
+            type: String,
+            default: "degree",
+            trim: true
+        },
+        entranceExam: {
+            type: String,
+            trim: true,
+            default: ""
+        },
         official_source_url: {
             type: String,
             trim: true

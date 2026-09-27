@@ -50,7 +50,7 @@ const getGuidanceByOptions = async (req, res) => {
         const courseQuery = {
             qualification: { $regex: new RegExp(`^${qualification}$`, "i") }
         };
-        if (stream) {
+        if (stream && stream !== "All" && stream !== "General") {
             courseQuery.stream = { $regex: new RegExp(`^${stream}$`, "i") };
         }
         const courses = await Course.find(courseQuery).sort({ name: 1 });

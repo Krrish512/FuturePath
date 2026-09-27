@@ -53,6 +53,7 @@ function App() {
   // Course specific filters
   const [selectedCourseUniFilter, setSelectedCourseUniFilter] = useState('All');
   const [selectedCourseLevelFilter, setSelectedCourseLevelFilter] = useState('All');
+  const [selectedCourseTypeFilter, setSelectedCourseTypeFilter] = useState('All');
 
   // College specific city & type filters
   const [selectedCityFilter, setSelectedCityFilter] = useState('All');
@@ -266,7 +267,27 @@ function App() {
   const filteredCourses = filterCatalog(allCourses, ['name', 'course_name', 'description', 'subjects', 'eligibility', 'university_name', 'field_of_study']).filter((c) => {
     const uniMatch = selectedCourseUniFilter === 'All' || (c.university_name && c.university_name.includes(selectedCourseUniFilter));
     const levelMatch = selectedCourseLevelFilter === 'All' || c.course_level === selectedCourseLevelFilter;
-    return uniMatch && levelMatch;
+    
+    let typeMatch = true;
+    if (selectedCourseTypeFilter !== 'All') {
+      const f = (c.field_of_study || '').toLowerCase();
+      const n = (c.name || c.course_name || '').toLowerCase();
+      if (selectedCourseTypeFilter === 'tech') {
+        typeMatch = f.includes('computer') || f.includes('information technology') || n.includes('bca') || n.includes('it') || n.includes('cyber');
+      } else if (selectedCourseTypeFilter === 'engineering') {
+        typeMatch = f.includes('engineering') || n.includes('b.tech');
+      } else if (selectedCourseTypeFilter === 'business') {
+        typeMatch = f.includes('commerce') || f.includes('management') || f.includes('accounting') || n.includes('b.com') || n.includes('bba') || n.includes('mba');
+      } else if (selectedCourseTypeFilter === 'science') {
+        typeMatch = f.includes('sciences') || f.includes('physics') || f.includes('chemistry') || f.includes('mathematical') || n.includes('b.sc') || n.includes('m.sc');
+      } else if (selectedCourseTypeFilter === 'medical') {
+        typeMatch = f.includes('biological') || f.includes('medical') || n.includes('biotechnology') || n.includes('pharmacy');
+      } else if (selectedCourseTypeFilter === 'humanities') {
+        typeMatch = f.includes('humanities') || f.includes('social') || n.includes('b.a.') || n.includes('arts');
+      }
+    }
+
+    return uniMatch && levelMatch && typeMatch;
   });
 
   // College filtered list
@@ -412,16 +433,17 @@ function App() {
         {activeTab === 'courses' && (
           <section className="container-xl px-3 px-sm-4" style={{ padding: '2.5rem 1.25rem 3.5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-              <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>Accredited Degrees</span>
-              <h2 style={{ fontSize: '2.25rem', fontWeight: '700', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
+              <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>Accredited Programmes</span>
+              <h2 style={{ fontSize: '2.25rem', fontWeight: '800', color: 'var(--fp-text, #111827)', marginBottom: '0.5rem' }}>
                 Explore Verified <span className="gradient-text">University Programmes</span>
               </h2>
               <p style={{ color: 'var(--fp-secondary, #6B7280)', maxWidth: '680px', margin: '0 auto 1.25rem' }}>
-                Official undergraduate, postgraduate, and integrated programs from Gujarat University, VNSGU, SPU, Sarvajanik University, and SVNIT Surat.
+                Official undergraduate, postgraduate, and 5-year integrated programmes from Gujarat University, VNSGU, SPU, Sarvajanik University, and SVNIT Surat.
               </p>
 
-              {/* University & Level Filter Pills */}
+              {/* University, Level & Type Filter Pills */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center', marginBottom: '1.25rem' }}>
+                {/* 1. University Filter */}
                 <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                   <button
                     onClick={() => setSelectedCourseUniFilter('All')}
@@ -440,6 +462,7 @@ function App() {
                   </button>
                   {universitiesList.map((u) => {
                     const isSel = selectedCourseUniFilter === u.university_name || selectedCourseUniFilter === u.abbreviation;
+                    const uniCount = allCourses.filter(c => (c.university_name && c.university_name.includes(u.university_name))).length;
                     return (
                       <button
                         key={u._id}
@@ -455,22 +478,31 @@ function App() {
                           cursor: 'pointer'
                         }}
                       >
-                        🏛️ {u.abbreviation || u.university_name}
+                        🏛️ {u.abbreviation || u.university_name} ({uniCount})
                       </button>
                     );
                   })}
                 </div>
 
+                {/* 2. Programme Level Filter */}
                 <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {['All', 'Undergraduate', 'Postgraduate', 'Integrated (UG+PG)'].map((lvl) => {
-                    const isSel = selectedCourseLevelFilter === lvl;
+                  {[
+                    { id: 'All', label: 'All Levels' },
+                    { id: 'Undergraduate', label: 'Undergraduate' },
+                    { id: 'Integrated (UG+PG)', label: 'Integrated UG + PG (5 Yrs)' },
+                    { id: 'Postgraduate', label: 'Postgraduate' }
+                  ].map((lvl) => {
+                    const isSel = selectedCourseLevelFilter === lvl.id;
+                    const count = lvl.id === 'All' 
+                      ? allCourses.length 
+                      : allCourses.filter(c => c.course_level === lvl.id).length;
                     return (
                       <button
-                        key={lvl}
-                        onClick={() => setSelectedCourseLevelFilter(lvl)}
+                        key={lvl.id}
+                        onClick={() => setSelectedCourseLevelFilter(lvl.id)}
                         style={{
-                          padding: '0.25rem 0.75rem',
-                          fontSize: '0.75rem',
+                          padding: '0.3rem 0.8rem',
+                          fontSize: '0.78rem',
                           fontWeight: isSel ? '700' : '500',
                           borderRadius: 'var(--radius-full)',
                           background: isSel ? '#EEF2FF' : 'transparent',
@@ -479,7 +511,40 @@ function App() {
                           cursor: 'pointer'
                         }}
                       >
-                        {lvl}
+                        {lvl.label} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* 3. Programme Discipline / Domain Filter */}
+                <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {[
+                    { id: 'All', label: 'All Fields' },
+                    { id: 'tech', label: 'Computer & IT' },
+                    { id: 'engineering', label: 'Engineering' },
+                    { id: 'business', label: 'Commerce & Management' },
+                    { id: 'science', label: 'Pure Sciences' },
+                    { id: 'medical', label: 'Biotech & Medical' },
+                    { id: 'humanities', label: 'Humanities & Arts' }
+                  ].map((t) => {
+                    const isSel = selectedCourseTypeFilter === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => setSelectedCourseTypeFilter(t.id)}
+                        style={{
+                          padding: '0.22rem 0.65rem',
+                          fontSize: '0.74rem',
+                          fontWeight: isSel ? '700' : '500',
+                          borderRadius: 'var(--radius-full)',
+                          background: isSel ? '#ECFDF5' : '#F9FAFB',
+                          color: isSel ? '#059669' : '#6B7280',
+                          border: isSel ? '1px solid #10B981' : '1px solid #E5E7EB',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {t.label}
                       </button>
                     );
                   })}
@@ -500,7 +565,29 @@ function App() {
             </div>
 
             {loadingView ? (
-              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--fp-secondary, #6B7280)' }}>Loading courses...</div>
+              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--fp-secondary, #6B7280)' }}>Loading programmes...</div>
+            ) : filteredCourses.length === 0 ? (
+              <div className="glass-card" style={{ maxWidth: '600px', margin: '2rem auto', padding: '3rem 2rem', textAlign: 'center' }}>
+                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🔍</div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'var(--fp-text)' }}>
+                  No programmes available for this filter.
+                </h3>
+                <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
+                  Try clearing your active university, level or discipline filters to see all available degree programmes.
+                </p>
+                <button
+                  onClick={() => {
+                    setSelectedCourseUniFilter('All');
+                    setSelectedCourseLevelFilter('All');
+                    setSelectedCourseTypeFilter('All');
+                    setCatalogSearch('');
+                  }}
+                  className="btn btn-primary"
+                  style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}
+                >
+                  Reset All Filters
+                </button>
+              </div>
             ) : (
               <div className="fp-grid-cards">
                 {filteredCourses.map((c) => (
@@ -511,6 +598,7 @@ function App() {
                     isSaved={isBookmarked(c._id, 'course')}
                     onToggleCompare={handleToggleCompare}
                     isCompared={isCourseCompared(c._id)}
+                    institutions={allColleges}
                   />
                 ))}
               </div>

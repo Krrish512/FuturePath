@@ -70,10 +70,10 @@ export default function Hero({ summary, onSelectCategory }) {
              🎒 
             </div>
             <div>
-              <div className="badge badge-cyan" style={{ marginBottom: '0.35rem' }}>Secondary School</div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: '700', marginBottom: '0.25rem' }}>I Passed 10th</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
-                Polytechnic Diplomas, ITI, D2D Engineering & 11th Streams
+              <div className="badge badge-cyan" style={{ marginBottom: '0.35rem' }}>Class 10 Completed</div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.25rem', color: 'var(--fp-text)' }}>After 10th</h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.4' }}>
+                Explore school, diploma, ITI and vocational pathways.
               </p>
             </div>
           </div>
@@ -101,10 +101,10 @@ export default function Hero({ summary, onSelectCategory }) {
               🎓
             </div>
             <div>
-              <div className="badge badge-primary" style={{ marginBottom: '0.35rem' }}>Higher Secondary</div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: '700', marginBottom: '0.25rem' }}>I Passed 12th</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
-                Science (PCM/PCB), Commerce, Arts & Universal Degrees (BCA/BBA)
+              <div className="badge badge-primary" style={{ marginBottom: '0.35rem' }}>Class 12 Completed</div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.25rem', color: 'var(--fp-text)' }}>After 12th</h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.4' }}>
+                Explore degrees, integrated programmes, medical pathways and careers.
               </p>
             </div>
           </div>
@@ -125,15 +125,15 @@ export default function Hero({ summary, onSelectCategory }) {
               <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary)' }}>
                 {summary.totalPathways}+
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '500' }}>
-                Roadmaps
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '600' }}>
+                Education Paths
               </div>
             </div>
             <div>
               <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--accent-cyan)' }}>
                 {summary.totalCourses}+
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '500' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '600' }}>
                 Degree Programs
               </div>
             </div>
@@ -141,16 +141,16 @@ export default function Hero({ summary, onSelectCategory }) {
               <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--accent-emerald)' }}>
                 {summary.totalCareers}+
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '500' }}>
-                Career Trajectories
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '600' }}>
+                Career Paths
               </div>
             </div>
             <div>
               <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--accent-amber)' }}>
                 {summary.totalInstitutions}+
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '500' }}>
-                Colleges & Unis
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '600' }}>
+                Institutions
               </div>
             </div>
           </div>
