@@ -34,12 +34,38 @@ const createInstitution = async (req, res) => {
     }
 };
 
-// Get All Institutions
+// Get All Institutions with optional filters
 const getInstitutions = async (req, res) => {
     try {
-        const institutions = await Institution.find()
+        const { search, course, city, type } = req.query;
+        let query = { isActive: true };
+
+        if (course) {
+            query.coursesOffered = course;
+        }
+
+        if (type && type !== "All") {
+            query.type = type;
+        }
+
+        if (city && city !== "All") {
+            // Can match city id or will be filtered
+            query.$or = [
+                { state: { $regex: city, $options: "i" } }
+            ];
+        }
+
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: "i" } },
+                { affiliation: { $regex: search, $options: "i" } },
+                { address: { $regex: search, $options: "i" } }
+            ];
+        }
+
+        const institutions = await Institution.find(query)
             .populate("city", "name state")
-            .populate("coursesOffered", "name duration")
+            .populate("coursesOffered", "name course_name duration field_of_study qualification stream university_name")
             .sort({ name: 1 });
 
         res.json({

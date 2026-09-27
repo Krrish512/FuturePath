@@ -73,6 +73,26 @@ const courseSchema = new mongoose.Schema(
         subjects: {
             type: [String],
             default: []
+        },
+        interestTags: {
+            type: [String],
+            default: []
+        },
+        subjectTags: {
+            type: [String],
+            default: []
+        },
+        skillTags: {
+            type: [String],
+            default: []
+        },
+        workStyleTags: {
+            type: [String],
+            default: []
+        },
+        careerTags: {
+            type: [String],
+            default: []
         }
     },
     {

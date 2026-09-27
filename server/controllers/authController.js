@@ -259,7 +259,9 @@ exports.getAllUsers = async (req, res) => {
     res.json({
       success: true,
       count: users.length,
+      total: users.length,
       data: users,
+      users: users,
     });
   } catch (error) {
     res.status(500).json({

@@ -276,7 +276,48 @@ function App() {
     return cityMatch && typeMatch;
   });
 
-  // Handle logout: clear auth and go to explore
+  // Handle login with proper role-based post-login navigation
+  const handleLogin = async (email, password) => {
+    const res = await login(email, password);
+    if (res.success) {
+      if (res.user?.role === 'admin') {
+        setActiveTab('admin');
+      } else {
+        setActiveTab('explore');
+      }
+    }
+    return res;
+  };
+
+  // Handle register with post-registration navigation to explore
+  const handleRegister = async (data) => {
+    const res = await register(data);
+    if (res.success) {
+      setActiveTab('explore');
+    }
+    return res;
+  };
+
+  // Safety navigation guards to prevent blank or unauthorized views
+  useEffect(() => {
+    if (isLoggedIn && activeTab === 'auth') {
+      setActiveTab(isAdmin ? 'admin' : 'explore');
+    }
+  }, [isLoggedIn, activeTab, isAdmin]);
+
+  useEffect(() => {
+    if (activeTab === 'admin' && (!isLoggedIn || !isAdmin)) {
+      setActiveTab('explore');
+    }
+  }, [activeTab, isLoggedIn, isAdmin]);
+
+  useEffect(() => {
+    if (activeTab === 'profile' && !isLoggedIn) {
+      setActiveTab('auth');
+    }
+  }, [activeTab, isLoggedIn]);
+
+  // Handle logout: clear auth and return to explore
   const handleLogout = () => {
     logout();
     setActiveTab('explore');
@@ -316,7 +357,13 @@ function App() {
 
         {/* Interactive Career Aptitude Quiz View */}
         {activeTab === 'quiz' && (
-          <AptitudeQuiz onExplorePath={handleQuizExplore} />
+          <AptitudeQuiz 
+            onExplorePath={handleQuizExplore} 
+            onToggleBookmark={toggleBookmark}
+            isBookmarked={isBookmarked}
+            onToggleCompare={handleToggleCompare}
+            isCompared={isCourseCompared}
+          />
         )}
 
         {/* Dedicated Roadmaps View */}
@@ -678,8 +725,8 @@ function App() {
         {/* Authentication View */}
         {activeTab === 'auth' && !isLoggedIn && (
           <AuthView 
-            onLogin={login}
-            onRegister={register}
+            onLogin={handleLogin}
+            onRegister={handleRegister}
             loading={authLoading}
             initialMode={authInitialMode}
           />
@@ -697,6 +744,28 @@ function App() {
         {/* Admin Dashboard */}
         {activeTab === 'admin' && isLoggedIn && isAdmin && (
           <AdminDashboard onLogout={handleLogout} />
+        )}
+
+        {/* Fallback View if invalid/unhandled tab */}
+        {![
+          'explore', 'quiz', 'pathways', 'courses', 'careers', 'colleges', 
+          'bookmarks', 'about', 'contact', 'privacy', 'terms', 'faq', 
+          'auth', 'profile', 'admin'
+        ].includes(activeTab) && (
+          <>
+            <Hero 
+              summary={summary} 
+              onSelectCategory={handleHeroCategorySelect} 
+            />
+            <GuidanceWizard 
+              initialQual={selectedQual} 
+              initialStream={selectedStream}
+              onToggleBookmark={toggleBookmark}
+              isBookmarked={isBookmarked}
+              onToggleCompare={handleToggleCompare}
+              isCompared={isCourseCompared}
+            />
+          </>
         )}
       </main>
 

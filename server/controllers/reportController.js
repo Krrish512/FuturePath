@@ -67,7 +67,14 @@ const generateReport = async (req, res) => {
 
             case "user": {
                 let query = {};
-                if (filters.role) query.role = filters.role;
+                if (filters.role && filters.role !== "All") query.role = filters.role;
+                if (filters.search && filters.search.trim()) {
+                    const term = filters.search.trim();
+                    query.$or = [
+                        { name: { $regex: term, $options: "i" } },
+                        { email: { $regex: term, $options: "i" } }
+                    ];
+                }
                 data = await User.find(query).select("-password").sort({ createdAt: -1 });
                 break;
             }

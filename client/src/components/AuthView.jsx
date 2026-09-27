@@ -273,10 +273,11 @@ export default function AuthView({ onLogin, onRegister, loading, initialMode = '
             <Info size={15} style={{ color: 'var(--fp-primary)', flexShrink: 0, marginTop: '2px' }} />
             <div>
               <p style={{ fontSize: '0.75rem', color: 'var(--fp-primary)', fontWeight: '700', marginBottom: '0.2rem' }}>
-                Demo Credentials
+                Default Demo Accounts
               </p>
-              <p style={{ fontSize: '0.75rem', color: 'var(--fp-text-secondary)' }}>
-                Admin: admin@futurepath.com / admin123
+              <p style={{ fontSize: '0.75rem', color: 'var(--fp-text-secondary)', margin: 0 }}>
+                <strong>Admin:</strong> admin@futurepath.edu (adminpassword123)<br />
+                <strong>Student:</strong> student@futurepath.edu (studentpassword123)
               </p>
             </div>
           </div>

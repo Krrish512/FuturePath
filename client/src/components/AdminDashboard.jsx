@@ -63,6 +63,7 @@ export default function AdminDashboard({ onLogout }) {
   const [filterUniversity, setFilterUniversity] = useState('All');
   const [filterLevel, setFilterLevel] = useState('All');
   const [filterStatus, setFilterStatus] = useState('All');
+  const [filterUserRole, setFilterUserRole] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -133,7 +134,7 @@ export default function AdminDashboard({ onLogout }) {
       setPathways(pathwaysRes.data || []);
       setCities(citiesRes.data || []);
       setQualifications(qualsRes.data || []);
-      setUsers(usersRes.data || []);
+      setUsers(usersRes.data || usersRes.users || []);
     } catch (err) {
       console.error('Error loading admin master data:', err);
       showToast('Failed to load some dataset tables', true);
@@ -272,15 +273,20 @@ export default function AdminDashboard({ onLogout }) {
     else if (activeSection === 'users') list = users;
 
     return list.filter(item => {
-      // University filter
-      if (filterUniversity !== 'All') {
+      // University filter only for courses, curriculum, universities
+      if (['courses', 'curriculum', 'universities'].includes(activeSection) && filterUniversity !== 'All') {
         const uName = item.university_name || item.name || '';
         if (!uName.toLowerCase().includes(filterUniversity.toLowerCase())) return false;
       }
-      // Level filter
-      if (filterLevel !== 'All' && item.course_level && item.course_level !== filterLevel) return false;
-      // Status filter
-      if (filterStatus !== 'All' && item.verification_status && item.verification_status !== filterStatus) return false;
+      // Level filter only for courses
+      if (activeSection === 'courses' && filterLevel !== 'All' && item.course_level && item.course_level !== filterLevel) return false;
+      // Status filter only for courses, curriculum
+      if (['courses', 'curriculum'].includes(activeSection) && filterStatus !== 'All' && item.verification_status && item.verification_status !== filterStatus) return false;
+
+      // User role filter for users section
+      if (activeSection === 'users' && filterUserRole !== 'All') {
+        if (item.role !== filterUserRole) return false;
+      }
 
       // Search term filter
       if (searchTerm.trim()) {
@@ -294,7 +300,7 @@ export default function AdminDashboard({ onLogout }) {
 
   const filteredData = useMemo(() => getDisplayData(), [
     activeSection, universities, courses, curriculums, institutions, careers, pathways, cities, users,
-    filterUniversity, filterLevel, filterStatus, searchTerm
+    filterUniversity, filterLevel, filterStatus, filterUserRole, searchTerm
   ]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
@@ -559,7 +565,7 @@ export default function AdminDashboard({ onLogout }) {
                 { label: 'Curriculum Records', val: stats?.totalCurriculum || curriculums.length, icon: Layers, col: '#D97706', bg: '#FFFBEB' },
                 { label: 'Institutions (Colleges)', val: stats?.totalInstitutions || institutions.length, icon: Building2, col: '#0284C7', bg: '#F0F9FF' },
                 { label: 'Career Roadmaps', val: stats?.totalPathways || pathways.length, icon: Map, col: '#7C3AED', bg: '#F5F3FF' },
-                { label: 'Registered Students', val: stats?.totalStudents || users.filter(u => u.role === 'student').length, icon: Users, col: '#DB2777', bg: '#FDF2F8' }
+                { label: 'Registered Users', val: (stats?.totalUsers !== undefined ? stats.totalUsers : users.length), icon: Users, col: '#DB2777', bg: '#FDF2F8' }
               ].map((card, i) => {
                 const Icon = card.icon;
                 return (
@@ -636,10 +642,12 @@ export default function AdminDashboard({ onLogout }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
                 <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#0F172A', textTransform: 'capitalize' }}>
-                  {activeSection} Master Directory
+                  {activeSection === 'users' ? 'Registered Users' : activeSection} Master Directory
                 </h2>
                 <p style={{ color: '#64748B', fontSize: '0.85rem' }}>
-                  Manage verified Gujarat education dataset records ({filteredData.length} total entries).
+                  {activeSection === 'users' 
+                    ? `Manage verified registered user and student accounts (${filteredData.length} total entries).`
+                    : `Manage verified Gujarat education dataset records (${filteredData.length} total entries).`}
                 </p>
               </div>
 
@@ -660,7 +668,7 @@ export default function AdminDashboard({ onLogout }) {
                 <Search size={16} color="#94A3B8" style={{ position: 'absolute', left: '10px', top: '10px' }} />
                 <input
                   type="text"
-                  placeholder={`Search ${activeSection}...`}
+                  placeholder={`Search ${activeSection === 'users' ? 'users by name, email, role' : activeSection}...`}
                   value={searchTerm}
                   onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
                   style={{ width: '100%', padding: '0.45rem 0.5rem 0.45rem 2.2rem', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.85rem' }}
@@ -690,6 +698,18 @@ export default function AdminDashboard({ onLogout }) {
                   </select>
                 </>
               )}
+
+              {activeSection === 'users' && (
+                <select
+                  value={filterUserRole}
+                  onChange={(e) => { setFilterUserRole(e.target.value); setCurrentPage(1); }}
+                  style={{ padding: '0.45rem', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.85rem' }}
+                >
+                  <option value="All">All User Roles</option>
+                  <option value="student">Student Accounts</option>
+                  <option value="admin">Administrator Accounts</option>
+                </select>
+              )}
             </div>
 
             {/* Table */}
@@ -698,14 +718,16 @@ export default function AdminDashboard({ onLogout }) {
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0', color: '#475569', fontWeight: '700' }}>
-                      <th style={{ padding: '0.75rem 1rem' }}>ID / Code</th>
-                      <th style={{ padding: '0.75rem 1rem' }}>Name / Title</th>
+                      <th style={{ padding: '0.75rem 1rem' }}>{activeSection === 'users' ? 'User ID' : 'ID / Code'}</th>
+                      <th style={{ padding: '0.75rem 1rem' }}>{activeSection === 'users' ? 'Full Name' : 'Name / Title'}</th>
                       {activeSection === 'courses' && <th style={{ padding: '0.75rem 1rem' }}>University</th>}
                       {activeSection === 'courses' && <th style={{ padding: '0.75rem 1rem' }}>Level & Duration</th>}
                       {activeSection === 'curriculum' && <th style={{ padding: '0.75rem 1rem' }}>Course & Sem</th>}
                       {activeSection === 'curriculum' && <th style={{ padding: '0.75rem 1rem' }}>Type & Credits</th>}
                       {activeSection === 'institutions' && <th style={{ padding: '0.75rem 1rem' }}>Type & City</th>}
-                      {activeSection === 'users' && <th style={{ padding: '0.75rem 1rem' }}>Email & Role</th>}
+                      {activeSection === 'users' && <th style={{ padding: '0.75rem 1rem' }}>Email Address</th>}
+                      {activeSection === 'users' && <th style={{ padding: '0.75rem 1rem' }}>Account Role</th>}
+                      {activeSection === 'users' && <th style={{ padding: '0.75rem 1rem' }}>Registered On</th>}
                       <th style={{ padding: '0.75rem 1rem' }}>Status</th>
                       <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Actions</th>
                     </tr>
@@ -713,7 +735,7 @@ export default function AdminDashboard({ onLogout }) {
                   <tbody>
                     {paginatedData.length === 0 ? (
                       <tr>
-                        <td colSpan={7} style={{ textAlign: 'center', padding: '2rem', color: '#94A3B8' }}>
+                        <td colSpan={activeSection === 'users' ? 7 : 8} style={{ textAlign: 'center', padding: '2rem', color: '#94A3B8' }}>
                           No records found matching current criteria.
                         </td>
                       </tr>
@@ -721,10 +743,12 @@ export default function AdminDashboard({ onLogout }) {
                       paginatedData.map((row, idx) => (
                         <tr key={row._id || idx} style={{ borderBottom: '1px solid #F1F5F9' }}>
                           <td style={{ padding: '0.75rem 1rem', fontWeight: '700', color: '#4F46E5' }}>
-                            {row.course_id || row.curriculum_id || row.university_id || row.subject_code || (idx + 1)}
+                            {activeSection === 'users' 
+                              ? `USR-${(row._id || '').slice(-6).toUpperCase()}` 
+                              : (row.course_id || row.curriculum_id || row.university_id || row.subject_code || (idx + 1))}
                           </td>
                           <td style={{ padding: '0.75rem 1rem', fontWeight: '600', color: '#0F172A' }}>
-                            {row.course_name || row.name || row.university_name || row.subject_name || row.title}
+                            {row.name || row.course_name || row.university_name || row.subject_name || row.title}
                           </td>
                           {activeSection === 'courses' && (
                             <td style={{ padding: '0.75rem 1rem', color: '#475569' }}>
@@ -753,11 +777,38 @@ export default function AdminDashboard({ onLogout }) {
                           )}
                           {activeSection === 'users' && (
                             <td style={{ padding: '0.75rem 1rem', color: '#475569' }}>
-                              {row.email} • <span className="badge badge-primary">{row.role}</span>
+                              {row.email}
+                            </td>
+                          )}
+                          {activeSection === 'users' && (
+                            <td style={{ padding: '0.75rem 1rem' }}>
+                              <span className={`badge ${row.role === 'admin' ? 'badge-primary' : 'badge-indigo'}`} style={{ textTransform: 'capitalize' }}>
+                                {row.role || 'Student'}
+                              </span>
+                            </td>
+                          )}
+                          {activeSection === 'users' && (
+                            <td style={{ padding: '0.75rem 1rem', color: '#64748B', fontSize: '0.8rem' }}>
+                              {row.createdAt ? new Date(row.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Verified'}
                             </td>
                           )}
                           <td style={{ padding: '0.75rem 1rem' }}>
-                            {renderStatusBadge(row.verification_status)}
+                            {activeSection === 'users' ? (
+                              <span style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.25rem',
+                                padding: '0.2rem 0.6rem',
+                                borderRadius: '999px',
+                                fontSize: '0.72rem',
+                                fontWeight: '700',
+                                background: 'rgba(16, 185, 129, 0.1)',
+                                color: '#059669',
+                                border: '1px solid rgba(16, 185, 129, 0.3)'
+                              }}>
+                                <CheckCircle2 size={11} /> Active
+                              </span>
+                            ) : renderStatusBadge(row.verification_status)}
                           </td>
                           <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                             <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
@@ -778,7 +829,7 @@ export default function AdminDashboard({ onLogout }) {
                                 </button>
                               )}
                               <button
-                                onClick={() => setDeleteConfirm({ type: activeSection.slice(0, -1), id: row._id, name: row.name || row.course_name || row.title })}
+                                onClick={() => setDeleteConfirm({ type: activeSection.slice(0, -1), id: row._id, name: row.name || row.email || row.course_name || row.title })}
                                 style={{ background: '#FEE2E2', border: 'none', borderRadius: '6px', padding: '4px 8px', color: '#EF4444', cursor: 'pointer' }}
                                 title="Delete Record"
                               >
@@ -907,7 +958,7 @@ export default function AdminDashboard({ onLogout }) {
                   ].map(rt => (
                     <button
                       key={rt.id}
-                      onClick={() => { setReportType(rt.id); setReportData([]); }}
+                      onClick={() => { setReportType(rt.id); setReportData([]); setReportFilters({}); }}
                       style={{
                         padding: '0.5rem 1rem',
                         borderRadius: '8px',
@@ -959,6 +1010,24 @@ export default function AdminDashboard({ onLogout }) {
                       <option value="All">All Universities</option>
                       {universities.map(u => <option key={u._id} value={u.university_id}>{u.university_name}</option>)}
                     </select>
+                  )}
+                  {reportType === 'user' && (
+                    <>
+                      <select
+                        onChange={(e) => setReportFilters(f => ({ ...f, role: e.target.value === 'All' ? undefined : e.target.value }))}
+                        style={{ padding: '0.45rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.85rem' }}
+                      >
+                        <option value="All">All User Roles (Students & Admins)</option>
+                        <option value="student">Student Accounts Only</option>
+                        <option value="admin">Administrator Accounts Only</option>
+                      </select>
+                      <input
+                        type="text"
+                        placeholder="Search name or email..."
+                        onChange={(e) => setReportFilters(f => ({ ...f, search: e.target.value.trim() || undefined }))}
+                        style={{ padding: '0.45rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.85rem' }}
+                      />
+                    </>
                   )}
                 </div>
               </div>
@@ -1018,8 +1087,11 @@ export default function AdminDashboard({ onLogout }) {
                     <thead>
                       <tr style={{ background: '#F8FAFC', borderBottom: '2px solid #CBD5E1', color: '#1E293B', textAlign: 'left' }}>
                         <th style={{ padding: '0.6rem 0.8rem' }}>#</th>
-                        <th style={{ padding: '0.6rem 0.8rem' }}>Identifier</th>
-                        <th style={{ padding: '0.6rem 0.8rem' }}>Name / Title</th>
+                        <th style={{ padding: '0.6rem 0.8rem' }}>{reportType === 'user' ? 'User ID' : 'Identifier'}</th>
+                        <th style={{ padding: '0.6rem 0.8rem' }}>{reportType === 'user' ? 'Full Name' : 'Name / Title'}</th>
+                        {reportType === 'user' && <th style={{ padding: '0.6rem 0.8rem' }}>Email Address</th>}
+                        {reportType === 'user' && <th style={{ padding: '0.6rem 0.8rem' }}>Account Role</th>}
+                        {reportType === 'user' && <th style={{ padding: '0.6rem 0.8rem' }}>Registration Date</th>}
                         {reportType === 'course' && <th style={{ padding: '0.6rem 0.8rem' }}>University</th>}
                         {reportType === 'course' && <th style={{ padding: '0.6rem 0.8rem' }}>Level & Duration</th>}
                         {reportType === 'curriculum' && <th style={{ padding: '0.6rem 0.8rem' }}>Subject Code & Name</th>}
@@ -1029,19 +1101,55 @@ export default function AdminDashboard({ onLogout }) {
                     </thead>
                     <tbody>
                       {reportData.map((row, idx) => (
-                        <tr key={idx} style={{ borderBottom: '1px solid #E2E8F0' }}>
+                        <tr key={row._id || idx} style={{ borderBottom: '1px solid #E2E8F0' }}>
                           <td style={{ padding: '0.6rem 0.8rem', color: '#64748B' }}>{idx + 1}</td>
                           <td style={{ padding: '0.6rem 0.8rem', fontWeight: '700', color: '#4F46E5' }}>
-                            {row.course_id || row.curriculum_id || row.university_id || row.abbreviation || (idx + 1)}
+                            {reportType === 'user' 
+                              ? `USR-${(row._id || '').slice(-6).toUpperCase()}`
+                              : (row.course_id || row.curriculum_id || row.university_id || row.abbreviation || (idx + 1))}
                           </td>
                           <td style={{ padding: '0.6rem 0.8rem', fontWeight: '600', color: '#0F172A' }}>
-                            {row.course_name || row.name || row.university_name || row.subject_name || row.title}
+                            {row.name || row.course_name || row.university_name || row.subject_name || row.title}
                           </td>
+                          {reportType === 'user' && (
+                            <td style={{ padding: '0.6rem 0.8rem', color: '#475569' }}>
+                              {row.email}
+                            </td>
+                          )}
+                          {reportType === 'user' && (
+                            <td style={{ padding: '0.6rem 0.8rem' }}>
+                              <span className={`badge ${row.role === 'admin' ? 'badge-primary' : 'badge-indigo'}`} style={{ textTransform: 'capitalize' }}>
+                                {row.role || 'Student'}
+                              </span>
+                            </td>
+                          )}
+                          {reportType === 'user' && (
+                            <td style={{ padding: '0.6rem 0.8rem', color: '#64748B', fontSize: '0.8rem' }}>
+                              {row.createdAt ? new Date(row.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Verified'}
+                            </td>
+                          )}
                           {reportType === 'course' && <td style={{ padding: '0.6rem 0.8rem' }}>{row.university_name}</td>}
                           {reportType === 'course' && <td style={{ padding: '0.6rem 0.8rem' }}>{row.course_level} ({row.duration})</td>}
                           {reportType === 'curriculum' && <td style={{ padding: '0.6rem 0.8rem' }}>{row.subject_code} - {row.subject_name}</td>}
                           {reportType === 'curriculum' && <td style={{ padding: '0.6rem 0.8rem' }}>{row.credits} Cr ({row.subject_type})</td>}
-                          <td style={{ padding: '0.6rem 0.8rem' }}>{renderStatusBadge(row.verification_status)}</td>
+                          <td style={{ padding: '0.6rem 0.8rem' }}>
+                            {reportType === 'user' ? (
+                              <span style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.25rem',
+                                padding: '0.2rem 0.6rem',
+                                borderRadius: '999px',
+                                fontSize: '0.72rem',
+                                fontWeight: '700',
+                                background: 'rgba(16, 185, 129, 0.1)',
+                                color: '#059669',
+                                border: '1px solid rgba(16, 185, 129, 0.3)'
+                              }}>
+                                <CheckCircle2 size={11} /> Active
+                              </span>
+                            ) : renderStatusBadge(row.verification_status)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
