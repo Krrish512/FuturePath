@@ -33,19 +33,27 @@ export default function GuidanceWizard({
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [allInstitutionsList, setAllInstitutionsList] = useState([]);
+  const [allMasterCourses, setAllMasterCourses] = useState([]);
 
   // Active section tab:
-  // For 10th: '10th_paths' | '10th_diploma' | '10th_iti' | 'careers' | 'institutions'
+  // For 10th: '10th_paths' | '10th_healthcare' | '10th_diploma' | '10th_iti' | 'careers' | 'institutions'
   // For 12th: 'ug_degrees' | 'integrated' | 'medical' | 'postgraduate' | 'pathways' | 'careers' | 'institutions'
   const [activeSection, setActiveSection] = useState('ug_degrees');
+  const [medicalSubFilter, setMedicalSubFilter] = useState('undergraduate'); // 'undergraduate' | 'postgraduate' | 'diploma' | 'all'
 
-  // Load institutions list for course mapping
+  // Load institutions and all master courses list for course mapping
   useEffect(() => {
     api.getInstitutions()
       .then((res) => {
         if (res.success) setAllInstitutionsList(res.data || []);
       })
       .catch((err) => console.error('Error loading institutions in wizard:', err));
+
+    api.getCourses()
+      .then((res) => {
+        if (res.success) setAllMasterCourses(res.data || []);
+      })
+      .catch((err) => console.error('Error loading master courses in wizard:', err));
   }, []);
 
   // Update stream & section default when qualification changes
@@ -92,7 +100,7 @@ export default function GuidanceWizard({
     });
   };
 
-  // Base raw collections from guidanceData
+  // Base raw collections from guidanceData and allMasterCourses
   const rawPathways = guidanceData?.pathways || [];
   const rawCourses = guidanceData?.courses || [];
   const rawCareers = guidanceData?.careers || [];
@@ -100,7 +108,8 @@ export default function GuidanceWizard({
 
   // Filtered collections
   const filteredPathways = filterBySearch(rawPathways, ['title', 'description', 'steps']);
-  const filteredCourses = filterBySearch(rawCourses, ['name', 'course_name', 'description', 'subjects', 'eligibility', 'field_of_study', 'university_name']);
+  const filteredCourses = filterBySearch(rawCourses, ['name', 'course_name', 'shortName', 'description', 'subjects', 'eligibility', 'field_of_study', 'university_name', 'category']);
+  const filteredMasterCourses = filterBySearch(allMasterCourses.length > 0 ? allMasterCourses : rawCourses, ['name', 'course_name', 'shortName', 'description', 'subjects', 'eligibility', 'field_of_study', 'university_name', 'category']);
   const filteredCareers = filterBySearch(rawCareers, ['title', 'description', 'requiredSkills', 'jobRoles', 'skills']);
   const filteredInstitutions = filterBySearch(rawInstitutions.length > 0 ? rawInstitutions : allInstitutionsList, ['name', 'address', 'affiliation', 'type']);
 
@@ -115,13 +124,29 @@ export default function GuidanceWizard({
     return t.includes('iti') || t.includes('vocational') || t.includes('trade') || t.includes('skill');
   });
 
+  // Helper to identify medical / healthcare courses
+  const isMedicalCourse = (c) => {
+    const cat = (c.category || '').toLowerCase();
+    const f = (c.field_of_study || '').toLowerCase();
+    const n = (c.name || c.course_name || '').toLowerCase();
+    const s = (c.shortName || '').toLowerCase();
+    return cat.includes('medical') || cat.includes('healthcare') ||
+           f.includes('medical') || f.includes('dental') || f.includes('nursing') || f.includes('physiotherapy') || f.includes('pharmaceutical') || f.includes('biological') || f.includes('radiological') || f.includes('surgical') || f.includes('vision') || f.includes('renal') || f.includes('pathology') ||
+           n.includes('mbbs') || n.includes('bds') || n.includes('bhms') || n.includes('bums') || n.includes('bnys') || n.includes('bvsc') || n.includes('nursing') || n.includes('physiotherapy') || n.includes('pharmacy') || n.includes('optometry') || n.includes('laboratory') || n.includes('radiology') || n.includes('operation theatre') || n.includes('doctor of medicine') || n.includes('master of surgery') || n.includes('master of dental') || n.includes('dmlt') || n.includes('dialysis') ||
+           s === 'mbbs' || s === 'bds' || s === 'bhms' || s === 'bums' || s === 'bnys' || s === 'bpt' || s === 'b.pharm' || s === 'dmlt' || s === 'md' || s === 'ms' || s === 'mds';
+  };
+
+  // 10th Healthcare Diplomas (5 distinct courses)
+  const healthcareDiplomaCourses10th = filteredMasterCourses.filter((c) => {
+    const is10 = c.qualification === '10th' || c.level === 'after10' || (c.course_level || '').toLowerCase().includes('diploma');
+    return is10 && isMedicalCourse(c);
+  });
+
   // Segmenting 12th Courses
   const ugDegrees = filteredCourses.filter((c) => {
     const lvl = c.course_level || 'Undergraduate';
     const isInt = lvl.includes('Integrated') || (c.name || '').includes('Integrated') || c.duration === '5 Years';
-    const isMed = (c.field_of_study || '').toLowerCase().includes('biological') || 
-                  (c.field_of_study || '').toLowerCase().includes('medical') || 
-                  (c.name || '').toLowerCase().includes('biotechnology');
+    const isMed = isMedicalCourse(c);
     return lvl === 'Undergraduate' && !isInt && !isMed;
   });
 
@@ -130,14 +155,26 @@ export default function GuidanceWizard({
     return lvl.includes('Integrated') || (c.name || '').includes('Integrated') || c.duration === '5 Years';
   });
 
-  const medicalCourses = filteredCourses.filter((c) => {
-    const f = (c.field_of_study || '').toLowerCase();
-    const n = (c.name || '').toLowerCase();
-    return f.includes('biological') || f.includes('medical') || n.includes('biotechnology') || n.includes('pharmacy');
+  // 12th Medical Undergraduate Courses (13 distinct courses)
+  const medUndergraduateCourses = filteredMasterCourses.filter((c) => {
+    const lvl = (c.course_level || '').toLowerCase();
+    const isUG = lvl === 'undergraduate' || c.level === 'undergraduate';
+    return isUG && isMedicalCourse(c);
   });
 
+  // Medical Postgraduate Courses (3 distinct courses)
+  const medPostgraduateCourses = filteredMasterCourses.filter((c) => {
+    const lvl = (c.course_level || '').toLowerCase();
+    const isPG = lvl === 'postgraduate' || c.level === 'postgraduate';
+    return isPG && isMedicalCourse(c);
+  });
+
+  // All Medical Courses Combined
+  const allMedicalCourses = filteredMasterCourses.filter((c) => isMedicalCourse(c));
+
+  // General PG Courses
   const pgCourses = filteredCourses.filter((c) => {
-    return (c.course_level || '') === 'Postgraduate';
+    return (c.course_level || '') === 'Postgraduate' && !isMedicalCourse(c);
   });
 
   return (
@@ -289,6 +326,7 @@ export default function GuidanceWizard({
               /* TABS FOR AFTER 10TH */
               [
                 { id: '10th_paths', label: 'Education Paths', count: filteredPathways.length, icon: '🗺️' },
+                { id: '10th_healthcare', label: 'Healthcare Diplomas', count: healthcareDiplomaCourses10th.length, icon: '🧬' },
                 { id: '10th_diploma', label: 'Diploma & Polytechnic', count: diplomaPathways10th.length, icon: '⚙️' },
                 { id: '10th_iti', label: 'ITI & Vocational', count: itiPathways10th.length, icon: '🛠️' },
                 { id: 'careers', label: 'Career Paths', count: filteredCareers.length, icon: '💼' },
@@ -334,7 +372,7 @@ export default function GuidanceWizard({
               [
                 { id: 'ug_degrees', label: 'Undergraduate Degrees', count: ugDegrees.length, icon: '🎓' },
                 { id: 'integrated', label: 'Integrated UG + PG', count: integratedCourses.length, icon: '⚡' },
-                { id: 'medical', label: 'Medical & Healthcare', count: medicalCourses.length, icon: '🧬' },
+                { id: 'medical', label: 'Medical & Healthcare', count: allMedicalCourses.length, icon: '🧬' },
                 { id: 'postgraduate', label: 'Postgraduate', count: pgCourses.length, icon: '📚' },
                 { id: 'pathways', label: 'Education Paths', count: filteredPathways.length, icon: '🗺️' },
                 { id: 'careers', label: 'Career Paths', count: filteredCareers.length, icon: '💼' },
@@ -399,7 +437,7 @@ export default function GuidanceWizard({
                   <Info size={18} color="var(--fp-primary)" style={{ flexShrink: 0 }} />
                   <p style={{ fontSize: '0.85rem', color: 'var(--fp-text-secondary)', margin: 0 }}>
                     <strong style={{ color: 'var(--fp-text)' }}>Post-10th Pathways: </strong>
-                    After Class 10, students can continue to 11th & 12th Higher Secondary (Science/Commerce/Arts), enroll in a 3-Year Polytechnic Engineering Diploma (with Direct-to-Degree D2D entry into 2nd year B.Tech), or enter ITI skill trades.
+                    After Class 10, students can continue to 11th & 12th Higher Secondary (Science/Commerce/Arts), enroll in a 3-Year Polytechnic Engineering Diploma (with Direct-to-Degree D2D entry into 2nd year B.Tech), enroll in Healthcare Technical Diplomas, or enter ITI skill trades.
                   </p>
                 </div>
 
@@ -417,6 +455,44 @@ export default function GuidanceWizard({
                 ) : (
                   <div className="glass-card" style={{ padding: '3rem', textAlign: 'center' }}>
                     <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.95rem' }}>No roadmaps found matching your search criteria.</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 10TH SECTION: HEALTHCARE DIPLOMA & CERTIFICATES AFTER 10TH */}
+            {qualification === '10th' && activeSection === '10th_healthcare' && (
+              <div>
+                <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '10px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontWeight: '700', color: '#065F46', fontSize: '0.95rem', marginBottom: '0.35rem' }}>
+                    <Stethoscope size={17} /> Healthcare Diploma & Certificate Pathways (After Class 10)
+                  </div>
+                  <p style={{ fontSize: '0.85rem', color: '#047857', margin: '0 0 0.5rem', lineHeight: '1.5' }}>
+                    These are healthcare-support and technical pathways that may be available after Class 10. Admission, duration and eligibility vary by institute and state.
+                  </p>
+                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', fontSize: '0.78rem', color: '#065F46', fontWeight: '600' }}>
+                    <span>⏱️ Typical duration: 1–2 years (or 3–6 months for short-term certificates)</span>
+                    <span>📋 Admission: Based on institute/state rules, merit or direct application (No NEET required)</span>
+                  </div>
+                </div>
+
+                {healthcareDiplomaCourses10th.length > 0 ? (
+                  <div className="fp-grid-cards">
+                    {healthcareDiplomaCourses10th.map((course) => (
+                      <CourseCard 
+                        key={course._id} 
+                        course={course} 
+                        onToggleBookmark={onToggleBookmark}
+                        isSaved={isBookmarked && isBookmarked(course._id, 'course')}
+                        onToggleCompare={onToggleCompare}
+                        isCompared={isCompared && isCompared(course._id)}
+                        institutions={allInstitutionsList}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="glass-card" style={{ padding: '3rem', textAlign: 'center' }}>
+                    <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.95rem' }}>No healthcare diplomas found matching this search keyword.</p>
                   </div>
                 )}
               </div>
@@ -556,43 +632,145 @@ export default function GuidanceWizard({
             {/* 12TH SECTION: MEDICAL & HEALTHCARE */}
             {qualification === '12th' && activeSection === 'medical' && (
               <div>
-                {/* Medical Education Pathway Guide */}
-                <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '10px', padding: '1.25rem', marginBottom: '1.5rem' }}>
-                  <div style={{ fontWeight: '700', color: '#065F46', fontSize: '0.95rem', marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <Stethoscope size={16} /> Medical & Clinical Education Progression Pathway
-                  </div>
-                  <div style={{ fontSize: '0.825rem', color: '#047857', lineHeight: '1.5' }}>
-                    <strong>Direct Post-12th (PCB + NEET-UG): </strong>
-                    MBBS (5.5 Yrs), BDS (Dental - 5 Yrs), BAMS (Ayurveda), BHMS (Homeopathy), B.Sc Nursing, and B.Sc Biotechnology.<br />
-                    <strong>Postgraduate Medical Specialization (NEET-PG / INI-CET): </strong>
-                    MD (Doctor of Medicine), MS (Master of Surgery), and MDS are pursued <em>after completing an undergraduate medical degree (MBBS/BDS)</em> and are not direct post-12th entries.
-                  </div>
+                {/* Category Sub-Filter Tabs */}
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                  {[
+                    { id: 'undergraduate', label: 'Undergraduate', count: medUndergraduateCourses.length, icon: '🩺' },
+                    { id: 'postgraduate', label: 'Postgraduate', count: medPostgraduateCourses.length, icon: '🔬' },
+                    { id: 'diploma', label: 'Diploma & Certificate After 10th', count: healthcareDiplomaCourses10th.length, icon: '🏥' },
+                    { id: 'all', label: 'All Medical & Healthcare', count: allMedicalCourses.length, icon: '🌐' }
+                  ].map((subTab) => {
+                    const isSel = medicalSubFilter === subTab.id;
+                    return (
+                      <button
+                        key={subTab.id}
+                        type="button"
+                        onClick={() => setMedicalSubFilter(subTab.id)}
+                        style={{
+                          padding: '0.45rem 0.95rem',
+                          fontSize: '0.825rem',
+                          fontWeight: isSel ? '700' : '500',
+                          borderRadius: 'var(--radius-full)',
+                          background: isSel ? 'var(--fp-primary)' : '#FFFFFF',
+                          color: isSel ? '#FFFFFF' : 'var(--fp-text-secondary)',
+                          border: isSel ? '1px solid var(--fp-primary)' : '1px solid var(--fp-border)',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          transition: 'all 0.15s ease',
+                          boxShadow: isSel ? '0 2px 6px rgba(79, 70, 229, 0.2)' : 'none'
+                        }}
+                      >
+                        <span>{subTab.icon}</span>
+                        <span>{subTab.label}</span>
+                        <span style={{
+                          background: isSel ? 'rgba(255, 255, 255, 0.25)' : '#F3F4F6',
+                          color: isSel ? '#FFFFFF' : 'var(--fp-text-secondary)',
+                          fontSize: '0.7rem',
+                          fontWeight: '700',
+                          padding: '0.05rem 0.4rem',
+                          borderRadius: '999px'
+                        }}>
+                          {subTab.count}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
 
-                {medicalCourses.length > 0 ? (
-                  <div className="fp-grid-cards">
-                    {medicalCourses.map((course) => (
-                      <CourseCard 
-                        key={course._id} 
-                        course={course} 
-                        onToggleBookmark={onToggleBookmark}
-                        isSaved={isBookmarked && isBookmarked(course._id, 'course')}
-                        onToggleCompare={onToggleCompare}
-                        isCompared={isCompared && isCompared(course._id)}
-                        institutions={allInstitutionsList}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="glass-card" style={{ padding: '3rem', textAlign: 'center' }}>
-                    <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.95rem', marginBottom: '0.75rem' }}>
-                      No direct medical/healthcare courses mapped for stream ({stream}). Note: Medical UG requires 12th Science with Biology (PCB).
+                {/* Sub-Filter Specific Pathway Explanations */}
+                {medicalSubFilter === 'undergraduate' && (
+                  <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '10px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+                    <div style={{ fontWeight: '700', color: '#065F46', fontSize: '0.95rem', marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <Stethoscope size={16} /> Medical & Healthcare Undergraduate Degrees (After 12th Science)
+                    </div>
+                    <p style={{ fontSize: '0.85rem', color: '#047857', margin: '0 0 0.4rem', lineHeight: '1.5' }}>
+                      Accredited Bachelor's programmes across Clinical Medicine (MBBS), Dental Surgery (BDS), AYUSH systems (BHMS, BUMS, BNYS), Veterinary Medicine (BVSc & AH), Nursing, Physiotherapy (BPT), Pharmacy (B.Pharm), and Allied Health Sciences (B.Sc MLT, Radiology, OTT).
                     </p>
-                    <button onClick={() => setStream('Science')} className="btn btn-outline-primary" style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}>
-                      Switch to Science (PCB) Stream
-                    </button>
+                    <div style={{ fontSize: '0.78rem', color: '#065F46' }}>
+                      <strong>Eligibility note: </strong>Requires 12th Standard Science (PCB / PCM depending on programme). Admission through NEET-UG, GUJCET, or State Paramedical Admission Committees.
+                    </div>
                   </div>
                 )}
+
+                {medicalSubFilter === 'postgraduate' && (
+                  <div style={{ background: '#F5F3FF', border: '1px solid #DDD6FE', borderRadius: '10px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+                    <div style={{ fontWeight: '700', color: '#5B21B6', fontSize: '0.95rem', marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      📚 Medical & Healthcare Postgraduate Specialization Pathway
+                    </div>
+                    <div style={{
+                      background: '#FFFFFF',
+                      border: '1px solid #EDE9FE',
+                      borderRadius: '8px',
+                      padding: '0.75rem 1rem',
+                      margin: '0.5rem 0 0.75rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      fontSize: '0.825rem',
+                      fontWeight: '600',
+                      color: '#4C1D95',
+                      flexWrap: 'wrap'
+                    }}>
+                      <span>12th Science (PCB)</span>
+                      <span>→</span>
+                      <span>Medical Undergraduate (MBBS / BDS / relevant UG)</span>
+                      <span>→</span>
+                      <span style={{ color: '#6D28D9', textDecoration: 'underline' }}>Medical Postgraduate (MD / MS / MDS)</span>
+                      <span>→</span>
+                      <span>Specialized Healthcare Role / Consultant</span>
+                    </div>
+                    <p style={{ fontSize: '0.825rem', color: '#6D28D9', margin: 0, lineHeight: '1.5' }}>
+                      Postgraduate medical degrees are advanced master's clinical specializations pursued after qualifying an undergraduate medical degree (MBBS/BDS) and clearing NEET-PG / INI-CET / NEET-MDS. They are not direct entries immediately after Class 12.
+                    </p>
+                  </div>
+                )}
+
+                {medicalSubFilter === 'diploma' && (
+                  <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: '10px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+                    <div style={{ fontWeight: '700', color: '#92400E', fontSize: '0.95rem', marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      🏥 Healthcare Diploma & Certificate Programmes (After Class 10)
+                    </div>
+                    <p style={{ fontSize: '0.85rem', color: '#B45309', margin: '0 0 0.4rem', lineHeight: '1.5' }}>
+                      These are healthcare-support and technical pathways that may be available after Class 10. Admission, duration and eligibility vary by institute and state.
+                    </p>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', fontSize: '0.78rem', color: '#92400E', fontWeight: '600' }}>
+                      <span>⏱️ Typical duration: 1–2 years (or 3–6 months for short-term certificates)</span>
+                      <span>📋 Admission: Institute / State merit or direct application (No NEET required)</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Grid of Medical Courses based on active subfilter */}
+                {(() => {
+                  let displayList = medUndergraduateCourses;
+                  if (medicalSubFilter === 'postgraduate') displayList = medPostgraduateCourses;
+                  else if (medicalSubFilter === 'diploma') displayList = healthcareDiplomaCourses10th;
+                  else if (medicalSubFilter === 'all') displayList = allMedicalCourses;
+
+                  return displayList.length > 0 ? (
+                    <div className="fp-grid-cards">
+                      {displayList.map((course) => (
+                        <CourseCard 
+                          key={course._id} 
+                          course={course} 
+                          onToggleBookmark={onToggleBookmark}
+                          isSaved={isBookmarked && isBookmarked(course._id, 'course')}
+                          onToggleCompare={onToggleCompare}
+                          isCompared={isCompared && isCompared(course._id)}
+                          institutions={allInstitutionsList}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="glass-card" style={{ padding: '3rem', textAlign: 'center' }}>
+                      <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.95rem', marginBottom: '0.75rem' }}>
+                        No medical / healthcare courses found matching this search keyword.
+                      </p>
+                    </div>
+                  );
+                })()}
               </div>
             )}
 

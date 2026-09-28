@@ -168,7 +168,11 @@ const seedDatabase = async () => {
     });
     const createdCourses = await Course.insertMany(courseDocuments);
 
-    // 3. Seed Curriculum from Curriculum.csv
+    // 2b. Seed Medical & Healthcare Courses
+    const { medicalCourses, medicalPathways } = require("./upsert_medical");
+    console.log(`Importing ${medicalCourses.length} Medical & Healthcare Courses...`);
+    const createdMedicalCourses = await Course.insertMany(medicalCourses);
+    const allInsertedCourses = [...createdCourses, ...createdMedicalCourses];
     const currCsvPath = path.join(workspaceRoot, "Curriculum.csv");
     const currData = parseCsv(currCsvPath);
     console.log(`Importing ${currData.length} Curriculum records from CSV...`);
@@ -372,6 +376,32 @@ const seedDatabase = async () => {
           "Appear for CMAT / CAT or CA Foundation / Intermediate examinations",
           "Complete corporate internships in financial analysis or management",
           "Graduate as a Financial Analyst, Chartered Accountant, or Business Manager",
+        ],
+      },
+      {
+        title: "10th Standard → Healthcare & Paramedical Diploma (1-2 Yrs) → Clinical Technician / Assistant",
+        qualification: qual10th._id,
+        description: "Early entry technical healthcare pathway for students seeking immediate hospital/laboratory paramedical training without requiring 12th or NEET.",
+        steps: [
+          "Pass 10th Standard (SSC) from a recognized state/national secondary education board",
+          "Apply directly to state medical faculty or paramedical institute (Merit/direct admission, No NEET required)",
+          "Complete 1-2 Year Diploma in DMLT, Radiology, Operation Theatre, Dialysis, or Nursing Care",
+          "Undergo hospital clinical training and hands-on lab rotatory internship",
+          "Begin career as a Certified Paramedical Technician, Dialysis Assistant, or Diagnostic Lab Associate"
+        ],
+      },
+      {
+        title: "12th Science (PCB) → NEET-UG → Medical UG (MBBS/BDS/BAMS/BHMS/BPT) → NEET-PG / Specialization",
+        qualification: qual12th._id,
+        stream: streamScience._id,
+        description: "Structured clinical progression pathway from higher secondary science to doctoral degree, clinical internship, and advanced postgraduate medical specialization (MD/MS/MDS).",
+        steps: [
+          "Complete 12th Standard Science with Physics, Chemistry, Biology (PCB) and English",
+          "Appear and qualify for NEET-UG National Entrance Examination with required cutoff percentile",
+          "Participate in ACPUGMEC (Gujarat State Quota) or MCC (All India Quota) centralized admission rounds",
+          "Complete Undergraduate Medical Programme (4.5 to 5.5 Years including mandatory 1-Year rotatory hospital internship)",
+          "Register with National Medical Commission (NMC) / Gujarat Medical Council as a registered practitioner",
+          "Appear for NEET-PG / INI-CET for admission to 3-Year Post-Graduate Specialization (MD / MS / MDS) or pursue clinical fellowship"
         ],
       },
     ]);

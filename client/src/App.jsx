@@ -264,14 +264,19 @@ function App() {
   };
 
   // Courses filtered list
-  const filteredCourses = filterCatalog(allCourses, ['name', 'course_name', 'description', 'subjects', 'eligibility', 'university_name', 'field_of_study']).filter((c) => {
+  const filteredCourses = filterCatalog(allCourses, ['name', 'course_name', 'shortName', 'description', 'subjects', 'eligibility', 'university_name', 'field_of_study', 'category', 'entranceExam']).filter((c) => {
     const uniMatch = selectedCourseUniFilter === 'All' || (c.university_name && c.university_name.includes(selectedCourseUniFilter));
-    const levelMatch = selectedCourseLevelFilter === 'All' || c.course_level === selectedCourseLevelFilter;
+    const levelMatch = selectedCourseLevelFilter === 'All' || 
+      c.course_level === selectedCourseLevelFilter || 
+      c.level === selectedCourseLevelFilter ||
+      (selectedCourseLevelFilter === 'Diploma / Certificate' && (c.level === 'Diploma' || c.level === 'Certificate' || c.course_level === 'Diploma' || c.course_level === 'Diploma / Certificate'));
     
     let typeMatch = true;
     if (selectedCourseTypeFilter !== 'All') {
       const f = (c.field_of_study || '').toLowerCase();
+      const cat = (c.category || '').toLowerCase();
       const n = (c.name || c.course_name || '').toLowerCase();
+      const sn = (c.shortName || '').toLowerCase();
       if (selectedCourseTypeFilter === 'tech') {
         typeMatch = f.includes('computer') || f.includes('information technology') || n.includes('bca') || n.includes('it') || n.includes('cyber');
       } else if (selectedCourseTypeFilter === 'engineering') {
@@ -279,9 +284,9 @@ function App() {
       } else if (selectedCourseTypeFilter === 'business') {
         typeMatch = f.includes('commerce') || f.includes('management') || f.includes('accounting') || n.includes('b.com') || n.includes('bba') || n.includes('mba');
       } else if (selectedCourseTypeFilter === 'science') {
-        typeMatch = f.includes('sciences') || f.includes('physics') || f.includes('chemistry') || f.includes('mathematical') || n.includes('b.sc') || n.includes('m.sc');
+        typeMatch = (f.includes('sciences') || f.includes('physics') || f.includes('chemistry') || f.includes('mathematical') || n.includes('b.sc') || n.includes('m.sc')) && !cat.includes('medical') && !cat.includes('healthcare');
       } else if (selectedCourseTypeFilter === 'medical') {
-        typeMatch = f.includes('biological') || f.includes('medical') || n.includes('biotechnology') || n.includes('pharmacy');
+        typeMatch = cat.includes('medical') || cat.includes('healthcare') || f.includes('biological') || f.includes('medical') || f.includes('nursing') || f.includes('pharmacy') || f.includes('allied') || sn === 'mbbs' || sn === 'bds' || sn === 'bpt' || sn === 'dmlt' || sn === 'md' || sn === 'ms' || sn === 'mds' || sn === 'bhms' || sn === 'bums' || sn === 'bnys' || sn === 'bvsc & ah' || sn === 'b.pharm';
       } else if (selectedCourseTypeFilter === 'humanities') {
         typeMatch = f.includes('humanities') || f.includes('social') || n.includes('b.a.') || n.includes('arts');
       }
@@ -490,12 +495,15 @@ function App() {
                     { id: 'All', label: 'All Levels' },
                     { id: 'Undergraduate', label: 'Undergraduate' },
                     { id: 'Integrated (UG+PG)', label: 'Integrated UG + PG (5 Yrs)' },
-                    { id: 'Postgraduate', label: 'Postgraduate' }
+                    { id: 'Postgraduate', label: 'Postgraduate' },
+                    { id: 'Diploma / Certificate', label: 'Diploma & Certificate' }
                   ].map((lvl) => {
                     const isSel = selectedCourseLevelFilter === lvl.id;
                     const count = lvl.id === 'All' 
                       ? allCourses.length 
-                      : allCourses.filter(c => c.course_level === lvl.id).length;
+                      : lvl.id === 'Diploma / Certificate'
+                        ? allCourses.filter(c => c.level === 'Diploma' || c.level === 'Certificate' || c.course_level === 'Diploma' || c.course_level === 'Diploma / Certificate').length
+                        : allCourses.filter(c => c.course_level === lvl.id || c.level === lvl.id).length;
                     return (
                       <button
                         key={lvl.id}
@@ -524,8 +532,8 @@ function App() {
                     { id: 'tech', label: 'Computer & IT' },
                     { id: 'engineering', label: 'Engineering' },
                     { id: 'business', label: 'Commerce & Management' },
+                    { id: 'medical', label: 'Medical & Healthcare' },
                     { id: 'science', label: 'Pure Sciences' },
-                    { id: 'medical', label: 'Biotech & Medical' },
                     { id: 'humanities', label: 'Humanities & Arts' }
                   ].map((t) => {
                     const isSel = selectedCourseTypeFilter === t.id;

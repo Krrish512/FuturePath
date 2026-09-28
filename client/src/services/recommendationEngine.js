@@ -352,12 +352,15 @@ export function matchCourses(answers, allCourses = []) {
       subjectMatchCount++;
       reasons.push('Builds directly on your interest in Business Studies and organization');
     }
-    if (subjects.includes('biology') && (name.includes('biotechnology') || name.includes('biology') || field.includes('biological') || field.includes('biotechnology'))) {
-      score += 18;
+    if (subjects.includes('biology') && (
+      name.includes('biotechnology') || name.includes('biology') || name.includes('medicine') || name.includes('surgery') || name.includes('dental') || name.includes('nursing') || name.includes('physiotherapy') || name.includes('pharmacy') || name.includes('optometry') || name.includes('laboratory') || name.includes('radiology') || name.includes('operation theatre') || name.includes('dialysis') || name.includes('dmlt') ||
+      field.includes('biological') || field.includes('medical') || field.includes('healthcare') || field.includes('clinical') || field.includes('dental') || field.includes('nursing') || field.includes('physiotherapy') || field.includes('pharmaceutical') || field.includes('pathology')
+    )) {
+      score += 20;
       subjectMatchCount++;
       reasons.push('Direct alignment with your passion for Biology & Life Sciences');
     }
-    if (subjects.includes('physics') && (name.includes('physics') || name.includes('engineering') || name.includes('b.tech') || field.includes('physical'))) {
+    if (subjects.includes('physics') && (name.includes('physics') || name.includes('engineering') || name.includes('b.tech') || name.includes('radiology') || field.includes('physical') || field.includes('radiological'))) {
       score += 12;
       subjectMatchCount++;
       reasons.push('Applies physical sciences and applied mechanics fundamentals');
@@ -369,6 +372,15 @@ export function matchCourses(answers, allCourses = []) {
     }
 
     // --- B. Broad Interest Domain (Max +25) ---
+    if (interests.includes('healthcare') && (
+      name.includes('medicine') || name.includes('dental') || name.includes('nursing') || name.includes('physiotherapy') || name.includes('pharmacy') || name.includes('optometry') || name.includes('laboratory') || name.includes('radiology') || name.includes('operation theatre') || name.includes('dialysis') || name.includes('nurse') || name.includes('dmlt') || name.includes('mbbs') || name.includes('bds') || name.includes('bpt') || name.includes('biotechnology') ||
+      field.includes('medical') || field.includes('healthcare') || field.includes('biological') || field.includes('clinical') || field.includes('nursing') || field.includes('physiotherapy') || field.includes('pharmaceutical') || field.includes('pathology')
+    )) {
+      score += 22;
+      if (reasons.length < 3 && !reasons.some(r => r.includes('healthcare') || r.includes('Healthcare'))) {
+        reasons.push('You showed strong interest in healthcare and helping people');
+      }
+    }
     if (interests.includes('technology') && (name.includes('bca') || name.includes('computer') || name.includes('information technology') || name.includes('ai') || name.includes('data') || name.includes('cyber') || field.includes('computer') || field.includes('information technology'))) {
       score += 12;
       if (reasons.length < 3 && !reasons.some(r => r.includes('Technology'))) {
@@ -419,13 +431,26 @@ export function matchCourses(answers, allCourses = []) {
     }
 
     // Bio rating
-    if (bioScore >= 3 && (name.includes('biotechnology') || name.includes('biological'))) {
-      score += 15;
-      if (bioScore === 4 && reasons.length < 4) {
-        reasons.push('Strong match for your high interest in biological and healthcare sciences');
+    if (bioScore >= 3 && (
+      name.includes('biotechnology') || name.includes('biological') || name.includes('medicine') || name.includes('dental') || name.includes('nursing') || name.includes('physiotherapy') || name.includes('pharmacy') || name.includes('optometry') || name.includes('laboratory') || name.includes('radiology') || name.includes('operation theatre') || name.includes('dialysis') || name.includes('dmlt') || name.includes('nurse') ||
+      field.includes('medical') || field.includes('healthcare') || field.includes('biological') || field.includes('clinical') || field.includes('nursing') || field.includes('physiotherapy')
+    )) {
+      score += (bioScore === 4 ? 18 : 10);
+      if (bioScore === 4 && reasons.length < 4 && !reasons.some(r => r.includes('human body') || r.includes('patient care') || r.includes('biological'))) {
+        if (name.includes('physiotherapy') || name.includes('bpt')) {
+          reasons.push('Matches your interest in human anatomy, body mechanics, and physical wellbeing');
+        } else if (name.includes('nursing') || name.includes('nurse')) {
+          reasons.push('Strong match for your interest in clinical patient care and hospital healthcare');
+        } else if (name.includes('pharmacy') || name.includes('pharm')) {
+          reasons.push('Combines chemical sciences, pharmaceutical drug formulation, and patient wellbeing');
+        } else if (name.includes('laboratory') || name.includes('dmlt')) {
+          reasons.push('Ideal fit for investigative diagnostics, laboratory testing, and sample analysis');
+        } else {
+          reasons.push('Strong match for your high interest in biological systems and healthcare science');
+        }
       }
-    } else if (bioScore <= 2 && name.includes('biotechnology')) {
-      score -= 10;
+    } else if (bioScore <= 2 && (name.includes('biotechnology') || name.includes('mbbs') || name.includes('bds') || name.includes('b.sc nursing'))) {
+      score -= 15;
     }
 
     // Business rating

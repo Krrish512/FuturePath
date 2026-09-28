@@ -13,10 +13,31 @@ export default function CourseCard({
   const [selectedInstForDetail, setSelectedInstForDetail] = useState(null);
 
   const isIntegrated = (course.course_level || '').includes('Integrated') || (course.name || '').includes('Integrated');
-  const isMedical = (course.field_of_study || '').toLowerCase().includes('biological') || 
+  const isMedical = (course.category || '').toLowerCase().includes('medical') || 
+                    (course.category || '').toLowerCase().includes('healthcare') || 
+                    (course.field_of_study || '').toLowerCase().includes('biological') || 
                     (course.field_of_study || '').toLowerCase().includes('medical') || 
+                    (course.field_of_study || '').toLowerCase().includes('dental') || 
+                    (course.field_of_study || '').toLowerCase().includes('nursing') || 
+                    (course.field_of_study || '').toLowerCase().includes('physiotherapy') || 
+                    (course.field_of_study || '').toLowerCase().includes('pharmaceutical') || 
                     (course.name || '').toLowerCase().includes('biotechnology') ||
-                    (course.programmeType || '').toLowerCase() === 'medical';
+                    (course.name || '').toLowerCase().includes('mbbs') ||
+                    (course.name || '').toLowerCase().includes('bds') ||
+                    (course.name || '').toLowerCase().includes('bhms') ||
+                    (course.name || '').toLowerCase().includes('bums') ||
+                    (course.name || '').toLowerCase().includes('bnys') ||
+                    (course.name || '').toLowerCase().includes('nursing') ||
+                    (course.name || '').toLowerCase().includes('bpt') ||
+                    (course.name || '').toLowerCase().includes('pharm') ||
+                    (course.name || '').toLowerCase().includes('dmlt') ||
+                    (course.name || '').toLowerCase().includes('optometry') ||
+                    (course.name || '').toLowerCase().includes('radiology') ||
+                    (course.name || '').toLowerCase().includes('operation theatre') ||
+                    (course.name || '').toLowerCase().includes('dialysis');
+
+  const isDiploma10th = course.level === 'after10' || course.qualification === '10th' || (course.course_level || '').toLowerCase().includes('diploma');
+  const isPostgraduate = (course.course_level || '').toLowerCase() === 'postgraduate' || course.level === 'postgraduate';
 
   // Find institutions offering this specific course
   const matchedInstitutions = institutions.filter((inst) => {
@@ -76,16 +97,31 @@ export default function CourseCard({
       >
         {/* Top Badges */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.75rem' }}>
-          <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            {course.shortName && (
+              <span style={{
+                fontSize: '0.75rem',
+                fontWeight: '800',
+                color: isMedical ? '#065F46' : '#4338CA',
+                background: isMedical ? '#D1FAE5' : '#EEF2FF',
+                border: isMedical ? '1px solid #A7F3D0' : '1px solid #C7D2FE',
+                padding: '0.15rem 0.55rem',
+                borderRadius: '6px',
+                letterSpacing: '0.02em'
+              }}>
+                {course.shortName}
+              </span>
+            )}
+
             <span style={{ 
               fontSize: '0.75rem', 
               fontWeight: '600', 
               color: 'var(--fp-primary, #4F46E5)', 
               background: 'var(--fp-tint, #EEF2FF)', 
-              padding: '0.2rem 0.6rem', 
+              padding: '0.15rem 0.55rem', 
               borderRadius: '6px'
             }}>
-              {course.university_name || course.stream || 'Gujarat University'}
+              {course.university_name || course.stream || (isDiploma10th ? 'State Paramedical Board' : 'Gujarat University')}
             </span>
 
             {isIntegrated ? (
@@ -94,10 +130,34 @@ export default function CourseCard({
                 fontWeight: '700',
                 color: '#4338CA',
                 background: '#E0E7FF',
-                padding: '0.2rem 0.55rem',
+                padding: '0.15rem 0.55rem',
                 borderRadius: '6px'
               }}>
                 5 Years • UG + PG
+              </span>
+            ) : isDiploma10th ? (
+              <span style={{
+                fontSize: '0.725rem',
+                fontWeight: '700',
+                color: '#92400E',
+                background: '#FEF3C7',
+                border: '1px solid #FDE68A',
+                padding: '0.15rem 0.55rem',
+                borderRadius: '6px'
+              }}>
+                Diploma (After 10th)
+              </span>
+            ) : isPostgraduate ? (
+              <span style={{
+                fontSize: '0.725rem',
+                fontWeight: '700',
+                color: '#6D28D9',
+                background: '#EDE9FE',
+                border: '1px solid #DDD6FE',
+                padding: '0.15rem 0.55rem',
+                borderRadius: '6px'
+              }}>
+                Postgraduate
               </span>
             ) : (
               <span style={{
@@ -105,10 +165,23 @@ export default function CourseCard({
                 fontWeight: '600',
                 color: isMedical ? '#047857' : '#4B5563',
                 background: isMedical ? '#ECFDF5' : '#F3F4F6',
-                padding: '0.2rem 0.55rem',
+                padding: '0.15rem 0.55rem',
                 borderRadius: '6px'
               }}>
                 {course.course_level || 'Undergraduate'}
+              </span>
+            )}
+
+            {course.entranceExam && (
+              <span style={{
+                fontSize: '0.7rem',
+                fontWeight: '600',
+                color: '#1E40AF',
+                background: '#DBEAFE',
+                padding: '0.15rem 0.5rem',
+                borderRadius: '6px'
+              }}>
+                {course.entranceExam}
               </span>
             )}
           </div>
@@ -277,12 +350,30 @@ export default function CourseCard({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
               <div>
                 <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  {course.shortName && (
+                    <span style={{
+                      fontSize: '0.825rem',
+                      fontWeight: '800',
+                      color: isMedical ? '#065F46' : '#4338CA',
+                      background: isMedical ? '#D1FAE5' : '#EEF2FF',
+                      border: isMedical ? '1px solid #A7F3D0' : '1px solid #C7D2FE',
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '6px'
+                    }}>
+                      {course.shortName}
+                    </span>
+                  )}
                   <span style={{ fontSize: '0.8rem', color: '#4F46E5', fontWeight: '700', background: '#EEF2FF', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
-                    {course.university_name || 'Gujarat University'}
+                    {course.university_name || (isDiploma10th ? 'State Paramedical Board' : 'Gujarat University')}
                   </span>
                   {isIntegrated && (
                     <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#4338CA', background: '#E0E7FF', padding: '0.2rem 0.55rem', borderRadius: '6px' }}>
                       5 Years • UG + PG
+                    </span>
+                  )}
+                  {isDiploma10th && (
+                    <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#92400E', background: '#FEF3C7', padding: '0.2rem 0.55rem', borderRadius: '6px' }}>
+                      Diploma (After 10th)
                     </span>
                   )}
                 </div>
@@ -290,7 +381,7 @@ export default function CourseCard({
                   {course.course_name || course.name}
                 </h3>
                 <div style={{ fontSize: '0.85rem', color: '#6B7280' }}>
-                  Level: {course.course_level || 'Undergraduate'} • Field: {course.field_of_study || 'General'}
+                  Level: {course.course_level || 'Undergraduate'} • Category: {course.category || 'General'} • Field: {course.field_of_study || 'General'}
                 </div>
               </div>
               <button 
@@ -321,20 +412,9 @@ export default function CourseCard({
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#6B7280' }}>Source & Accreditation</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>
-                  {course.official_source_url ? (
-                    <a 
-                      href={course.official_source_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      style={{ color: '#4F46E5', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
-                    >
-                      University Syllabus <ExternalLink size={12} />
-                    </a>
-                  ) : (
-                    'Verified State Curriculum'
-                  )}
+                <div style={{ fontSize: '0.75rem', color: '#6B7280' }}>Entrance / Admission</div>
+                <div style={{ fontSize: '0.88rem', fontWeight: '700', color: course.entranceExam ? '#1E40AF' : '#111827' }}>
+                  {course.entranceExam || (isDiploma10th ? 'State / Institute Merit' : 'Merit / Direct')}
                 </div>
               </div>
             </div>

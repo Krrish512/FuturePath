@@ -33,6 +33,9 @@ const getCourses = async (req, res) => {
             university,
             university_id,
             course_level,
+            level,
+            category,
+            shortName,
             field_of_study,
             duration,
             qualification,
@@ -56,6 +59,18 @@ const getCourses = async (req, res) => {
 
         if (course_level && course_level !== "All") {
             query.course_level = { $regex: course_level, $options: "i" };
+        }
+
+        if (level && level !== "All") {
+            query.level = { $regex: `^${level}$`, $options: "i" };
+        }
+
+        if (category && category !== "All") {
+            query.category = { $regex: category, $options: "i" };
+        }
+
+        if (shortName) {
+            query.shortName = { $regex: shortName, $options: "i" };
         }
 
         if (programmeType && programmeType !== "All") {
@@ -86,8 +101,11 @@ const getCourses = async (req, res) => {
             query.$or = [
                 { name: { $regex: search, $options: "i" } },
                 { course_name: { $regex: search, $options: "i" } },
+                { shortName: { $regex: search, $options: "i" } },
                 { university_name: { $regex: search, $options: "i" } },
                 { field_of_study: { $regex: search, $options: "i" } },
+                { category: { $regex: search, $options: "i" } },
+                { entranceExam: { $regex: search, $options: "i" } },
                 { eligibility: { $regex: search, $options: "i" } }
             ];
         }

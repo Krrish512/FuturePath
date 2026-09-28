@@ -314,27 +314,32 @@ export default function AptitudeQuiz({
               <div className="quiz-progress-track">
                 <div 
                   className="quiz-progress-fill" 
-                  style={{ width: `${progressPercentage}%` }} 
+                  style={{ width: `${progressPercentage}%` }}
                 />
               </div>
             </div>
 
-            {/* Question Title & Subtitle */}
+            {/* Question Title & Prompt */}
             <div style={{ marginBottom: '1.75rem' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--fp-primary)', display: 'block', marginBottom: '0.35rem' }}>
-                {currentQuestion.title}
-              </span>
-              <h2 style={{ fontSize: '1.35rem', fontWeight: '700', color: 'var(--fp-text)', lineHeight: '1.35', marginBottom: '0.35rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <span className="badge badge-primary" style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+                  {currentQuestion.category}
+                </span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--fp-text-secondary)' }}>
+                  {currentQuestion.type === 'multiple' ? '• Multi-select' : currentQuestion.type === 'scale' ? '• Rating Scale' : '• Single Choice'}
+                </span>
+              </div>
+              <h2 style={{ fontSize: '1.35rem', fontWeight: '700', color: 'var(--fp-text)', marginBottom: '0.4rem', lineHeight: '1.35' }}>
                 {currentQuestion.question}
               </h2>
               {currentQuestion.subtitle && (
-                <p style={{ fontSize: '0.875rem', color: 'var(--fp-text-secondary)', margin: 0 }}>
+                <p style={{ color: 'var(--fp-text-secondary)', fontSize: '0.875rem', lineHeight: '1.45', margin: 0 }}>
                   {currentQuestion.subtitle}
                 </p>
               )}
             </div>
 
-            {/* Render Question Options based on Type */}
+            {/* Single Select Question */}
             {currentQuestion.type === 'single' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.75rem' }}>
                 {currentQuestion.options.map((option) => {
@@ -348,7 +353,7 @@ export default function AptitudeQuiz({
                       aria-pressed={isSelected}
                     >
                       <div className="quiz-check-circle">
-                        {isSelected && <CheckCircle2 size={16} />}
+                        {isSelected && <CheckCircle2 size={14} />}
                       </div>
                       <div style={{ flex: 1 }}>
                         <div className="quiz-option-title">{option.label}</div>
@@ -360,6 +365,7 @@ export default function AptitudeQuiz({
               </div>
             )}
 
+            {/* Multiple Select Question */}
             {currentQuestion.type === 'multiple' && (
               <div style={{ marginBottom: '1.75rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
@@ -374,7 +380,7 @@ export default function AptitudeQuiz({
                         aria-pressed={isSelected}
                       >
                         <div className="quiz-check-circle">
-                          {isSelected && <CheckCircle2 size={16} />}
+                          {isSelected && <CheckCircle2 size={14} />}
                         </div>
                         <div style={{ flex: 1 }}>
                           <div className="quiz-option-title">{option.label}</div>
@@ -391,12 +397,7 @@ export default function AptitudeQuiz({
                     onClick={handleConfirmMulti}
                     disabled={multiSelection.length === 0}
                     className="btn btn-primary"
-                    style={{
-                      padding: '0.75rem 1.75rem',
-                      fontSize: '0.95rem',
-                      opacity: multiSelection.length === 0 ? 0.5 : 1,
-                      cursor: multiSelection.length === 0 ? 'not-allowed' : 'pointer'
-                    }}
+                    style={{ padding: '0.65rem 1.4rem', fontSize: '0.875rem' }}
                   >
                     Continue <ArrowRight size={16} />
                   </button>
@@ -519,9 +520,14 @@ export default function AptitudeQuiz({
                     {/* Top Row: Match Badge, University & Actions */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        <span className="match-badge">
-                          🎯 {matchPercentage}% Match
+                        <span className="match-badge" style={{ background: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0', fontWeight: '700', fontSize: '0.78rem' }}>
+                          ✨ Recommended based on your answers
                         </span>
+                        {course.shortName && (
+                          <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#4338CA', background: '#EEF2FF', padding: '0.2rem 0.55rem', borderRadius: '6px' }}>
+                            {course.shortName}
+                          </span>
+                        )}
                         <span style={{ fontSize: '0.78rem', fontWeight: '600', color: 'var(--fp-primary)', background: 'var(--fp-primary-soft)', padding: '0.25rem 0.65rem', borderRadius: '6px' }}>
                           {course.university_name || 'Gujarat University'}
                         </span>
@@ -594,10 +600,10 @@ export default function AptitudeQuiz({
                       <span style={{ color: 'var(--fp-text-secondary)' }}>{course.eligibility || '12th Standard or Equivalent'}</span>
                     </div>
 
-                    {/* Why this matches you */}
+                    {/* Why this appeared */}
                     {reasons && reasons.length > 0 && (
                       <div className="match-reason-box">
-                        <div className="match-reason-title">Why this matches you:</div>
+                        <div className="match-reason-title">Why this appeared:</div>
                         {reasons.map((reason, rIdx) => (
                           <div key={rIdx} className="match-reason-item">
                             <span style={{ color: '#059669', fontWeight: '700' }}>✓</span>

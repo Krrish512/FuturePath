@@ -24,10 +24,26 @@ const courseSchema = new mongoose.Schema(
             type: String,
             trim: true
         },
+        shortName: {
+            type: String,
+            trim: true,
+            default: ""
+        },
         course_level: {
             type: String,
             default: "Undergraduate",
             trim: true
+        },
+        level: {
+            type: String,
+            enum: ["after10", "undergraduate", "postgraduate", "integrated", ""],
+            default: "undergraduate",
+            trim: true
+        },
+        category: {
+            type: String,
+            trim: true,
+            default: "general"
         },
         field_of_study: {
             type: String,
